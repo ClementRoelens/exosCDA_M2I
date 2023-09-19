@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <main class="container">
+        <h1 class="display-5">TP POO - PARKING - Class Véhicule</h1>
+        <hr>
+        <h2 class="display-6">Création et utilisation des Class en Javascript</h2>
+        <form class="border rounded p-4 mt-4">
+            <p class="text-center display-6">Parking 3000</p>
+            <div class="text-center bg-success text-success bg-opacity-25 rounded py-3 mb-4 col-12" id="feedbackSuccess" style="display:none"></div>
+            <div class="text-center bg-danger text-danger bg-opacity-25 rounded py-3 mb-4 col-12" id="feedbackFail" style="display:none"></div>
+            <div class="text-center bg-warning text-warning bg-opacity-25 rounded py-3 mb-4 col-12" id="feedbackPay" style="display:none"></div>
+            <div class="row mb-2">
+                <input type="text" class="form-control col" placeholder="Saisir votre immatriculation">
+                <button class="btn btn-success col-1" id="endSession">Payer</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-secondary" id="startSession">Obtenir un ticket</button>
+            </div>
+        </form>
+        <hr>
+        <p>Véhicules déjà garés : </p>
+        <ul class="list-group">
+            <li class="list-group-item">367-LM-52 depuis 1h</li>
+            <li class="list-group-item">152-HU-52 depuis 30 minutes</li>
+            <li class="list-group-item">455-IF-52 depuis 5 minutes</li>
+            <li class="list-group-item">362-NJ-52 depuis 25 minutes</li>
+        </ul>
+    </main>
+
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>
