@@ -21,6 +21,24 @@ function feedback(type, message) {
     }, 5000)
 }
 
+function renderHistoric(){
+    const tbody = document.querySelector('tbody');
+    tbody.innerHTML = "";
+    parking.historic.forEach(session => {
+        const tr = document.createElement("tr");
+        const id = document.createElement("td");
+        const startDate = document.createElement("td");
+        const endDate = document.createElement("td");
+        id.textContent = session.id;
+        startDate.textContent = session.startDate.toLocaleString();
+        endDate.textContent = session.endDate.toLocaleString();
+        tr.appendChild(id);
+        tr.appendChild(startDate);
+        tr.appendChild(endDate);
+        tbody.appendChild(tr);
+    })
+}
+
 const parking = new Parking();
 
 
@@ -62,6 +80,7 @@ end.addEventListener('click', e => {
         const price = parking.endSession(id);
         if (price !== -1) {
             feedback("pay",`Le prix à payer pour le véhicule ${id} est de ${price}€`);
+            renderHistoric();
         } else {
             feedback("fail", `Le véhicule ${id} n'existe pas`);
         }

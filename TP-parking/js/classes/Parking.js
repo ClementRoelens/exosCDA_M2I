@@ -22,6 +22,7 @@ export class Parking {
                 price: 6
             }
         ];
+        this.historic = [];
     }
 
     startSession(vehicule) {
@@ -36,8 +37,13 @@ export class Parking {
     endSession(id) {
         for (let i = 0; i < this.sessions.length; i++) {
             if (this.sessions[i].vehicule.id === id) {
-                const duration = Date.now() - this.sessions[i].startSessionDateTime;
-                this.sessions.splice(i, 1);
+                const splicedSession = this.sessions.splice(i, 1)[0];
+                const duration = Date.now() - splicedSession.startSessionDateTime;
+                this.historic.push({
+                    id : splicedSession.vehicule.id,
+                    startDate : new Date(splicedSession.startSessionDateTime),
+                    endDate : new Date()
+                });
                 for (let j = 0; j < this.pricesThresholds.length - 1; j++) {
                     if (duration / 60000 < this.pricesThresholds[j + 1].threshold) {
                         return this.pricesThresholds[j].price;
