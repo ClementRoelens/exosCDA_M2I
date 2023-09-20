@@ -1,0 +1,47 @@
+.cursor{
+    cursor:pointer;
+}
+
+img {
+    cursor:pointer;
+
+}
+
+.personnal-tooltip {
+    transition:opacity 2s ease-out;
+    position:absolute;
+    font-size: 0.9em;
+    padding:15px;
+    width:220px;
+    border-radius:50px;
+    background-color: rgba(155,155,155,0.8);
+    z-index:100;
+}
+
+h2 {
+    text-transform: capitalize;
+}
+
+#team {
+    display:grid;
+    grid-template:repeat(2,1fr) / repeat(3,1fr);
+}
+
+.team-member {
+    width:80px;
+    margin-bottom:15px;
+}
+
+.team-member:hover {
+    transition:width 0.2s ease-in;
+    width:96px;
+    
+}
+
+#warn-message{
+    transition : opacity 0.5s ease-out;
+}
+
+#erase-pokemon{
+    display:none;
+}

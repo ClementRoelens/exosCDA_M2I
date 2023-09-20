@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="main.js" type="module" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <main class="container text-center mt-5">
+        <p class="display-5">Les 151 premiers Pokémon sont visibles ici</p>
+        <br>
+        <p class="display-6">Tu peux naviguer avec les flèches</p>
+        <img class="rounded-circle bg-primary bg-opacity-75 p-3 mt-5" id="current-pokemon" src="" alt="">
+        <div class="controls">
+            <i class="bi bi-caret-left display-4 cursor"></i>
+            <i class="bi bi-caret-right display-4 cursor" ></i>
+        </div>
+        <h2 class="display-4"></h2>
+        <h4 class="display-6"></h4>
+        <p id="weightAndHeight"></p>
+        <div id="buttons">
+            <button class="btn btn-outline-danger">Surprends-moi</button>
+            <button class="btn btn-outline-danger" id="erase-pokemon">Supprimer de l'équipe</button>
+        </div>
+        <p id="warn-message" class="mt-4"></p>
+        <div class="mt-5" id="team">
+        </div>
+    </main>
+</body>
+</html>
