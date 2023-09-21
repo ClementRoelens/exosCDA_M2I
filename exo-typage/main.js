@@ -1,19 +1,15 @@
 // 1
-const userName: string = "Clément";
-
+var userName = "Clément";
 // 2
-const userAge: number = 32;
-
+var userAge = 32;
 // 3
-const isLogin: boolean = true;
-
+var isLogin = true;
 // 4
-const userNames: string[] = [];
+var userNames = [];
 userNames.push(userName);
 console.log(userNames);
-
 // 5
-const person: object = {
+var person = {
     firstName: "Dupont",
     age: 20,
     isLoggedIn: true
@@ -21,22 +17,19 @@ const person: object = {
 // console.log(person.age); 
 // Property 'age' does not exist on type 'object'
 // Puisque le type "object" ne possède aucun attribut age
-
 // 6
-const person1: { firstName: string, age: number, isLoggedIn: boolean } = {
+var person1 = {
     firstName: "Dupont",
     age: 20,
     isLoggedIn: true
 };
-console.log(person1.age); 
-
+console.log(person1.age);
 // 7
-const person2 = {
+var person2 = {
     firstName: "Dupont",
     age: 20,
     isLoggedIn: true
 };
 console.log(person2.age);
-
 // 8
-const infos: [string, number] = ["Clément", 32];
+var infos = ["Clément", 32];
