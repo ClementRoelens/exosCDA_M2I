@@ -68,6 +68,8 @@ function addContact(e) {
     const avatarURLModal = document.querySelector('#avatarURL');
     const newContact = new Contact(firstnameModal.value, lastnameModal.value, new Date(birthdayModal.value), emailModal.value, phoneModal.value, avatarURLModal.value);
     contacts.push(newContact);
+    // On enregistre notre tableau
+    localStorage.setItem('contacts', JSON.stringify(contacts));
     addButtonContact(newContact);
     displayContact(newContact);
     // Apparemment, Bootstrap ne vide pas les champs par lui-même, donc on utilise form.reset() (merci Rémi)
@@ -141,6 +143,8 @@ function editContact(e) {
         selectedContact.birthday = new Date(birthday.value);
         selectedContact.email = email.value;
         selectedContact.phone = phone.value;
+        // On enregistre notre modification
+        localStorage.setItem('contacts', JSON.stringify(contacts));
         // On supprime la mise en évidence
         inputs.forEach((input) => {
             input.classList.remove("border-danger");
@@ -171,6 +175,8 @@ function removeContact(e) {
     // On supprime le contact du tableau
     const index = contacts.indexOf(selectedContact);
     contacts.splice(index, 1);
+    // On enregistre notre modification
+    localStorage.setItem('contacts', JSON.stringify(contacts));
     // On va aussi supprimer le bouton correspondant (grâce au dataset)
     const removedButton = document.querySelector(`button[data-id='${selectedContact.id}'`);
     const parent = removedButton.parentNode;
@@ -185,13 +191,22 @@ function removeContact(e) {
         displayContact(anonymousContact);
     }
 }
-// On crée notre tableau de contacts, contenant déjà des contacts par défaut
-const contacts = [
-    new Contact("Albert", "Einstein", new Date(1879, 2, 14), "godDoestNotPlayDice@relativity.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Albert_Einstein_1947.jpg/800px-Albert_Einstein_1947.jpg"),
-    new Contact("Stanley", "Milgram", new Date(1933, 7, 15), "submit@authority.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/7/77/Stanley_Milgram.jpg"),
-    new Contact("Charles", "Darwin", new Date(1809, 1, 12), "adaptOrDie@fitness.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/f/f1/Charles_Darwin_portrait.jpg"),
-    new Contact("Jeffrey", "Atkins", new Date(1976, 1, 29), "notAScientist.justBornA29thFebruary@lol.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Ja_Rule_in_2016.jpg/800px-Ja_Rule_in_2016.jpg")
-];
+const storedContacts = localStorage.getItem('contacts');
+let contacts = [];
+// S'il y a une liste de contacts enregistrée en localStorage, on l'assigne à contacts. Sinon, on les crée
+if (storedContacts) {
+    // Sans cette manip bizarre, mon navigateur ne veut pas considérer mes éléments comme des contacts
+    // (et en faisant des new Contact on se met à niveau avec l'id)
+    contacts = JSON.parse(storedContacts).map((contact) => new Contact(contact._firstname, contact._lastname, new Date(contact._birthday), contact._email, contact._phone, contact._imageUrl));
+}
+else {
+    contacts = [
+        new Contact("Albert", "Einstein", new Date(1879, 2, 14), "godDoestNotPlayDice@relativity.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Albert_Einstein_1947.jpg/800px-Albert_Einstein_1947.jpg"),
+        new Contact("Stanley", "Milgram", new Date(1933, 7, 15), "submit@authority.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/7/77/Stanley_Milgram.jpg"),
+        new Contact("Charles", "Darwin", new Date(1809, 1, 12), "adaptOrDie@fitness.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/f/f1/Charles_Darwin_portrait.jpg"),
+        new Contact("Jeffrey", "Atkins", new Date(1976, 1, 29), "notAScientist.justBornA29thFebruary@lol.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Ja_Rule_in_2016.jpg/800px-Ja_Rule_in_2016.jpg")
+    ];
+}
 // Ce contact anonyme sera affiché si tous les contacts sont supprimés
 const anonymousContact = new Contact("John", "Doe", new Date(1970, 0, 1), "ajouteUnContact@silteplait.com", "+33119788254", "./assets/unknown.jpg");
 let selectedContact = contacts[0];

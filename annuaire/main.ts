@@ -26,7 +26,7 @@ function renderContacts(): void {
     })
     displayContact(selectedContact);
     contactsElement.children[0].classList.remove('btn-outline-light');
-    contactsElement.children[0].classList.add('btn-light','text-dark');
+    contactsElement.children[0].classList.add('btn-light', 'text-dark');
 }
 
 function addButtonContact(contact: Contact) {
@@ -41,12 +41,12 @@ function addButtonContact(contact: Contact) {
         const id: number = Number(element.dataset.id);
         // Il faut renoircir le bouton du contact qui était jusqu'ici sélectionné
         const previouslySelectedButton = findButton(selectedContact.id) as HTMLButtonElement;
-        previouslySelectedButton.classList.remove('btn-light','text-dark');
+        previouslySelectedButton.classList.remove('btn-light', 'text-dark');
         previouslySelectedButton.classList.add('btn-outline-light');
         const newSelectedContact = contacts.find(seekedContact => seekedContact.id === id) as Contact;
         displayContact(newSelectedContact);
         // Et on blanchit le bouton vu qu'il devient le contact sélectionné
-        element.classList.add('btn-light','text-dark');
+        element.classList.add('btn-light', 'text-dark');
     });
     contactsElement.appendChild(button);
 }
@@ -75,6 +75,8 @@ function addContact(e: MouseEvent) {
 
     const newContact = new Contact(firstnameModal.value, lastnameModal.value, new Date(birthdayModal.value), emailModal.value, phoneModal.value, avatarURLModal.value);
     contacts.push(newContact);
+    // On enregistre notre tableau
+    localStorage.setItem('contacts', JSON.stringify(contacts));
     addButtonContact(newContact);
     displayContact(newContact);
 
@@ -85,36 +87,36 @@ function addContact(e: MouseEvent) {
     addContactButton.disabled = true;
 }
 
-function launchEditMode(e:MouseEvent){
+function launchEditMode(e: MouseEvent) {
     e.preventDefault();
     // En mode édition, tous les inputs perdent le readonly
     const inputs = document.querySelectorAll('.infos input') as NodeListOf<HTMLInputElement>;
-    inputs.forEach((input:HTMLInputElement) => {
+    inputs.forEach((input: HTMLInputElement) => {
         input.readOnly = false;
     });
     birthday.type = "date";
     // Il faut donner une string formaté spécifiquement au input[type="date"]...
-    const year:string = selectedContact.birthday.getFullYear().toString();
+    const year: string = selectedContact.birthday.getFullYear().toString();
     // On utilise padStart pour que 2 donne 02
-    const month:string = selectedContact.birthday.getMonth() >= 10 ? 
-                        (selectedContact.birthday.getMonth()+1).toString() : 
-                        (selectedContact.birthday.getMonth()+1).toString().padStart(2,'0');
-    const day:string = selectedContact.birthday.getDate() >= 10 ? 
-                        selectedContact.birthday.getDate().toString() :
-                        selectedContact.birthday.getDate().toString().padStart(2,'0');
+    const month: string = selectedContact.birthday.getMonth() >= 10 ?
+        (selectedContact.birthday.getMonth() + 1).toString() :
+        (selectedContact.birthday.getMonth() + 1).toString().padStart(2, '0');
+    const day: string = selectedContact.birthday.getDate() >= 10 ?
+        selectedContact.birthday.getDate().toString() :
+        selectedContact.birthday.getDate().toString().padStart(2, '0');
     birthday.value = `${year}-${month}-${day}`;
     // On change le bouton Editer en un bouton Valider (et on rechangera quand on sortira du mode édition)
     editButtonText.innerHTML = "Valider";
     // Et du coup, on change la fonction lancée au clic
     editContactButton.removeEventListener('click', launchEditMode);
-    editContactButton.addEventListener('click',editContact);
+    editContactButton.addEventListener('click', editContact);
     // On crée une nouvelle ligne dans le formulaire, contenant l'URL de notre image
-    const avatarDiv:HTMLDivElement = document.createElement('div');
+    const avatarDiv: HTMLDivElement = document.createElement('div');
     avatarDiv.id = "avatarEditDiv";
-    const label:HTMLLabelElement = document.createElement('label');
-    const input:HTMLInputElement = document.createElement('input');
-    label.classList.add("form-label","text-light","mt-3");
-    label.setAttribute("for","avatarEditURL")
+    const label: HTMLLabelElement = document.createElement('label');
+    const input: HTMLInputElement = document.createElement('input');
+    label.classList.add("form-label", "text-light", "mt-3");
+    label.setAttribute("for", "avatarEditURL")
     label.textContent = "URL de votre avatar :"
     input.classList.add("form-control");
     input.id = "avatarEditURL";
@@ -124,23 +126,23 @@ function launchEditMode(e:MouseEvent){
     avatarDiv.appendChild(label);
     avatarDiv.appendChild(input);
     const hr = document.querySelector(".infos hr") as HTMLHRElement;
-    
-    infos.insertBefore(avatarDiv,hr);
+
+    infos.insertBefore(avatarDiv, hr);
 }
 
-function editContact(e:MouseEvent){
+function editContact(e: MouseEvent) {
     e.preventDefault();
     // On va lister les champs laissés vides dans notre formulaire
     const inputs = document.querySelectorAll('.infos input') as NodeListOf<HTMLInputElement>;
-    let emptyInputs:HTMLInputElement[] = [];
-    inputs.forEach((input:HTMLInputElement) => {
-        if (input.value === ""){
+    let emptyInputs: HTMLInputElement[] = [];
+    inputs.forEach((input: HTMLInputElement) => {
+        if (input.value === "") {
             emptyInputs.push(input);
         }
     });
     // Si au moins un champ est vide, on ne modifie pas le contact et on met en évidence ces champs
-    if (emptyInputs.length > 0){
-        emptyInputs.forEach((input:HTMLInputElement) => {
+    if (emptyInputs.length > 0) {
+        emptyInputs.forEach((input: HTMLInputElement) => {
             input.classList.add("border-danger");
             input.placeholder += " requis";
         })
@@ -151,8 +153,10 @@ function editContact(e:MouseEvent){
         selectedContact.birthday = new Date(birthday.value);
         selectedContact.email = email.value;
         selectedContact.phone = phone.value;
+        // On enregistre notre modification
+        localStorage.setItem('contacts', JSON.stringify(contacts));
         // On supprime la mise en évidence
-        inputs.forEach((input:HTMLInputElement) => {
+        inputs.forEach((input: HTMLInputElement) => {
             input.classList.remove("border-danger");
             input.readOnly = true;
         });
@@ -160,8 +164,8 @@ function editContact(e:MouseEvent){
         const buttonToChange = findButton(selectedContact.id) as HTMLButtonElement;
         buttonToChange.innerHTML = selectedContact.getFullname();
         // Et on rechange les événements des boutons et on supprime la ligne de l'avatar URL
-        editContactButton.removeEventListener('click',editContact);
-        editContactButton.addEventListener('click',launchEditMode);
+        editContactButton.removeEventListener('click', editContact);
+        editContactButton.addEventListener('click', launchEditMode);
         const avatarDiv = document.querySelector('#avatarEditDiv') as HTMLDivElement;
         const parentAvatarDiv = avatarDiv.parentNode as HTMLElement;
         parentAvatarDiv.removeChild(avatarDiv);
@@ -169,26 +173,28 @@ function editContact(e:MouseEvent){
     }
 }
 
-function findButton(id:number) : HTMLButtonElement | undefined{
-    for (let i:number = 0; i < contactsElement.children.length; i++) {
+function findButton(id: number): HTMLButtonElement | undefined {
+    for (let i: number = 0; i < contactsElement.children.length; i++) {
         const contactElement = contactsElement.children[i] as HTMLButtonElement;
-            if (contactElement.dataset.id === id.toString()){
-                return contactElement;
-            }
+        if (contactElement.dataset.id === id.toString()) {
+            return contactElement;
+        }
     }
 }
 
-function removeContact(e:MouseEvent){
+function removeContact(e: MouseEvent) {
     e.preventDefault();
     // On supprime le contact du tableau
     const index = contacts.indexOf(selectedContact);
-    contacts.splice(index,1);
+    contacts.splice(index, 1);
+    // On enregistre notre modification
+    localStorage.setItem('contacts', JSON.stringify(contacts));
     // On va aussi supprimer le bouton correspondant (grâce au dataset)
     const removedButton = document.querySelector(`button[data-id='${selectedContact.id}'`) as HTMLButtonElement;
     const parent = removedButton.parentNode as HTMLElement;
     parent.removeChild(removedButton);
     // On affiche un autre contact
-    if (contacts.length > 0){
+    if (contacts.length > 0) {
         const displayedContact = (index >= 0 && index < contacts.length) ? contacts[index] : contacts[0];
         displayContact(displayedContact)
         // Sauf s'il n'y en a plus, là on affiche le contact anonyme par défaut
@@ -197,16 +203,31 @@ function removeContact(e:MouseEvent){
     }
 }
 
-// On crée notre tableau de contacts, contenant déjà des contacts par défaut
-const contacts: Contact[] = [
-    new Contact("Albert", "Einstein", new Date(1879, 2, 14), "godDoestNotPlayDice@relativity.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Albert_Einstein_1947.jpg/800px-Albert_Einstein_1947.jpg"),
-    new Contact("Stanley", "Milgram", new Date(1933, 7, 15), "submit@authority.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/7/77/Stanley_Milgram.jpg"),
-    new Contact("Charles", "Darwin", new Date(1809, 1, 12), "adaptOrDie@fitness.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/f/f1/Charles_Darwin_portrait.jpg"),
-    new Contact("Jeffrey", "Atkins", new Date(1976, 1, 29), "notAScientist.justBornA29thFebruary@lol.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Ja_Rule_in_2016.jpg/800px-Ja_Rule_in_2016.jpg")
-];
+const storedContacts: string | null = localStorage.getItem('contacts');
+let contacts: Contact[] = [];
+// S'il y a une liste de contacts enregistrée en localStorage, on l'assigne à contacts. Sinon, on les crée
+if (storedContacts) {
+    // Sans cette manip bizarre, mon navigateur ne veut pas considérer mes éléments comme des contacts
+    // (et en faisant des new Contact on se met à niveau avec l'id)
+    contacts = JSON.parse(storedContacts).map((contact:any) => new Contact(
+        contact._firstname,
+        contact._lastname,
+        new Date(contact._birthday),
+        contact._email,
+        contact._phone,
+        contact._imageUrl
+    ));
+} else {
+    contacts = [
+        new Contact("Albert", "Einstein", new Date(1879, 2, 14), "godDoestNotPlayDice@relativity.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Albert_Einstein_1947.jpg/800px-Albert_Einstein_1947.jpg"),
+        new Contact("Stanley", "Milgram", new Date(1933, 7, 15), "submit@authority.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/7/77/Stanley_Milgram.jpg"),
+        new Contact("Charles", "Darwin", new Date(1809, 1, 12), "adaptOrDie@fitness.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/f/f1/Charles_Darwin_portrait.jpg"),
+        new Contact("Jeffrey", "Atkins", new Date(1976, 1, 29), "notAScientist.justBornA29thFebruary@lol.com", "+33119788254", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Ja_Rule_in_2016.jpg/800px-Ja_Rule_in_2016.jpg")
+    ];
+}
 // Ce contact anonyme sera affiché si tous les contacts sont supprimés
-const anonymousContact = new Contact("John","Doe",new Date(1970,0,1),"ajouteUnContact@silteplait.com","+33119788254","./assets/unknown.jpg");
-let selectedContact:Contact = contacts[0];
+const anonymousContact = new Contact("John", "Doe", new Date(1970, 0, 1), "ajouteUnContact@silteplait.com", "+33119788254", "./assets/unknown.jpg");
+let selectedContact: Contact = contacts[0];
 // On sélectionne tous les éléments qu'on va manipuler
 const contactsElement = document.querySelector(".contacts") as HTMLDivElement;
 const firstname = document.querySelector('#firstname') as HTMLInputElement;
@@ -224,8 +245,8 @@ const editButtonText = document.querySelector("#editButtonText") as HTMLSpanElem
 
 addContactButton.addEventListener('click', addContact);
 checkInputsBeforeValidate();
-editContactButton.addEventListener('click',launchEditMode);
-removeContactButton.addEventListener('click',removeContact);
+editContactButton.addEventListener('click', launchEditMode);
+removeContactButton.addEventListener('click', removeContact);
 
 window.onload = renderContacts;
 
