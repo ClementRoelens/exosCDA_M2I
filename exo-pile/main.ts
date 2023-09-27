@@ -9,7 +9,7 @@ class Pile<T> {
         return this._array;
     }
 
-    Acceder(index:number):T{
+    Acceder(index:number):T | undefined{
         return this._array[index];
     }
 
@@ -20,6 +20,18 @@ class Pile<T> {
     Depiler(){
         this._array.pop();
     }
+    
+    DepilerAlIndex(index:number){
+        this._array.splice(index,1)[0];
+    }
+
+    DepilerElement(element:T){
+        const index = this._array.indexOf(element);
+        if (index !== -1){
+            this.DepilerAlIndex(index);
+        }
+    }
+    
 
     Compter() : number {
         return this._array.length;
@@ -42,6 +54,12 @@ console.log("On le voit maintenant dans la pile");
 console.table(nombres.array);
 console.log("Et on l'enlève");
 nombres.Depiler();
+console.table(nombres.array);
+console.log("On enlève spécifiquement -4658787482783")
+nombres.DepilerElement(-4658787482783);
+console.table(nombres.array);
+console.log("Et maintenant on dépile spécifiquement le 2ème nombre");
+nombres.DepilerAlIndex(1);
 console.table(nombres.array);
 
 const mots:Pile<string> = new Pile();
