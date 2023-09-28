@@ -39,6 +39,8 @@ function renderRecipeListElement(renderedRecipes) {
         const recipeButton = document.createElement("button");
         recipeButton.classList.add("btn", "btn-outline-light", "p-3", "mb-3", "col-12");
         recipeButton.setAttribute("data-id", recipe.id);
+        recipeButton.setAttribute("data-bs-toggle", "modal");
+        recipeButton.setAttribute("data-bs-target", "#recipeModal");
         //      <h5>
         const h5 = document.createElement("h5");
         h5.classList.add("text-center");
@@ -75,6 +77,30 @@ function renderRecipeListElement(renderedRecipes) {
         recipeButton.appendChild(times);
         liElement.append(recipeButton);
         recipesListElement.appendChild(liElement);
+        recipeButton.addEventListener("click", displayRecipe);
+    });
+}
+function displayRecipe(e) {
+    const clickedRecipeElement = e.currentTarget;
+    const targetRecipe = recipes.find((recipe) => recipe.id === clickedRecipeElement.dataset.id);
+    prepTimeModalElement.innerHTML = targetRecipe.prepTime;
+    cookTimeModalElement.innerHTML = targetRecipe.cookTime;
+    servingsModalElement.innerHTML = targetRecipe.servings.toString() + " servings";
+    targetRecipe.ingredients.forEach((ingredient) => {
+        const li = document.createElement("li");
+        const ingredientName = document.createElement("span");
+        ingredientName.innerHTML = ingredient.name;
+        const ingredientAmount = document.createElement("span");
+        ingredientAmount.innerHTML = ` (${ingredient.amount})`;
+        li.appendChild(ingredientName);
+        li.appendChild(ingredientAmount);
+        ingredientsModalElement.appendChild(li);
+    });
+    nameModalElement.innerHTML = targetRecipe.name;
+    targetRecipe.instructions.forEach((instruction) => {
+        const li = document.createElement("li");
+        li.innerHTML = instruction;
+        instructionsModalElement.appendChild(li);
     });
 }
 function settingMinMaxAndDefaultRanges() {
@@ -122,6 +148,13 @@ const spanPreparationTime = document.querySelector("#preparationTimeValue");
 const cookingTimeRangeElement = document.querySelector("#cookingRange");
 const spanCookingTime = document.querySelector("#cookingTimeValue");
 const nameFilterElement = document.querySelector("#nameFilter");
+const prepTimeModalElement = document.querySelector("#prepTimeModal");
+const cookTimeModalElement = document.querySelector("#cookTimeModal");
+const servingsModalElement = document.querySelector("#servingsModal");
+const ingredientsModalElement = document.querySelector("#ingredientsModal");
+const nameModalElement = document.querySelector("#nameModal");
+const instructionsModalElement = document.querySelector("#instructionsModal");
+const resetFiltersButton = document.querySelector("#resetFilters");
 // Récupération et initialisation des données
 const data = recipesData;
 const recipes = fetchRecipes(data);
@@ -171,5 +204,22 @@ select.addEventListener("change", () => {
     else {
         fileteredByIngredients = [...recipes];
     }
+    filterRecipesOverall();
     renderRecipeListElement(filteredRecipes);
+});
+resetFiltersButton.addEventListener("click", () => {
+    fileteredByPrepTime = [...recipes];
+    fileteredByCookTime = [...recipes];
+    fileteredByName = [...recipes];
+    fileteredByIngredients = [...recipes];
+    filteredRecipes = [...recipes];
+    renderRecipeListElement(filteredRecipes);
+    preparationTimeRangeElement.value = preparationTimeRangeElement.max;
+    updateTimeOnRangeChange(preparationTimeRangeElement, spanPreparationTime);
+    cookingTimeRangeElement.value = cookingTimeRangeElement.max;
+    updateTimeOnRangeChange(cookingTimeRangeElement, spanCookingTime);
+    nameFilterElement.value = "";
+    Array.from(select.options).forEach((option) => {
+        option.selected = false;
+    });
 });

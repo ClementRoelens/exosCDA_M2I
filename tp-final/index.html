@@ -34,6 +34,8 @@
                         <option>All</option>
                     </select>
                 </div>
+                <hr>
+                <button class="btn btn-outline-light col-12" id="resetFilters">RESET</button>
             </div>
         </div>
         <div class="col-8">
@@ -42,6 +44,31 @@
                 <hr>
                 <ul id="recipesList" class="list-group">
                 </ul>
+            </div>
+        </div>
+        <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipeModal" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body row">
+                        <div class="col-4">
+                            <p class="fs-5">Preparation Time</p>
+                            <div id="prepTimeModal" class="mb-3"></div>
+                            <p class="fs-5">Cooking Time</p>
+                            <div id="cookTimeModal" class="mb-3"></div>
+                            <p class="fs-5">Servings</p>
+                            <div id="servingsModal" class="mb-3"></div>
+                            <p class="fs-5">Ingredients</p>
+                            <ul id="ingredientsModal">
+                            </ul>
+                        </div>
+                        <div class="col-8">
+                            <h5 id="nameModal" class="fs-4"></h5>
+                            <hr>
+                            <ul id="instructionsModal">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>

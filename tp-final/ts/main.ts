@@ -44,6 +44,8 @@ function renderRecipeListElement(renderedRecipes: Recipe[]): void {
         const recipeButton: HTMLButtonElement = document.createElement("button");
         recipeButton.classList.add("btn", "btn-outline-light", "p-3", "mb-3", "col-12");
         recipeButton.setAttribute("data-id", recipe.id);
+        recipeButton.setAttribute("data-bs-toggle", "modal");
+        recipeButton.setAttribute("data-bs-target", "#recipeModal");
         //      <h5>
         const h5: HTMLHeadingElement = document.createElement("h5");
         h5.classList.add("text-center");
@@ -82,6 +84,32 @@ function renderRecipeListElement(renderedRecipes: Recipe[]): void {
 
         liElement.append(recipeButton);
         recipesListElement.appendChild(liElement);
+
+        recipeButton.addEventListener("click", displayRecipe);
+    });
+}
+
+function displayRecipe(e: MouseEvent) {
+    const clickedRecipeElement = e.currentTarget as HTMLButtonElement;
+    const targetRecipe = recipes.find((recipe: Recipe) => recipe.id === clickedRecipeElement.dataset.id) as Recipe;
+    prepTimeModalElement.innerHTML = targetRecipe.prepTime;
+    cookTimeModalElement.innerHTML = targetRecipe.cookTime;
+    servingsModalElement.innerHTML = targetRecipe.servings.toString() + " servings";
+    targetRecipe.ingredients.forEach((ingredient: { name: string, amount: string }) => {
+        const li: HTMLLIElement = document.createElement("li");
+        const ingredientName: HTMLSpanElement = document.createElement("span");
+        ingredientName.innerHTML = ingredient.name;
+        const ingredientAmount: HTMLSpanElement = document.createElement("span");
+        ingredientAmount.innerHTML = ` (${ingredient.amount})`;
+        li.appendChild(ingredientName);
+        li.appendChild(ingredientAmount);
+        ingredientsModalElement.appendChild(li);
+    });
+    nameModalElement.innerHTML = targetRecipe.name;
+    targetRecipe.instructions.forEach((instruction: string) => {
+        const li: HTMLLIElement = document.createElement("li");
+        li.innerHTML = instruction;
+        instructionsModalElement.appendChild(li);
     });
 }
 
@@ -135,6 +163,13 @@ const spanPreparationTime = document.querySelector("#preparationTimeValue") as H
 const cookingTimeRangeElement = document.querySelector("#cookingRange") as HTMLInputElement;
 const spanCookingTime = document.querySelector("#cookingTimeValue") as HTMLSpanElement;
 const nameFilterElement = document.querySelector("#nameFilter") as HTMLInputElement;
+const prepTimeModalElement = document.querySelector("#prepTimeModal") as HTMLDivElement;
+const cookTimeModalElement = document.querySelector("#cookTimeModal") as HTMLDivElement;
+const servingsModalElement = document.querySelector("#servingsModal") as HTMLDivElement;
+const ingredientsModalElement = document.querySelector("#ingredientsModal") as HTMLDivElement;
+const nameModalElement = document.querySelector("#nameModal") as HTMLDivElement;
+const instructionsModalElement = document.querySelector("#instructionsModal") as HTMLDivElement;
+const resetFiltersButton = document.querySelector("#resetFilters") as HTMLButtonElement;
 
 // Récupération et initialisation des données
 const data: any = recipesData;
@@ -188,9 +223,26 @@ select.addEventListener("change", () => {
     } else {
         fileteredByIngredients = [...recipes];
     }
+    filterRecipesOverall();
     renderRecipeListElement(filteredRecipes);
 });
 
+resetFiltersButton.addEventListener("click", () => {
+    fileteredByPrepTime = [...recipes];
+    fileteredByCookTime = [...recipes];
+    fileteredByName = [...recipes];
+    fileteredByIngredients = [...recipes];
+    filteredRecipes = [...recipes];
+    renderRecipeListElement(filteredRecipes);
+    preparationTimeRangeElement.value = preparationTimeRangeElement.max;
+    updateTimeOnRangeChange(preparationTimeRangeElement,spanPreparationTime);
+    cookingTimeRangeElement.value = cookingTimeRangeElement.max;
+    updateTimeOnRangeChange(cookingTimeRangeElement,spanCookingTime);
+    nameFilterElement.value = "";
+    Array.from(select.options).forEach((option: HTMLOptionElement) => {
+        option.selected = false;
+    });
+});
 
 
 
