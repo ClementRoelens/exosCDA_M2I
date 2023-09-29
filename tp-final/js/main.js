@@ -29,6 +29,7 @@ function createIngredientOptions(ingredientsList) {
         select.appendChild(option);
     });
 }
+// La liste des recettes sera regénérée à chaque application de filtres, en lui passant la liste à afficher
 function renderRecipeListElement(renderedRecipes) {
     recipesListElement.innerHTML = "";
     renderedRecipes.forEach((recipe) => {
@@ -80,6 +81,7 @@ function renderRecipeListElement(renderedRecipes) {
         recipeButton.addEventListener("click", displayRecipe);
     });
 }
+// La structure de la modal est déjà prête dans le HTML, on la personnalise au clic et on remplit les listes
 function displayRecipe(e) {
     const clickedRecipeElement = e.currentTarget;
     const targetRecipe = recipes.find((recipe) => recipe.id === clickedRecipeElement.dataset.id);
@@ -103,12 +105,15 @@ function displayRecipe(e) {
         instructionsModalElement.appendChild(li);
     });
 }
+// Plutôt que de laisser des range avec des valeurs par défaut, on choisit les bornes
+// Borne inférieure = temps minimum parmi les recettes récupérées, et inversement
 function settingMinMaxAndDefaultRanges() {
     let prepMin = Number.MAX_VALUE;
     let prepMax = 0;
     let cookingMin = Number.MAX_VALUE;
     let cookingMax = 0;
     recipes.forEach((recipe) => {
+        // Conversion de "xx mins" en xx:number
         const recipePrepTime = +recipe.prepTime.split(' ')[0];
         prepMin = (recipePrepTime < prepMin) ? recipePrepTime : prepMin;
         prepMax = (recipePrepTime > prepMax) ? recipePrepTime : prepMax;
@@ -128,10 +133,12 @@ function settingMinMaxAndDefaultRanges() {
 function updateTimeOnRangeChange(rangeElement, targetToUpdate) {
     targetToUpdate.innerHTML = rangeElement.value;
 }
+// Tous les filtres passeront par cette fonction qui filtrera selon les conditions données, et retournera la liste filtrée
 function filterRecipesOnOneFilter(predicate) {
     const filteredResults = recipes.filter(predicate);
     return filteredResults;
 }
+// Retourne les éléments présents dans les différents filtres appliqués
 function filterRecipesOverall() {
     filteredRecipes = recipes.filter(recipe => {
         return (fileteredByPrepTime.includes(recipe)
@@ -158,7 +165,9 @@ const resetFiltersButton = document.querySelector("#resetFilters");
 // Récupération et initialisation des données
 const data = recipesData;
 const recipes = fetchRecipes(data);
+// Les données affichées le seront toujours par rapport à ce tableau
 let filteredRecipes = [...recipes];
+// Et il y a un tableau par filtre possible
 let fileteredByPrepTime = [...recipes];
 let fileteredByCookTime = [...recipes];
 let fileteredByName = [...recipes];
