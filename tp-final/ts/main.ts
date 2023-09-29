@@ -46,7 +46,7 @@ function renderRecipeListElement(renderedRecipes: Recipe[]): void {
         recipeButton.classList.add("btn", "btn-outline-light", "p-3", "mb-3", "col-12");
         recipeButton.setAttribute("data-id", recipe.id);
         recipeButton.setAttribute("data-bs-toggle", "modal");
-        recipeButton.setAttribute("data-bs-target", "#recipeModal");
+        recipeButton.setAttribute("data-bs-target", "#displayRecipeModal");
         //      <h5>
         const h5: HTMLHeadingElement = document.createElement("h5");
         h5.classList.add("text-center");
@@ -93,10 +93,12 @@ function renderRecipeListElement(renderedRecipes: Recipe[]): void {
 // La structure de la modal est déjà prête dans le HTML, on la personnalise au clic et on remplit les listes
 function displayRecipe(e: MouseEvent) {
     const clickedRecipeElement = e.currentTarget as HTMLButtonElement;
-    const targetRecipe = recipes.find((recipe: Recipe) => recipe.id === clickedRecipeElement.dataset.id) as Recipe;
+    const id = clickedRecipeElement.dataset.id as string;
+    const targetRecipe = recipes.find((recipe: Recipe) => recipe.id === id) as Recipe;
     prepTimeModalElement.innerHTML = targetRecipe.prepTime;
     cookTimeModalElement.innerHTML = targetRecipe.cookTime;
     servingsModalElement.innerHTML = targetRecipe.servings.toString() + " servings";
+    ingredientsModalElement.innerHTML = "";
     targetRecipe.ingredients.forEach((ingredient: { name: string, amount: string }) => {
         const li: HTMLLIElement = document.createElement("li");
         const ingredientName: HTMLSpanElement = document.createElement("span");
@@ -108,11 +110,13 @@ function displayRecipe(e: MouseEvent) {
         ingredientsModalElement.appendChild(li);
     });
     nameModalElement.innerHTML = targetRecipe.name;
+    instructionsModalElement.innerHTML = "";
     targetRecipe.instructions.forEach((instruction: string) => {
         const li: HTMLLIElement = document.createElement("li");
         li.innerHTML = instruction;
         instructionsModalElement.appendChild(li);
     });
+    removeButton.setAttribute("data-id", id);
 }
 
 // Plutôt que de laisser des range avec des valeurs par défaut, on choisit les bornes
@@ -155,11 +159,111 @@ function filterRecipesOnOneFilter(predicate: (item: Recipe) => boolean): Recipe[
 function filterRecipesOverall() {
     filteredRecipes = recipes.filter(recipe => {
         return (
-            fileteredByPrepTime.includes(recipe)
-            && fileteredByCookTime.includes(recipe)
-            && fileteredByName.includes(recipe)
-            && fileteredByIngredients.includes(recipe));
+            filteredByPrepTime.includes(recipe)
+            && filteredByCookTime.includes(recipe)
+            && filteredByName.includes(recipe)
+            && filteredByIngredients.includes(recipe));
     });
+}
+
+function removeRecipe(e: MouseEvent) {
+    const button = e.target as HTMLButtonElement;
+    const id = button.dataset.id as string;
+    // Il faut le supprimer de chaque liste filtrée, à moins de reset les filtres à la suppression
+    recipesLists.forEach((recipeList: Recipe[]) => {
+        const index = recipeList.findIndex((recipe:Recipe) => recipe.id === id);
+        recipeList.splice(index,1);
+    });
+    renderRecipeListElement(filteredRecipes);
+}
+
+function addIngredient(e:MouseEvent){
+    e.preventDefault();
+    const li:HTMLLIElement = document.createElement("li");
+    li.classList.add("new-ingredient","list-group-item","row","border-0");
+    const div:HTMLDivElement = document.createElement("div");
+    div.classList.add("input-group");
+    const ingredientInput:HTMLInputElement = document.createElement("input");
+    ingredientInput.classList.add("form-control","w-50");
+    ingredientInput.placeholder = "Name"
+    const amountInput:HTMLInputElement = document.createElement("input");
+    amountInput.classList.add("form-control","w-25");
+    amountInput.placeholder = "Amount";
+    amountInput.type = "number";
+    const unitInput:HTMLInputElement = document.createElement("input");
+    unitInput.classList.add("form-control","w-25");
+    unitInput.placeholder = "Unit";
+
+    div.appendChild(ingredientInput);
+    div.appendChild(amountInput);
+    div.appendChild(unitInput);
+    li.appendChild(div);
+
+    ingredientsListElement.appendChild(li);
+}
+
+function addInstruction(e:MouseEvent){
+    e.preventDefault();
+    const li:HTMLLIElement = document.createElement("li");
+    li.classList.add("list-group-item","border-0");
+    const instructionInput:HTMLInputElement = document.createElement("input");
+    instructionInput.classList.add("form-control","new-instruction");
+    instructionInput.placeholder = "Instruction"
+
+    li.appendChild(instructionInput);
+    instructionsListElement.appendChild(li);
+}
+
+function addRecipe(e:MouseEvent) {
+    e.preventDefault()
+    // Je crée les éléments ici car on doit de toutes façons créer au clic les listes d'instructions et d'ingrédients
+    const newName = document.querySelector("#nameAddModal") as HTMLInputElement;
+    const newPrepTime = document.querySelector("#prepTimeAddModal") as HTMLInputElement;
+    const newCookTime = document.querySelector("#cookTimeAddModal") as HTMLInputElement;
+    const newServings = document.querySelector("#servingsAddModal") as HTMLInputElement;
+    const newIngredientsLiElements = document.querySelectorAll(".new-ingredient") as NodeListOf<HTMLLIElement>;
+    const newIngredients:{name:string,amount:string}[] = [];
+    // On doit construire chaque nouvel ingrédient à partir de chaque LI
+    Array.from(newIngredientsLiElements).forEach((newIngredientElement:HTMLLIElement)=>{
+        // Les 3 données sont dans le seul enfant de LI
+        const inputs = newIngredientElement.children[0].children as HTMLCollection;
+        let ingredientsInputs:HTMLInputElement[] = [];
+        Array.from(inputs).forEach((child:Element) => {
+            const input = child as HTMLInputElement;
+            if (input.value !== ""){
+                ingredientsInputs.push(input);
+            }
+        });
+        let newIngredient:{name:string,amount:string} = {
+            name : ingredientsInputs[0].value,
+            amount : `${ingredientsInputs[1].value} ${ingredientsInputs[2].value}`
+        };
+        newIngredients.push(newIngredient);
+    });
+    // Même méthode pour les instructions
+    const newInstructionsLiElements = document.querySelectorAll(".new-instruction") as NodeListOf<HTMLInputElement>;
+    const newInstructions:string[] = [];
+    Array.from(newInstructionsLiElements).forEach((input:HTMLInputElement)=>{
+        if (input.value !== ""){
+            newInstructions.push(input.value);
+        }
+    });
+    const newRecipe:Recipe = {
+        id:crypto.randomUUID(),
+        name:newName.value,
+        servings: +newServings.value,
+        prepTime:newPrepTime.value + " mins",
+        cookTime:newCookTime.value + " mins",
+        ingredients:newIngredients,
+        instructions:newInstructions
+    };
+    // Comme pour la suppression, on ajoute la recette à chaque liste
+    recipesLists.forEach((recipeList:Recipe[])=>{
+        recipeList.push(newRecipe);
+    });
+    // On met à jours les mins et max des ranges et on rerend la liste des recettes
+    settingMinMaxAndDefaultRanges();
+    renderRecipeListElement(filteredRecipes);
 }
 
 // Récupération des éléments HTML
@@ -173,10 +277,16 @@ const nameFilterElement = document.querySelector("#nameFilter") as HTMLInputElem
 const prepTimeModalElement = document.querySelector("#prepTimeModal") as HTMLDivElement;
 const cookTimeModalElement = document.querySelector("#cookTimeModal") as HTMLDivElement;
 const servingsModalElement = document.querySelector("#servingsModal") as HTMLDivElement;
-const ingredientsModalElement = document.querySelector("#ingredientsModal") as HTMLDivElement;
+const ingredientsModalElement = document.querySelector("#ingredientsModal") as HTMLUListElement;
 const nameModalElement = document.querySelector("#nameModal") as HTMLDivElement;
-const instructionsModalElement = document.querySelector("#instructionsModal") as HTMLDivElement;
+const instructionsModalElement = document.querySelector("#instructionsModal") as HTMLUListElement;
 const resetFiltersButton = document.querySelector("#resetFilters") as HTMLButtonElement;
+const removeButton = document.querySelector("#removeRecipe") as HTMLButtonElement;
+const ingredientsListElement = document.querySelector("#ingredientsAddModal") as HTMLUListElement;
+const addIngredientButton = document.querySelector("#addIngredientButton") as HTMLButtonElement;
+const instructionsListElement = document.querySelector("#instructionsAddModal") as HTMLUListElement;
+const addInstructionButton = document.querySelector("#addInstructionButton") as HTMLButtonElement;
+const addRecipeButton = document.querySelector("#addRecipeButton") as HTMLButtonElement;
 
 // Récupération et initialisation des données
 const data: any = recipesData;
@@ -184,10 +294,12 @@ const recipes: Recipe[] = fetchRecipes(data);
 // Les données affichées le seront toujours par rapport à ce tableau
 let filteredRecipes: Recipe[] = [...recipes];
 // Et il y a un tableau par filtre possible
-let fileteredByPrepTime: Recipe[] = [...recipes];
-let fileteredByCookTime: Recipe[] = [...recipes];
-let fileteredByName: Recipe[] = [...recipes];
-let fileteredByIngredients: Recipe[] = [...recipes];
+let filteredByPrepTime: Recipe[] = [...recipes];
+let filteredByCookTime: Recipe[] = [...recipes];
+let filteredByName: Recipe[] = [...recipes];
+let filteredByIngredients: Recipe[] = [...recipes];
+// Tableau des différents tableaux, utile pour la suppression et l'ajout
+const recipesLists: Recipe[][] = [recipes, filteredRecipes, filteredByPrepTime, filteredByCookTime, filteredByName, filteredByIngredients];
 const ingredientsList: string[] = createIngredientsList(recipes);
 createIngredientOptions(ingredientsList);
 renderRecipeListElement(recipes);
@@ -196,7 +308,7 @@ settingMinMaxAndDefaultRanges();
 // Mise en place des événements
 preparationTimeRangeElement.addEventListener("input", () => {
     updateTimeOnRangeChange(preparationTimeRangeElement, spanPreparationTime);
-    fileteredByPrepTime = filterRecipesOnOneFilter((recipe: Recipe) => {
+    filteredByPrepTime = filterRecipesOnOneFilter((recipe: Recipe) => {
         const selectedValue = parseInt(preparationTimeRangeElement.value);
         const recipeValue = parseInt(recipe.prepTime.split(' ')[0]);
         return selectedValue >= recipeValue;
@@ -207,7 +319,7 @@ preparationTimeRangeElement.addEventListener("input", () => {
 
 cookingTimeRangeElement.addEventListener("input", () => {
     updateTimeOnRangeChange(cookingTimeRangeElement, spanCookingTime);
-    fileteredByCookTime = filterRecipesOnOneFilter((recipe: Recipe) => {
+    filteredByCookTime = filterRecipesOnOneFilter((recipe: Recipe) => {
         const selectedValue = parseInt(cookingTimeRangeElement.value);
         const recipeValue = parseInt(recipe.cookTime.split(' ')[0]);
         return selectedValue >= recipeValue;
@@ -217,7 +329,7 @@ cookingTimeRangeElement.addEventListener("input", () => {
 });
 
 nameFilterElement.addEventListener("input", () => {
-    fileteredByName = filterRecipesOnOneFilter((recipe: Recipe) => recipe.name.toLowerCase().includes(nameFilterElement.value.toLowerCase()));
+    filteredByName = filterRecipesOnOneFilter((recipe: Recipe) => recipe.name.toLowerCase().includes(nameFilterElement.value.toLowerCase()));
     filterRecipesOverall();
     renderRecipeListElement(filteredRecipes);
 });
@@ -225,36 +337,37 @@ nameFilterElement.addEventListener("input", () => {
 select.addEventListener("change", () => {
     const optionNames: string[] = Array.from(select.selectedOptions).map(option => option.innerHTML);
     if (optionNames[0].toLowerCase() !== "all") {
-        fileteredByIngredients = filterRecipesOnOneFilter((recipe: Recipe) => {
+        filteredByIngredients = filterRecipesOnOneFilter((recipe: Recipe) => {
             const ingredientsName: string[] = recipe.ingredients.map(ingredient => ingredient.name);
             return optionNames.every(optionName => ingredientsName.includes(optionName.toLocaleLowerCase()));
         });
     } else {
-        fileteredByIngredients = [...recipes];
+        filteredByIngredients = [...recipes];
     }
     filterRecipesOverall();
     renderRecipeListElement(filteredRecipes);
 });
 
 resetFiltersButton.addEventListener("click", () => {
-    fileteredByPrepTime = [...recipes];
-    fileteredByCookTime = [...recipes];
-    fileteredByName = [...recipes];
-    fileteredByIngredients = [...recipes];
+    filteredByPrepTime = [...recipes];
+    filteredByCookTime = [...recipes];
+    filteredByName = [...recipes];
+    filteredByIngredients = [...recipes];
     filteredRecipes = [...recipes];
     renderRecipeListElement(filteredRecipes);
     preparationTimeRangeElement.value = preparationTimeRangeElement.max;
-    updateTimeOnRangeChange(preparationTimeRangeElement,spanPreparationTime);
+    updateTimeOnRangeChange(preparationTimeRangeElement, spanPreparationTime);
     cookingTimeRangeElement.value = cookingTimeRangeElement.max;
-    updateTimeOnRangeChange(cookingTimeRangeElement,spanCookingTime);
+    updateTimeOnRangeChange(cookingTimeRangeElement, spanCookingTime);
     nameFilterElement.value = "";
     Array.from(select.options).forEach((option: HTMLOptionElement) => {
         option.selected = false;
     });
 });
 
-
-
-
+removeButton.addEventListener("click", removeRecipe);
+addIngredientButton.addEventListener("click",addIngredient);
+addInstructionButton.addEventListener("click",addInstruction);
+addRecipeButton.addEventListener("click",addRecipe);
 
 

@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recettes de cuisine</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
     <script type="module" src="./js/main.js" defer></script>
 </head>
+
 <body>
     <main class="container row g-3 mt-2 mx-auto">
         <div class="col-4">
@@ -17,11 +22,13 @@
                 <h2>Filters</h2>
                 <hr>
                 <div class="preparation-time">
-                    <label for="preparationRange" class="form-label">Preparation time : <span id="preparationTimeValue"></span> min</label>
+                    <label for="preparationRange" class="form-label">Preparation time : <span
+                            id="preparationTimeValue"></span> min</label>
                     <input type="range" class="form-range" id="preparationRange">
                 </div>
                 <div class="cooking-time">
-                    <label for="cookingRange" class="form-label">Cooking time : <span id="cookingTimeValue"></span> min</label>
+                    <label for="cookingRange" class="form-label">Cooking time : <span id="cookingTimeValue"></span>
+                        min</label>
                     <input type="range" class="form-range" id="cookingRange">
                 </div>
                 <div class="name-filter">
@@ -40,37 +47,110 @@
         </div>
         <div class="col-8">
             <div class="recipes bg-dark text-light p-3 rounded">
-                <h3>Recipes</h3>
+                <div class="d-flex justify-content-between">
+                    <h3>Recipes</h3>
+                    <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#addRecipeModal">ADD
+                        RECIPE</button>
+                </div>
                 <hr>
                 <ul id="recipesList" class="list-group">
                 </ul>
             </div>
         </div>
-        <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipeModal" aria-hidden="true">
+        <div class="modal fade" id="displayRecipeModal" tabindex="-1" 
+            aria-labelledby="displayRecipeModal" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-body row">
-                        <div class="col-4">
-                            <p class="fs-5">Preparation Time</p>
-                            <div id="prepTimeModal" class="mb-3"></div>
-                            <p class="fs-5">Cooking Time</p>
-                            <div id="cookTimeModal" class="mb-3"></div>
-                            <p class="fs-5">Servings</p>
-                            <div id="servingsModal" class="mb-3"></div>
-                            <p class="fs-5">Ingredients</p>
-                            <ul id="ingredientsModal">
-                            </ul>
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="fs-5">Preparation Time</p>
+                                <div id="prepTimeModal" class="mb-3"></div>
+                                <p class="fs-5">Cooking Time</p>
+                                <div id="cookTimeModal" class="mb-3"></div>
+                                <p class="fs-5">Servings</p>
+                                <div id="servingsModal" class="mb-3"></div>
+                                <p class="fs-5">Ingredients</p>
+                                <ul id="ingredientsModal">
+                                </ul>
+                            </div>
+                            <div class="col-8">
+                                <h5 id="nameModal" class="fs-4"></h5>
+                                <hr>
+                                <ul id="instructionsModal">
+                                </ul>
+                            </div>
                         </div>
-                        <div class="col-8">
-                            <h5 id="nameModal" class="fs-4"></h5>
-                            <hr>
-                            <ul id="instructionsModal">
-                            </ul>
-                        </div>
+                        <button class="btn btn-outline-dark col-11 mx-auto" id="removeRecipe"
+                            data-bs-dismiss="modal">SUPPRIMER</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="addRecipeModal" tabindex="-1" aria-labelledby="addRecipeModal" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-body row">
+                        <form class="row">
+                            <div class="col-4">
+                                <div class="preparation-time-form-group">
+                                    <label for="prepTimeAddModal" class="form-label">Preparation time</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="prepTimeAddModal"
+                                            placeholder="Preparation time">
+                                        <span class="input-group-text">mins</span>
+                                    </div>
+                                </div>
+                                <div class="cook-time-form-group">
+                                    <label for="cookTimeAddModal" class="form-label mt-2">Cooking time</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="cookTimeAddModal"
+                                            placeholder="Cooking time">
+                                        <span class="input-group-text">mins</span>
+                                    </div>
+                                </div>
+                                <div class="servings-form-group">
+                                    <label for="servingsAddModal" class="form-label mt-2">Servings</label>
+                                    <input type="number" id="servingsAddModal" class="form-control">
+                                </div>
+                                <div class="ingredients-form-group">
+                                    <label for="ingredients" class="form-label mt-2">Ingredients</label>
+                                    <ul id="ingredientsAddModal" class="list-group">
+                                        <li class="new-ingredient list-group-item row border-0">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control w-50" placeholder="Name">
+                                                <input type="number" class="form-control w-25" placeholder="Amount">
+                                                <input type="text" class="form-control w-25" placeholder="Unit">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <button class="btn btn-outline-dark col-10 d-block mx-auto" id="addIngredientButton">ADD
+                                        INGREDIENT</button>
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="name-form-group">
+                                    <label for="nameAddModal" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="nameAddModal" placeholder="Name">
+                                </div>
+                                <hr>
+                                <ul id="instructionsAddModal" class="list-group">
+                                    <li class="list-group-item border-0">
+                                        <input type="text" class="form-control new-instruction"
+                                            placeholder="Instruction">
+                                    </li>
+                                </ul>
+                                <button class="btn btn-outline-dark col-10 d-block mx-auto" id="addInstructionButton">ADD
+                                    INSTRUCTION</button>
+                            </div>
+                            <button class="btn btn-outline-dark col-11 mx-auto mt-3" id="addRecipeButton"
+                                data-bs-dismiss="modal">CONFIRM</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 </body>
+
 </html>
