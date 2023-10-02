@@ -1,0 +1,28 @@
+.icon {
+    width: 20px;
+}
+
+.container {
+    width: 200px;
+    border-width:1px;
+    border-style: solid;
+}
+
+.danger {
+    color: #ff0000;
+    background-color: rgba(204, 0, 0, 0.5);
+    border-color: #990000;
+}
+
+.info {
+    color: #0000ff;
+    background-color: rgba(0, 0, 204, 0.5);
+    border-color: #000099;
+}
+
+
+.success {
+    color: #00cc00;
+    background-color: rgba(0, 153, 0, 0.5);
+    border-color: #006600;
+}
