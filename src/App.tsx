@@ -1,25 +1,65 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Person } from './Person.interface';
+import TableComponent from './components/TableComponent';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
+  const personnes:Person[] = [
+    {
+      firstname:"Clément",
+      lastname:"Roelens",
+      id:0
+    },
+    {
+      firstname:"Nassim",
+      lastname:"Sakhri",
+      id:1
+    },
+    {
+      firstname:"Olivia",
+      lastname:"Pigani",
+      id:2
+    },
+    {
+      firstname:"Clémence",
+      lastname:"Petit",
+      id:3
+    }
+  ];
+
+  const scientists:Person[] = [
+    {
+      firstname:"Albert",
+      lastname:"Einstein",
+      id:0
+    },
+    {
+      firstname:"Robert",
+      lastname:"Oppenheimer",
+      id:1
+    },
+    {
+      firstname:"Robert",
+      lastname:"Rosenthal",
+      id:2
+    },
+    {
+      firstname:"António",
+      lastname:"Damásio",
+      id:3
+    },
+    {
+      firstname:"Leonard",
+      lastname:"Hayflick",
+      id:4
+    }
+  ];
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className='container'>
+      <TableComponent personnesArray={personnes}/>
+      <TableComponent personnesArray={scientists} />
+      <TableComponent personnesArray={[]}/>
+    </main>
   );
 }
 
