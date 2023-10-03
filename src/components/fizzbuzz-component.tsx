@@ -1,57 +1,66 @@
 import { useState } from "react";
 
-function FizzBuzzComponent(props: FizzBuzzInterface) {
-    const [counter, setCounter] = useState<number>(0);
-    const [message, setMessage] = useState<string>("0");
-    // Les noms sont ignobles, l'usage est d'utiliser un set mais je me demande si je devrais pas en mettre un autre
-    const [isIncrementationDisabled,setIsIncrementationDisabled] = useState<boolean>(false) ;
-    const [isDesincrementationDisabled,setIsDesincrementationDisabled] = useState<boolean>(true) ;
+function FizzBuzzComponent(props: FizzBuzzPropsInterface) {
+    const initialState:FizzBuzzInterface = {
+        counter:0,
+        message:"0",
+        incrementationDisabled:false,
+        decrementationDisabled:true
+    };
+    const [fizzbuzzObject, setFizzbuzzObject] = useState<FizzBuzzInterface>(initialState);
 
     function incrementCounter() {
         changeCounter(1);
-        setIsIncrementationDisabled(counter + 1 === props.maxValue);
-        setIsDesincrementationDisabled(counter - 1 === 0);
     }
 
     function decrementCounter() {
         changeCounter(-1);
-        setIsIncrementationDisabled(counter + 1 === props.maxValue);
-        setIsDesincrementationDisabled(counter - 1 === 0);
     }
 
     function changeCounter(changeValue: number) {
-        setCounter((prevState: number) => {
-            prevState += changeValue;
-            let message;
+        setFizzbuzzObject((prevState: FizzBuzzInterface) => {
+            const newCounter = prevState.counter + changeValue;
+            let newMessage;
             switch (true) {
-                case ((prevState % 3 === 0) && (prevState % 5 === 0) && (prevState !== 0)):
-                    message = "FizzBuzz";
+                case ((newCounter % 3 === 0) && (newCounter % 5 === 0) && (newCounter !== 0)):
+                    newMessage = "FizzBuzz";
                     break;
-                case ((prevState % 3 === 0) && (prevState !== 0)):
-                    message = "Fizz";
+                case ((newCounter % 3 === 0) && (newCounter !== 0)):
+                    newMessage = "Fizz";
                     break;
-                case ((prevState % 5 === 0) && (prevState !== 0)):
-                    message = "Buzz";
+                case ((newCounter % 5 === 0) && (newCounter !== 0)):
+                    newMessage = "Buzz";
                     break;
                 default:
-                    message = prevState.toString();
+                    newMessage = newCounter.toString();
             }
-            setMessage(message);
-            return prevState;
+            return {
+                counter :newCounter,
+                incrementationDisabled : (newCounter+1) > props.maxValue,
+                decrementationDisabled : (newCounter-1) < 0,
+                message:newMessage 
+            };
         });
     }
 
     return (
         <>
-            <button onClick={incrementCounter} disabled={isIncrementationDisabled}>+</button>
-            <button onClick={decrementCounter} disabled={isDesincrementationDisabled}>-</button>
-            <p>{message}</p>
+            <button onClick={incrementCounter} disabled={fizzbuzzObject.incrementationDisabled}>+</button>
+            <button onClick={decrementCounter} disabled={fizzbuzzObject.decrementationDisabled}>-</button>
+            <p>{fizzbuzzObject.message}</p>
         </>
     );
 }
 
-interface FizzBuzzInterface {
+interface FizzBuzzPropsInterface {
     maxValue: number;
+}
+
+interface FizzBuzzInterface {
+    counter: number;
+    message: string;
+    incrementationDisabled: boolean;
+    decrementationDisabled: boolean;
 }
 
 export default FizzBuzzComponent;
