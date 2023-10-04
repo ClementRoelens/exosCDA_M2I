@@ -2,7 +2,6 @@ import { Person } from "./FormComponent";
 import TableStyles from "./TableComponent.module.css";
 
 function TableComponent(props:TableComponentProps){
-    let count:number = 0;
     if (props.transmittedPersonArray.length > 0) {
         return(
             <table className={`${TableStyles.table} ${TableStyles.content}`}>
@@ -10,13 +9,15 @@ function TableComponent(props:TableComponentProps){
                     <tr>
                         <th className={TableStyles.cell}>Nom</th>
                         <th className={TableStyles.cell}>Prénom</th>
+                        <th className={TableStyles.cell}>Âge</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {props.transmittedPersonArray.map((person:Person) => 
-                    <tr key={count++}>
+                    {props.transmittedPersonArray.map((person:Person,index:number) => 
+                    <tr key={index}>
                         <td className={TableStyles.cell}>{person.firstname}</td>
                         <td className={TableStyles.cell}>{person.lastname}</td>
+                        <td className={TableStyles.cell}>{person.age}</td>
                     </tr>
                     )}
                 </tbody>
