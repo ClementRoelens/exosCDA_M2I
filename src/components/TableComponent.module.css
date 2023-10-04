@@ -1,0 +1,14 @@
+.content{
+    margin-top:30px !important;
+}
+
+.table {
+    border: 1px solid gray;
+    border-collapse: collapse;
+    margin:auto;
+}
+
+.cell {
+    border: 1px solid gray;
+    padding : 5px
+}
