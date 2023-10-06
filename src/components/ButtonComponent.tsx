@@ -4,12 +4,10 @@ import { TaskContext } from "../context/TaskContext";
 
 
 function ButtonComponent(props: ButtonProps) {
-    const { tasks, setTasks } = useContext(TaskContext);
+    const { setTasks } = useContext(TaskContext);
     const [completed, setCompleted] = useState<boolean>(props.task.completed);
 
     function endTask() {
-        console.log(tasks);
-        console.log("compléter tâche " + props.task.id);
         setTasks((prevTasks: Task[]) => [...prevTasks.map((task: Task) => {
             if (task.id === props.task.id) {
                 task.completeTask();
@@ -18,7 +16,6 @@ function ButtonComponent(props: ButtonProps) {
             return task;
         })]);
         setCompleted(true);
-        console.log(tasks);
     }
 
     return (

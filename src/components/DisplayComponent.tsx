@@ -17,7 +17,7 @@ function DisplayComponent() {
                     <h3>{task.name}</h3>
                     <p>à réaliser avant le <b>{task.deadline.toLocaleDateString()}</b></p>
                     <ButtonComponent task={task} />
-                    <button className="btn" onClick={() => removeTask(task.id)}>X</button>
+                    {task.completed && <button className="btn" onClick={() => removeTask(task.id)}>X</button>}
                 </li>)}
         </ul>
     );
