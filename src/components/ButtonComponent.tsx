@@ -20,7 +20,7 @@ function ButtonComponent(props: ButtonProps) {
 
     return (
         <button className="btn btn-outline-dark" disabled={completed} onClick={endTask}>
-            {completed ? "Finir tâche" : "Tâche finie"}
+            {!completed ? "Finir tâche" : "Tâche finie"}
         </button>);
 }
 
