@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import HomeComponent from "../components/HomeComponent";
 import AboutComponent from "../components/AboutComponent";
 import ContactComponent from "../components/ContactComponent";
@@ -11,9 +11,11 @@ const router = createBrowserRouter([
             { path: "/", element: <HomeComponent /> },
             { path: "/projects", element: <ProjectsComponent /> },
             { path: "/contact", element: <ContactComponent /> },
-            { path: "/about", element: <AboutComponent /> }
+            { path: "/about", element: <AboutComponent /> },
+            { path: "*", element: <Navigate to="/" replace /> }
         ]
     },
+    { path: "*", element: <Navigate to="/" replace /> }
 
 ]);
 
