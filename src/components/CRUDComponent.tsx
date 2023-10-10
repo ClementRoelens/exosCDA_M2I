@@ -25,20 +25,20 @@ function CRUDComponent() {
 
 
     useEffect(() => {
-        if (mode !== "create"){
+        if (mode !== "create") {
             if (contactId) {
                 if (isNaN(Number(contactId))) {
                     // Implémenter ça après
-                    
+
                     // const error: Error = { name: "Mauvaise URL", message: "Le paramètre que vous avez passé ne correspond pas à un nombre" };
                     // navigate("/error", { state: error });
                     setErrorMessage("Le paramètre que vous avez passé ne correspond pas à un nombre");
                 } else {
                     const foundContact = contacts.find((contact: Contact) => contact.id === Number(contactId));
-    
+
                     if (!foundContact) {
                         // Implémenter ça après
-    
+
                         // const error: Error = { name: "Contact non-trouvé", message: "L'id passée ne correspond à aucun contact" };
                         // navigate("/error", { state: error });
                         setErrorMessage("L'id passée ne correspond à aucun contact");
@@ -58,11 +58,13 @@ function CRUDComponent() {
         e.preventDefault();
         switch (mode) {
             case "create":
-                setContacts((prevContacts: Contact[]) => {
-                    const newContacts = [...prevContacts, new Contact(firstnameRef.current.value, lastnameRef.current.value, emailRef.current.value, Number(phoneRef.current.value))];
-                    localStorage.setItem("contacts",JSON.stringify(newContacts));
-                    return newContacts;
-                });
+                if (firstnameRef.current.value !== "" && lastnameRef.current.value !== "" && emailRef.current.value !== "" && phoneRef.current.value !== "") {
+                    setContacts((prevContacts: Contact[]) => {
+                        const newContacts = [...prevContacts, new Contact(firstnameRef.current.value, lastnameRef.current.value, emailRef.current.value, Number(phoneRef.current.value))];
+                        localStorage.setItem("contacts", JSON.stringify(newContacts));
+                        return newContacts;
+                    });
+                }
                 break;
             case "edit":
                 const newContact = new Contact(firstnameRef.current.value, lastnameRef.current.value, emailRef.current.value, Number(phoneRef.current.value));
@@ -88,13 +90,13 @@ function CRUDComponent() {
             {!errorMessage &&
                 <form onSubmit={submitHandler}>
                     <label htmlFor="firstname" className="form-label">Prénom : </label>
-                    <input type="text" className="form-control" placeholder="Prénom" id="firstname" disabled={mode === "delete" || mode === "display"} ref={firstnameRef} />
+                    <input type="text" className="form-control" placeholder="Prénom" id="firstname" disabled={mode === "delete" || mode === "display"} ref={firstnameRef} required />
                     <label htmlFor="lastname" className="form-label mt-2">Nom : </label>
-                    <input type="text" className="form-control" placeholder="Nom" id="lastname" disabled={mode === "delete" || mode === "display"} ref={lastnameRef} />
+                    <input type="text" className="form-control" placeholder="Nom" id="lastname" disabled={mode === "delete" || mode === "display"} ref={lastnameRef} required />
                     <label htmlFor="mail" className="form-label mt-2">Adresse e-mail : </label>
-                    <input type="email" className="form-control" placeholder="Adresse e-mail" id="mail" disabled={mode === "delete" || mode === "display"} ref={emailRef} />
+                    <input type="email" className="form-control" placeholder="Adresse e-mail" id="mail" disabled={mode === "delete" || mode === "display"} ref={emailRef} required />
                     <label htmlFor="phone" className="form-label mt-2">Numéro de téléphone : </label>
-                    <input type="phone" className="form-control" placeholder="Numéro de téléphone" id="phone" disabled={mode === "delete" || mode === "display"} ref={phoneRef} />
+                    <input type="phone" className="form-control" placeholder="Numéro de téléphone" id="phone" disabled={mode === "delete" || mode === "display"} ref={phoneRef} required />
                     <hr />
                     {mode !== "display" && <button type="submit" className={`btn btn-${mode === "edit" ? "warning" : mode === "create" ? "success" : "danger"} d-block ms-auto`}>{
                         mode === "create" ? "Ajouter" :
