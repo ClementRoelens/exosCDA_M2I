@@ -7,7 +7,14 @@ import { useState } from 'react';
 import { Contact } from './models/contact';
 
 function App() {
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const storedContacts = localStorage.getItem("contacts");
+  let parsedContacts;
+  let typedContacts:Contact[] = [];
+  if (storedContacts){
+    parsedContacts = JSON.parse(storedContacts) as Contact[];
+    typedContacts = parsedContacts.map((contact:any) => new Contact(contact._firstname,contact._lastname,contact._email,contact._phonenumber));
+  }
+  const [contacts, setContacts] = useState<Contact[]>(typedContacts);
 
   return (
     <>
