@@ -4,7 +4,7 @@ import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import { ContactContext } from "../context/ContactContext";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 
-function CreateEditOrDeleteContactComponent() {
+function CRUDComponent() {
     const [searchParams] = useSearchParams();
     const mode = searchParams.get("mode");
 
@@ -25,7 +25,6 @@ function CreateEditOrDeleteContactComponent() {
 
 
     useEffect(() => {
-        // Create, edit or delete
         if (mode !== "create"){
             if (contactId) {
                 if (isNaN(Number(contactId))) {
@@ -89,15 +88,15 @@ function CreateEditOrDeleteContactComponent() {
             {!errorMessage &&
                 <form onSubmit={submitHandler}>
                     <label htmlFor="firstname" className="form-label">Prénom : </label>
-                    <input type="text" className="form-control" placeholder="Prénom" id="firstname" disabled={mode === "delete"} ref={firstnameRef} />
+                    <input type="text" className="form-control" placeholder="Prénom" id="firstname" disabled={mode === "delete" || mode === "display"} ref={firstnameRef} />
                     <label htmlFor="lastname" className="form-label mt-2">Nom : </label>
-                    <input type="text" className="form-control" placeholder="Nom" id="lastname" disabled={mode === "delete"} ref={lastnameRef} />
+                    <input type="text" className="form-control" placeholder="Nom" id="lastname" disabled={mode === "delete" || mode === "display"} ref={lastnameRef} />
                     <label htmlFor="mail" className="form-label mt-2">Adresse e-mail : </label>
-                    <input type="email" className="form-control" placeholder="Adresse e-mail" id="mail" disabled={mode === "delete"} ref={emailRef} />
+                    <input type="email" className="form-control" placeholder="Adresse e-mail" id="mail" disabled={mode === "delete" || mode === "display"} ref={emailRef} />
                     <label htmlFor="phone" className="form-label mt-2">Numéro de téléphone : </label>
-                    <input type="phone" className="form-control" placeholder="Numéro de téléphone" id="phone" disabled={mode === "delete"} ref={phoneRef} />
+                    <input type="phone" className="form-control" placeholder="Numéro de téléphone" id="phone" disabled={mode === "delete" || mode === "display"} ref={phoneRef} />
                     <hr />
-                    {<button type="submit" className={`btn btn-${mode === "edit" ? "warning" : "danger"} d-block ms-auto`}>{
+                    {mode !== "display" && <button type="submit" className={`btn btn-${mode === "edit" ? "warning" : mode === "create" ? "success" : "danger"} d-block ms-auto`}>{
                         mode === "create" ? "Ajouter" :
                             mode === "edit" ? "Modifier" :
                                 "Supprimer"
@@ -108,4 +107,4 @@ function CreateEditOrDeleteContactComponent() {
     );
 }
 
-export default CreateEditOrDeleteContactComponent;
+export default CRUDComponent;

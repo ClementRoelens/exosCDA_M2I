@@ -11,13 +11,13 @@ function DisplayContactsComponent() {
     return (
         <>
         <div className="top-area d-flex justify-content-between">
-            <h1>Contact list</h1>
+            <h1>Liste de contacts</h1>
             <i className="btn bi bi-plus-circle text-success align-self-center" onClick={() => navigate("/contacts/create?mode=create")}></i>
         </div>
             <hr />
             <ul className="list-group">
                 {contacts.map((contact: Contact, index: number) =>
-                    <li key={index} className="list-group-item bg-dark text-light w-100 border border-info-subtle my-1 rounded">
+                    <li key={index} className="list-group-item bg-dark text-light w-100 border border-info-subtle my-2 rounded">
                         <ContactComponent contact={contact} />
                     </li>
                 )}
