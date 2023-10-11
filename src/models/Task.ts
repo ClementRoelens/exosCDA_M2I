@@ -1,7 +1,7 @@
 export class Task {
-    
 
-    constructor(private _id:number, private _name: string, private _deadline: Date,private _completed: boolean) {
+
+    constructor(private _id: number = 0, private _name: string = "Rien", private _description: string = "Ceci est une tâche vide", private _deadline: Date = new Date(), private _completed: boolean = false) {
     }
 
     completeTask(): void {
@@ -18,6 +18,14 @@ export class Task {
 
     set name(value: string) {
         this._name = value;
+    }
+
+    get description(): string {
+        return this._description;
+    }
+
+    set description(value: string) {
+        this._description = value;
     }
 
     get deadline(): Date {
