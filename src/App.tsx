@@ -15,18 +15,18 @@ function App() {
   useEffect(() => {
     console.log("useEffect de App.tsx lancé");
     axios.get<Task[]>(url)
-    .then(res => {
-        const tasks:Task[] = res.data.map(data => new Task(data.id, data.name,data.description,data.deadline,data.completed));
+      .then(res => {
+        const tasks: Task[] = res.data.map(data => new Task(data.id, data.name, data.description, data.deadline, data.completed));
         setTasks(tasks);
-    })
-    .catch(error => console.error("Erreur lors de la récupération des tâches dans TaskList", error));
-},[]);
+      })
+      .catch(error => console.error("Erreur lors de la récupération des tâches dans TaskList", error));
+  }, []);
 
   return (
     <TaskContext.Provider value={{ tasks: tasks, setTasks: setTasks }}>
-      <Navbar/>
+      <Navbar />
       <main className="container bg-dark text-light p-3 mt-3 rounded">
-        <Outlet/>
+        <Outlet />
       </main>
     </TaskContext.Provider>
   )

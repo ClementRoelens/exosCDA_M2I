@@ -2,30 +2,30 @@
   "tasks": [
     {
       "name": "Réunir les reliques de la mort",
-      "description": "La baguette de surreau, la cape d'invisibilité et la pierre de résurrection doivent être réunies avant que Voldemort ne les trouve. Sans ça, il deviendrait le maître de la Mort",
+      "description": "La baguette de surreau, la cape d'invisibilité et la pierre de résurrection doivent être réunies avant que Voldemort ne les trouve. Sans ça, il deviendrait le maître de la Mort.",
       "deadline": "2026-11-06T00:00:00.000Z",
-      "completed": true,
+      "completed": false,
       "id": 4
     },
     {
       "name": "Trouver les 6 pierres d'infinité",
-      "description": "Espace, esprit, âme, réalité, temps, pouvoir. Réunissez les 6 gemmes, et plus rien ne vous sera impossible.",
+      "description": "Espace, esprit, âme, réalité, temps, pouvoir. Réunissez les 6 gemmes, et plus rien ne vous sera impossible (ou pas)",
       "deadline": "2023-12-31T00:00:00.000Z",
       "completed": false,
       "id": 6
     },
     {
       "name": "Attraper Bip-Bip",
-      "description": "Le grand Géocoucou, dont est inspiré Bip-Bip (Roadrunner de son nom original), est très rapide à la course",
+      "description": "Le grand Géocoucou, dont est inspiré Bip-Bip (Roadrunner de son nom original), est très rapide à la course.\n\nEnfin en tout cas c'est ce qu'on dit",
       "deadline": "2023-12-31T00:00:00.000Z",
-      "completed": false,
+      "completed": true,
       "id": 7
     },
     {
       "name": "Refroidir cette pièce",
       "description": "On crève de chaud j'en peux plus",
       "deadline": "2023-10-22T00:00:00.000Z",
-      "completed": false,
+      "completed": true,
       "id": 8
     },
     {
@@ -34,6 +34,13 @@
       "deadline": "2023-10-12T00:00:00.000Z",
       "completed": false,
       "id": 9
+    },
+    {
+      "name": "Sauver le monde",
+      "description": "Je ne sais pas de quoi, mais ça claque",
+      "deadline": "3054-03-15T00:00:00.000Z",
+      "completed": true,
+      "id": 10
     }
   ]
 }

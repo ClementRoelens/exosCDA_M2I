@@ -3,29 +3,42 @@ import { FormEvent, MutableRefObject, useContext, useEffect, useRef } from "reac
 import { Task } from "../models/Task";
 import { url } from "../url";
 import { TaskContext } from "../context/TaskContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-function Form(props: FormInterface) {
+function Form() {
     const { setTasks } = useContext(TaskContext);
+    const {id} = useParams();
 
     const nameRef = useRef() as MutableRefObject<HTMLInputElement>;
     const dateRef = useRef() as MutableRefObject<HTMLInputElement>;
     const descriptionRef = useRef() as MutableRefObject<HTMLTextAreaElement>;
+    let foundTask:Task | null;
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (props.task) {
-            nameRef.current.value = props.task.name;
-            descriptionRef.current.value = props.task.description;
+        // Si un id est passé, on pré-remplit
+        if (id) {
+            axios.get<Task>(url+id)
+            .then(res => {
+                if (res.data){
+                    foundTask = res.data;
+                    nameRef.current.value = foundTask.name;
+                    descriptionRef.current.value = foundTask.description;
+                    
+                    // Je déteste travailler avec les dates
+                    const dateBeforeT: string = foundTask.deadline.toString().split('T')[0];
+                    const dateParts: string[] = dateBeforeT.split('-');
+        
+                    dateRef.current.value = `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`;
 
-            // Je déteste travailler avec les dates
-            const dateBeforeT: string = props.task.deadline.toString().split('T')[0];
-            const dateParts: string[] = dateBeforeT.split('-');
-
-            dateRef.current.value = `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`;
+                } else {
+                    navigate("/error?message=Aucun utilisateur trouvé")
+                }
+            })
+            .catch(error => console.error("Erreur lors de la récupération dans FormComponent de la tâche " + id, error));
         }
-    }, [])
+    }, [id])
 
     function submitTask(e: FormEvent) {
         e.preventDefault();
@@ -36,14 +49,14 @@ function Form(props: FormInterface) {
             completed: false
         };
         // Si une task est passée, c'est qu'on est en mode Modifier
-        if (props.task) {
-            axios.put<Task>(`${url}/${props.task.id}`, body)
+        if (foundTask) {
+            axios.put<Task>(`${url}/${id}`, body)
                 .then(res => {
                     const newTask = new Task(res.data.id, res.data.name, res.data.description, res.data.deadline, res.data.completed);
                     setTasks((prevTasks: Task[]) => prevTasks.map((task: Task) => task.id === newTask.id ? newTask : task));
                     navigate("/");
                 })
-                .catch(error => console.error("Erreur lors de la modification de la tâche " + props.task?.id, error));
+                .catch(error => console.error("Erreur lors de la modification de la tâche " + id, error));
         } else {
             axios.post<Task>(url, body)
                 .then(res => {
@@ -63,13 +76,11 @@ function Form(props: FormInterface) {
             <textarea className="form-control" id="description" ref={descriptionRef} required></textarea>
             <label htmlFor="deadline" className="form-label text-light mt-3">Deadline : </label>
             <input type="date" className="form-control" id="deadline" ref={dateRef} required />
-            <button type="submit" className="btn btn-outline-light d-block mx-auto my-3" data-bs-dismiss="modal">{props.task ? "Modifier" : "Créer tâche"}</button>
+            <button type="submit" className="btn btn-outline-light d-block mx-auto my-3">{id ? "Modifier" : "Créer tâche"}</button>
         </form>
     );
 }
 
-interface FormInterface {
-    task?: Task;
-}
+
 
 export default Form;

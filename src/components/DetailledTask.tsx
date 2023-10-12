@@ -2,9 +2,11 @@ import axios from "axios";
 import { Task } from "../models/Task";
 import { url } from "../url";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { TaskContext } from "../context/TaskContext";
 
 function DetailledTask() {
+    const {setTasks} = useContext(TaskContext);
     const [task, setTask] = useState<Task | null>(null);
     const { id } = useParams();
     const navigate = useNavigate();
@@ -20,6 +22,18 @@ function DetailledTask() {
                 .catch(() => navigate("/error?message=Aucun utilisateur trouvé"));
         }
     }, [id]);
+
+    function completeTask() {
+        console.log("DetailledTask.completeTask()");
+        if (id){
+            axios.patch<Task>(url + id, { completed: true })
+                .then(res => {
+                    setTask(res.data);
+                    setTasks((prevTasks:Task[]) => prevTasks.map((task:Task) => task.id === +id ? res.data : task))
+                })
+                .catch(error => console.error("Erreur lors de la complétion de la tâche " + id, error));
+        }
+    }
 
     function deleteTask() {
         axios.delete(url + id)
@@ -38,7 +52,8 @@ function DetailledTask() {
                 </div>
                 <p className="mt-3 w-75 mx-auto px-1">{task.description}</p>
                 <div className="d-flex justify-content-around mt-3 mx-auto w-75">
-                    <Link className="btn btn-warning" to="/edit" >Modifier</Link>
+                    <Link className="btn btn-warning" to={`/edit${task ? "/" + task.id : ""}`} >Modifier</Link>
+                    {!task.completed && <button className="btn btn-success" onClick={completeTask}>Finir tâche</button>}
                     <button className="btn btn-danger" onClick={deleteTask}>Supprimer</button>
                 </div>
             </div>);
