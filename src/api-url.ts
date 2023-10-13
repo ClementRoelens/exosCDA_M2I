@@ -1,3 +1,3 @@
-const apiURL:string = "http://localhost:5000/articles/";
+const apiURL:string = "http://localhost:5000/";
 
 export default apiURL;

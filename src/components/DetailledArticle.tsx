@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { Article } from "../models/Article";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import apiURL from "../api-url";
 import CartContext from "../contexts/CartContext";
@@ -10,7 +10,7 @@ import ArticleContext from "../contexts/ArticleContext";
 
 function DetailledArticle() {
     const [article, setArticle] = useState<Article | null>(null);
-    const {setArticles} = useContext(ArticleContext);
+    const { setArticles } = useContext(ArticleContext);
     const { setCart } = useContext(CartContext);
     const { authorization } = useContext(AdminAuthorizationContext);
     const { id } = useParams();
@@ -19,10 +19,9 @@ function DetailledArticle() {
     useEffect(() => {
         console.log("detailledArticle.useEffect() lancé");
         if (id && !isNaN(+id)) {
-            axios.get<Article>(apiURL + id)
+            axios.get<Article>(`${apiURL}articles/${id}`)
                 .then(res => {
                     setArticle(new Article(res.data.id, res.data.name, res.data.hardware, res.data.imagePath, res.data.price));
-                    console.log(article);
                 })
                 .catch(error => {
                     console.error("Erreur lors de la récupération de l'article " + id, error);
@@ -45,13 +44,13 @@ function DetailledArticle() {
         });
     }
 
-    function removeArticle(){
-        axios.delete(apiURL+id)
-        .then(() => {
-            setArticles((prevArticles:Article[]) => prevArticles.filter((article:Article) => article.id !== Number(id)))
-            navigate("/");
-        })
-        .catch(error => console.error("Erreur lors de la suppression de "+id,error));
+    function removeArticle() {
+        axios.delete(`${apiURL}/${id}`)
+            .then(() => {
+                setArticles((prevArticles: Article[]) => prevArticles.filter((article: Article) => article.id !== Number(id)))
+                navigate("/");
+            })
+            .catch(error => console.error("Erreur lors de la suppression de " + id, error));
     }
 
     return (
@@ -63,10 +62,14 @@ function DetailledArticle() {
                     <img className="w-2/12 my-3" src={article.imagePath} alt={article.name} />
                     <p className="text-lg my-3">{article.price}€</p>
                     <button className="border-2 border-black py-2 px-4 rounded-lg mt-4" onClick={addToCart}>Ajouter au panier</button>
-                    {authorization && <button className="border-2 border-black py-2 px-4 rounded-lg mt-4" onClick={removeArticle}>SUPPRIMER ARTICLE</button>}
+                    {authorization &&
+                        <>
+                            <Link className="border-2 border-black py-2 px-4 rounded-lg mt-4" to={`/edit/${id}`} >MODIFIER ARTICLE</Link>
+                            <button className="border-2 border-black py-2 px-4 rounded-lg mt-4" onClick={removeArticle}>SUPPRIMER ARTICLE</button>
+                        </>}
                 </div>
                 :
-                <h2>Chargment...</h2>
+                <h2 className="text-center mx-auto">Chargment...</h2>
             }
         </>
     );

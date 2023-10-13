@@ -30,7 +30,7 @@ function App() {
       }));
     }
     // Récupération des articles
-    axios.get<Article[]>(apiURL)
+    axios.get<Article[]>(`${apiURL}articles`)
     .then(res => {
       const fetchedArticles = res.data.map((article:Article) => new Article(article.id,article.name,article.hardware,article.imagePath, article.price));
       setArticles(fetchedArticles);

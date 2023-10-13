@@ -6,6 +6,7 @@ import Cart from "./components/Cart";
 import Authentification from "./components/Authentification";
 import AdministrationSecure from "./components/AdministrationSecure";
 import Guard from "./components/Guard";
+import FormArticleSecure from "./components/FormArticleSecure";
 
 const router = createBrowserRouter([
     {
@@ -14,7 +15,8 @@ const router = createBrowserRouter([
             { path: "/detail/:id", element: <DetailledArticle /> },
             { path: "/card", element: <Cart /> },
             { path: "/authentification", element: <Authentification /> },
-            { path: "/admin", element: <Guard><AdministrationSecure /></Guard> }
+            { path: "/admin", element: <Guard><AdministrationSecure /></Guard> },
+            {path:"/edit/:id", element : <Guard><FormArticleSecure/></Guard>}
         ]
     }
 ]);

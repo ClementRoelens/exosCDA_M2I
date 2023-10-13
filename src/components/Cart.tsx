@@ -38,7 +38,7 @@ function Cart() {
                         {cart.map((cartArticle: CartArticle) =>
                             <tr key={cartArticle.article.id}>
                                 <td className="py-1 text-center">{cartArticle.article.name}</td>
-                                <td className="py-1 text-center">{cartArticle.article.price}</td>
+                                <td className="py-1 text-center">{cartArticle.article.price}€</td>
                                 <td className="py-1 text-center">{cartArticle.quantity}</td>
                                 <td className="py-1 text-center">
                                     <button className="rounded-3xl bg-slate-300 py-1 px-3" onClick={() => removeFromCart(cartArticle.article.id)}>{cartArticle.quantity > 1 ? "-" : "X"}</button>
