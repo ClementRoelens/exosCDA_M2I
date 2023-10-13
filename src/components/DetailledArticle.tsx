@@ -21,7 +21,7 @@ function DetailledArticle() {
         if (id && !isNaN(+id)) {
             axios.get<Article>(apiURL + id)
                 .then(res => {
-                    setArticle(new Article(res.data.id, res.data.name, res.data.hardware, res.data.imagePath));
+                    setArticle(new Article(res.data.id, res.data.name, res.data.hardware, res.data.imagePath, res.data.price));
                     console.log(article);
                 })
                 .catch(error => {
@@ -61,6 +61,7 @@ function DetailledArticle() {
                     <h2 className="text-5xl">{article.name}</h2>
                     <p className="text-lg my-3 underline underline-offset-4">Disponible sur {article.hardware}</p>
                     <img className="w-2/12 my-3" src={article.imagePath} alt={article.name} />
+                    <p className="text-lg my-3">{article.price}€</p>
                     <button className="border-2 border-black py-2 px-4 rounded-lg mt-4" onClick={addToCart}>Ajouter au panier</button>
                     {authorization && <button className="border-2 border-black py-2 px-4 rounded-lg mt-4" onClick={removeArticle}>SUPPRIMER ARTICLE</button>}
                 </div>

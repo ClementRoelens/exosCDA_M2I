@@ -1,5 +1,5 @@
 export class Article {
-    constructor(private _id: number, private _name: string, private _hardware:string, private _imagePath:string) {
+    constructor(private _id: number, private _name: string, private _hardware:string, private _imagePath:string, private _price:number) {
     }
 
     get id(): number {
@@ -25,5 +25,11 @@ export class Article {
     }
     set imagePath(value: string) {
         this._imagePath = value;
+    }
+    get price():number{
+        return this._price;
+    }
+    set price(value:number){
+        this._price = value;
     }
 }

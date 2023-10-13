@@ -1,40 +1,46 @@
 {
-  "articles": [
-    {
-      "id": 0,
-      "name": "Metroid Dread",
-      "hardware": "Switch",
-      "imagePath": "/src/assets/metroid_dread.jpg"
-    },
-    {
-      "id": 1,
-      "name": "Twilight Princess",
-      "hardware": "Wii U",
-      "imagePath": "/src/assets/twilight_princess.jpg"
-    },
-    {
-      "id": 2,
-      "name": "Darksiders",
-      "hardware": "Multi",
-      "imagePath": "/src/assets/darksiders.webp"
-    },
-    {
-      "id": 3,
-      "name": "Halo",
-      "hardware": "Xbox 360",
-      "imagePath": "/src/assets/halo.jpg"
-    },
-    {
-      "id": 4,
-      "name": "Portal",
-      "hardware": "Multi",
-      "imagePath": "/src/assets/portal.webp"
-    },
-    {
-      "name": "Super smash bros melee",
-      "hardware": "Gamecube",
-      "imagePath": "/src/assets/Super_Smash_Bros_Melee.png",
-      "id": 5
-    }
-  ]
+    "articles": [
+        {
+            "id": 0,
+            "name": "Metroid Dread",
+            "hardware": "Switch",
+            "imagePath": "/src/assets/metroid_dread.jpg",
+            "price": 50
+        },
+        {
+            "id": 1,
+            "name": "Twilight Princess",
+            "hardware": "Wii U",
+            "imagePath": "/src/assets/twilight_princess.jpg",
+            "price": 40
+        },
+        {
+            "id": 2,
+            "name": "Darksiders",
+            "hardware": "Multi",
+            "imagePath": "/src/assets/darksiders.webp",
+            "price": 30
+        },
+        {
+            "id": 3,
+            "name": "Halo",
+            "hardware": "Xbox 360",
+            "imagePath": "/src/assets/halo.jpg",
+            "price": 30
+        },
+        {
+            "id": 4,
+            "name": "Portal",
+            "hardware": "Multi",
+            "imagePath": "/src/assets/portal.webp",
+            "price": 15
+        },
+        {
+            "id": 5,
+            "name": "Super smash bros melee",
+            "hardware": "Gamecube",
+            "imagePath": "/src/assets/Super_Smash_Bros_Melee.png",
+            "price": 10
+        }
+    ]
 }
