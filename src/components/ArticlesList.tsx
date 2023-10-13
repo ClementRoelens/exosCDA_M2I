@@ -11,7 +11,7 @@ function ArticlesList() {
     return (
         <ul className="flex flex-wrap justify-around">
             {articles.map((article: Article) =>
-                <li className="w-3/12 mx-4 border-2 rounded-2xl my-2 cursor-pointer" key={article.id} onClick={() => navigate("/detail/"+article.id)}><ArticleThumbnail article={article} /></li>
+                <li className="w-3/12 mx-4 border-2 rounded-2xl my-2 cursor-pointer py-4" key={article.id} onClick={() => navigate("/detail/"+article.id)}><ArticleThumbnail article={article} /></li>
             )}
         </ul>
     );

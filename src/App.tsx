@@ -16,14 +16,16 @@ function App() {
   const [adminAuthorization,setAdminAuthorization] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log("app.useEffect() lancé");
     // Récupération du panier
     const rawStoredCart = localStorage.getItem("cart");
     if (rawStoredCart) {
       const parsedCart = JSON.parse(rawStoredCart) as CartArticle[];
       console.log("Test : parsedCart[0].article",parsedCart[0].article);
-      setCart(parsedCart.map((storedArticle: CartArticle) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setCart(parsedCart.map((storedArticle: any) => {
         return {
-          article: new Article(storedArticle.article.id, storedArticle.article.name, storedArticle.article.hardware, storedArticle.article.imagePath),
+          article: new Article(storedArticle.article._id, storedArticle.article._name, storedArticle.article._hardware, storedArticle.article._imagePath),
           quantity: storedArticle.quantity
         };
       }));
@@ -41,16 +43,16 @@ function App() {
   return (
     <>
       <CartContext.Provider value={{ cart: cart, setCart: setCart }}>
+      <AdminAuthorizationContext.Provider value={{ authorization: adminAuthorization, setAuthorization : setAdminAuthorization}} >
         <Navbar />
         <main className="mt-7">
           <ArticleContext.Provider value={{ articles: articles, setArticles: setArticles }}>
-            <AdminAuthorizationContext.Provider value={{ authorization: adminAuthorization, setAuthorization : setAdminAuthorization}} >
             <Outlet />
-            </AdminAuthorizationContext.Provider>
           </ArticleContext.Provider>
         </main>
-        <footer>
-          <Link to="/admin">ADMINISTRATION</Link>
+            </AdminAuthorizationContext.Provider>
+        <footer className="fixed bottom-0 flex justify-center w-full">
+          <Link className="bg-slate-500 rounded-2xl text-md text-white py-2 px-12 flex justify-around" to="/admin">ADMINISTRATION</Link>
         </footer>
       </CartContext.Provider>
     </>
