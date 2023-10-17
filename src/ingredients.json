@@ -1,0 +1,36 @@
+{
+    "ingredients": [
+        {
+            "id": 0,
+            "name": "Yaourt"
+        },
+        {
+            "id": 1,
+            "name": "Farine"
+        },
+        {
+            "id": 2,
+            "name": "Sucre"
+        },
+        {
+            "id": 3,
+            "name": "Levure"
+        },
+        {
+            "id": 4,
+            "name": "Huile"
+        },
+        {
+            "id": 5,
+            "name": "Œuf"
+        },
+        {
+            "id": 6,
+            "name": "Chocolat"
+        },
+        {
+            "id": 7,
+            "name": "Crème fraîche"
+        }
+    ]
+}
