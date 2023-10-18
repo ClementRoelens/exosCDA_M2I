@@ -30,18 +30,24 @@ function SignUpOrIn() {
         if (emailRef.current.value !== "" && passwordRef.current.value !== "") {
             if (mode === "signin") {
                 await dispatch(signIn({ email: emailRef.current.value, password: passwordRef.current.value }));
+                console.log("signUpOrIn.submitHandler : fonction asynchrone signin finie");
                 if (user === null) {
+                    console.log("user null");
                     setIsFail(true);
                     setFailMessage("Vos identifiants semblent être incorrects");
                 } else {
+                    console.log("user non null");
                     navigate("/");
                 }
             } else if (mode === "signup") {
                 await dispatch(signUp({ email: emailRef.current.value, password: passwordRef.current.value }));
+                console.log("signUpOrIn.submitHandler : fonction asynchrone signin finie");
                 if (user === null) {
+                    console.log("user null");
                     setIsFail(true);
                     setFailMessage("Il semble que le serveur rencontre un problème");
                 } else {
+                    console.log("user non null");
                     navigate("/");
                 }
             }

@@ -51,6 +51,8 @@ const userSlice = createSlice({
             }),
             builder.addCase(signUp.fulfilled, (state, action: PayloadAction<User>) => {
                 state.user = action.payload;
+                console.log("authSlice.extraReducers.signUp fulfilled");
+                console.log("user : ", state.user);
                 localStorage.setItem("user", JSON.stringify(action.payload));
             }),
             builder.addCase(signUp.rejected, (state, action) => {
