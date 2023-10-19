@@ -31,12 +31,12 @@ function SignUpOrIn() {
             if (mode === "signin") {
                 await dispatch(signIn({ email: emailRef.current.value, password: passwordRef.current.value }));
                 console.log("signUpOrIn.submitHandler : fonction asynchrone signin finie");
-                if (user === null) {
-                    console.log("user null");
+                if (!localStorage.getItem("user")) {
+                    console.log("pas d'user dans le localStorage");
                     setIsFail(true);
                     setFailMessage("Vos identifiants semblent être incorrects");
                 } else {
-                    console.log("user non null");
+                    console.log("user dans le localStorage");
                     navigate("/");
                 }
             } else if (mode === "signup") {

@@ -1,9 +1,8 @@
 import { ReactNode } from "react";
-import { useAppSelector } from "../../config/hooks";
 import { Navigate } from "react-router-dom";
 
 function Guard(props: GuardProps) {
-    const user = useAppSelector(state => state.users.user);
+    const user = localStorage.getItem("user");
 
     return (
         <>
