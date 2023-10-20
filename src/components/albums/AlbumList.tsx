@@ -1,9 +1,9 @@
-import { useRef } from "react";
+import { KeyboardEvent, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../config/hooks";
 import { Album } from "../../models/Album";
 import AlbumDisplay from "./AlbumDisplay";
 import { Link } from "react-router-dom";
-import { search } from "./albumSlice";
+import { resetFilter, search } from "./albumSlice";
 
 function AlbumList() {
     const albums = useAppSelector(state => state.albums.filteredAlbums);
@@ -11,8 +11,14 @@ function AlbumList() {
     const dispatch = useAppDispatch();
 
     function triggerSearch(){
-        if (searchRef.current.value !== ""){
+        if (searchRef.current.value.trim() !== ""){
             dispatch(search(searchRef.current.value));
+        }
+    }
+
+    function suppressCheck(e:KeyboardEvent<HTMLInputElement>){
+        if ((e.key === "Backspace" || e.key === "Delete") && searchRef.current.value.length === 1) {
+            dispatch(resetFilter());
         }
     }
 
@@ -22,7 +28,7 @@ function AlbumList() {
                 <h1>Albums</h1>
                 <div className="search-area d-flex">
                     <label htmlFor="filter" className="align-self-center me-3">Rechercher par : </label>
-                    <input type="text" className="rounded align-self-center py-1 px-2" placeholder="Entrez une valeur de recherche" onKeyDown={triggerSearch} ref={searchRef} />
+                    <input type="text" className="rounded align-self-center py-1 px-2" placeholder="Entrez une valeur de recherche" onInput={triggerSearch} onKeyDown={suppressCheck} ref={searchRef} />
                 </div>
             </div>
             <hr />

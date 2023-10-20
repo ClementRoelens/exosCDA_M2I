@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import FormComponent from "../shared/FormComponent";
 import { useAppDispatch, useAppSelector } from "../../config/hooks";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Alert } from "antd";
 import { signIn, signUp } from "./authSlice";
 
@@ -30,13 +30,10 @@ function SignUpOrIn() {
         if (emailRef.current.value !== "" && passwordRef.current.value !== "") {
             if (mode === "signin") {
                 await dispatch(signIn({ email: emailRef.current.value, password: passwordRef.current.value }));
-                console.log("signUpOrIn.submitHandler : fonction asynchrone signin finie");
                 if (!localStorage.getItem("user")) {
-                    console.log("pas d'user dans le localStorage");
                     setIsFail(true);
                     setFailMessage("Vos identifiants semblent être incorrects");
                 } else {
-                    console.log("user dans le localStorage");
                     navigate("/");
                 }
             } else if (mode === "signup") {
@@ -47,7 +44,6 @@ function SignUpOrIn() {
                     setIsFail(true);
                     setFailMessage("Il semble que le serveur rencontre un problème");
                 } else {
-                    console.log("user non null");
                     navigate("/");
                 }
             }
@@ -58,8 +54,8 @@ function SignUpOrIn() {
         }
     }
 
-    return (
-        <FormComponent submitFunction={submitHandler}>
+    return (<>
+        <FormComponent submitFunction={submitHandler} disabled={false}>
             <h1 className="text-center">{mode === "signin" ? "Connexion" : "Inscription"}</h1>
             {isFail && <Alert className="mt-2" message="Erreur" description={failMessage} type="error" />}
             <div>
@@ -71,6 +67,12 @@ function SignUpOrIn() {
                 <input type="password" className="form-control" id="password" ref={passwordRef} required />
             </div>
         </FormComponent>
+       { mode === "signin" ?
+       <Link to="/sign?mode=signup" className="d-block text-center mx-auto">Pas encore de compte ?</Link>
+       :
+       <Link to="/sign?mode=signin" className="d-block text-center mx-auto">Déjà un compte ?</Link>
+       }
+        </>
     );
 }
 

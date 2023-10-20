@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 import FormComponent from "../shared/FormComponent";
 import { useAppDispatch, useAppSelector } from "../../config/hooks";
@@ -57,7 +58,7 @@ function AddAlbum() {
                 releaseDateRef.current.value.trim() !== "" &&
                 scoreRef.current.value.trim() !== "" &&
                 (!isCoverInputNeeded || coverURLRef.current.value.trim() !== "")) {
-                let newAlbum: Album = {
+                const newAlbum: Album = {
                     title: titleRef.current.value,
                     artist: artistRef.current.value,
                     releaseDate: releaseDateRef.current.value,
@@ -70,7 +71,7 @@ function AddAlbum() {
                     const res = await dispatch(updateAlbum(newAlbum)) as any;
                     if (res.error) {
                         setIsRequestRejected(true);
-                        setTimeout(() => navigate("/"), 2000)
+                        setTimeout(() => navigate("/"), 2500)
                     } else {
                         await dispatch(readAllAlbums());
                         navigate("/");
@@ -79,7 +80,7 @@ function AddAlbum() {
                     const res = await dispatch(createAlbum(newAlbum)) as any;
                     if (res.error) {
                         setIsRequestRejected(true);
-                        setTimeout(() => navigate("/"), 2000)
+                        setTimeout(() => navigate("/"), 2500)
                     } else {
                         await dispatch(readAllAlbums());
                         navigate("/");
@@ -96,7 +97,7 @@ function AddAlbum() {
 
     return (<>
         {isRequestRejected && <Alert message="Erreur" description="Quelque chose s'est mal passé. Votre identification a peut-être expiré" type="error" />}
-        <FormComponent submitFunction={addOrEditAlbum}>
+        <FormComponent submitFunction={addOrEditAlbum} disabled={user === null}>
             {album && !isCoverInputNeeded &&
                 <>
                     <img className="w-25 d-block mx-auto mt-3 clickable" src={album.coverURL} alt={`Couverture de ${album.title}`} onClick={() => setIsCoverInputNeeded(true)} />
@@ -106,19 +107,19 @@ function AddAlbum() {
             {isFormIncorrect && <Alert className="mt-2" message="Erreur" description="Il faut remplir tous les champs" type="error" />}
             <div>
                 <label htmlFor="title" className="form-label mt-3">Titre : </label>
-                <input type="text" className="form-control" id="title" ref={titleRef} required />
+                <input type="text" className="form-control" id="title" ref={titleRef} readOnly={user === null} required />
             </div>
             <div>
                 <label htmlFor="artist" className="form-label mt-3">Artiste : </label>
-                <input type="text" className="form-control" id="artist" ref={artistRef} required />
+                <input type="text" className="form-control" id="artist" ref={artistRef} readOnly={user === null} required />
             </div>
             <div>
                 <label htmlFor="releaseDate" className="form-label mt-3">Date de sortie : </label>
-                <input type="date" className="form-control" id="releaseDate" ref={releaseDateRef} required />
+                <input type="date" className="form-control" id="releaseDate" ref={releaseDateRef} readOnly={user === null} required />
             </div>
             <div>
                 <label htmlFor="score" className="form-label mt-3">Score : </label>
-                <input type="range" className="form-range" min="1" max="5" step="1" defaultValue="3" id="score" ref={scoreRef} required />
+                <input type="range" className="form-range" min="1" max="5" step="1" defaultValue="3" id="score" ref={scoreRef} readOnly={user === null} required />
             </div>
             {/* En mode édition, on n'aura pas ça */}
             {isCoverInputNeeded &&

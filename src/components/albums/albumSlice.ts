@@ -29,7 +29,7 @@ export const readAllAlbums = createAsyncThunk(
     "album/getAll",
     async () => {
         const response = await axios.get(`${BASE_DB_URL}/albums.json`);
-        let albums: Album[] = [];
+        const albums: Album[] = [];
         for (const key in response.data) {
             const album = response.data[key] as Album;
             albums.push({ ...album, id: key });
@@ -92,12 +92,16 @@ const albumSlice = createSlice({
                     return false
                 });
             } else {
+                console.log("Le champ de recherche est vide");
                 state.filteredAlbums = state.albums;
             }
+        },
+        resetFilter : (state) => {
+            state.filteredAlbums = state.albums;
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(createAlbum.fulfilled, (state) => {
+        builder.addCase(createAlbum.fulfilled, () => {
         }),
             builder.addCase(createAlbum.rejected, (state, action) => {
                 console.error(action.error);
@@ -134,6 +138,6 @@ const albumSlice = createSlice({
     }
 });
 
-export const { search } = albumSlice.actions;
+export const { search, resetFilter } = albumSlice.actions;
 export default albumSlice.reducer;
 export const totoSelector = (state: RootState) => state.albums.albums;
