@@ -14,9 +14,9 @@ function AddAlbum() {
     const scoreRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const coverURLRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
-    const [isFormIncorrect, setIsFormIncorrect] = useState(false);
-    const [isRequestRejected, setIsRequestRejected] = useState(false);
-    const [isCoverInputNeeded, setIsCoverInputNeeded] = useState(true);
+    const [isFormIncorrect, setIsFormIncorrect] = useState<boolean>(false);
+    const [isRequestRejected, setIsRequestRejected] = useState<boolean>(false);
+    const [isCoverInputNeeded, setIsCoverInputNeeded] = useState<boolean>(true);
     const [album, setAlbum] = useState<Album | null>(null);
     const { id } = useParams();
 

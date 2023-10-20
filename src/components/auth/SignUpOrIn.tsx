@@ -9,8 +9,8 @@ function SignUpOrIn() {
     const emailRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const passwordRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
-    const [isFail, setIsFail] = useState(false);
-    const [failMessage, setFailMessage] = useState("");
+    const [isFail, setIsFail] = useState<boolean>(false);
+    const [failMessage, setFailMessage] = useState<string>("");
 
     const [searchParams] = useSearchParams();
     const mode = searchParams.get("mode");
@@ -38,7 +38,6 @@ function SignUpOrIn() {
                 }
             } else if (mode === "signup") {
                 await dispatch(signUp({ email: emailRef.current.value, password: passwordRef.current.value }));
-                console.log("signUpOrIn.submitHandler : fonction asynchrone signin finie");
                 if (user === null) {
                     console.log("user null");
                     setIsFail(true);
