@@ -1,0 +1,22 @@
+{
+    "clients": [
+        {
+            "id": "1f020b27-5681-445a-9b57-848efba08b0d",
+            "firstname": "Clément",
+            "lastname": "Roelens",
+            "phoneNumber": "0601851235"
+        },
+        {
+            "id": "d0c35522-5e6a-4729-9a35-b169b895bc6a",
+            "firstname": "Albert",
+            "lastname": "Einstein",
+            "phoneNumber": "0601851230"
+        },
+        {
+            "id": "5b3ea2ca-05ce-4ce7-83e5-d05e8d4787a0",
+            "firstname": "Steven",
+            "lastname": "Spielberg",
+            "phoneNumber": "0605852230"
+        }
+    ]
+}
