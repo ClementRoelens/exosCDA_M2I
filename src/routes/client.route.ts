@@ -8,6 +8,21 @@ const clientRouter = express.Router();
 const dao = new ClientDao(resolve("db/clientsDb.json"));
 
 
+function typeCheck(body:any) : boolean {
+    const anonymousClient:Client = {
+        firstname:"",
+        lastname:"",
+        phoneNumber:""
+    };
+
+    for (const key in anonymousClient) {
+        if (!(key in body) || (typeof body[key] !== typeof anonymousClient[key])){
+            return false;
+        }
+    }
+    return true;
+}
+
 clientRouter.get("/", (req: Request, res: Response) => {
     res.status(200).json({ clients: dao.getClients() });
 });
@@ -23,22 +38,26 @@ clientRouter.get("/:id", (req: Request, res: Response) => {
 });
 
 clientRouter.post("/", async (req: Request, res: Response) => {
-    try {
-        const newClient: Client = {
-            id: crypto.randomUUID(),
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            phoneNumber: req.body.phoneNumber
-        };
-        const response = await dao.addClient(newClient);
-        if (typeof response === "string") {
-            res.status(500).json({ messsage: "Le produit n'a pas pu être ajouté" });
-        } else {
-            res.status(201).json({ client: newClient });
+    if (typeCheck(req.body)){
+        try {
+            const newClient: Client = {
+                id: crypto.randomUUID(),
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                phoneNumber: req.body.phoneNumber
+            };
+            const response = await dao.addClient(newClient);
+            if (typeof response === "string") {
+                res.status(500).json({ messsage: "Le produit n'a pas pu être ajouté" });
+            } else {
+                res.status(201).json({ client: newClient });
+            }
         }
-    }
-    catch (err: any) {
-        console.error(err.message);
+        catch (err: any) {
+            console.error(err.message);
+        }
+    } else {
+        res.status(400).json({message : "Mauvaise structure de données. La structure attendue est : { 'firstname' : string , 'lastname' : string , 'phoneNumber' : string }"});
     }
 });
 

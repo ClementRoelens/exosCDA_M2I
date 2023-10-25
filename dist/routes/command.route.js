@@ -18,6 +18,23 @@ const path_1 = require("path");
 const crypto_1 = __importDefault(require("crypto"));
 const commandRouter = express_1.default.Router();
 const dao = new CommandDao_1.CommandDao((0, path_1.resolve)("db/commandsDb.json"));
+function typeCheck(body) {
+    const anonymousCommand = {
+        products: [],
+        client: {
+            id: "",
+            firstname: "",
+            lastname: "",
+            phoneNumber: ""
+        }
+    };
+    for (const key in anonymousCommand) {
+        if (!(key in body) || (typeof body[key] !== typeof anonymousCommand[key])) {
+            return false;
+        }
+    }
+    return true;
+}
 commandRouter.get("/", (req, res) => {
     res.status(200).json({ commands: dao.getCommands() });
 });
@@ -31,22 +48,27 @@ commandRouter.get("/:id", (req, res) => {
     }
 });
 commandRouter.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const newCommand = {
-            id: crypto_1.default.randomUUID(),
-            client: req.body.client,
-            products: req.body.products
-        };
-        const response = yield dao.addCommand(newCommand);
-        if (typeof response === "string") {
-            res.status(500).json({ messsage: "Le produit n'a pas pu être ajouté" });
+    if (typeCheck(req.body)) {
+        try {
+            const newCommand = {
+                id: crypto_1.default.randomUUID(),
+                client: req.body.client,
+                products: req.body.products
+            };
+            const response = yield dao.addCommand(newCommand);
+            if (typeof response === "string") {
+                res.status(500).json({ messsage: "Le produit n'a pas pu être ajouté" });
+            }
+            else {
+                res.status(201).json({ command: newCommand });
+            }
         }
-        else {
-            res.status(201).json({ command: newCommand });
+        catch (err) {
+            console.error(err.message);
         }
     }
-    catch (err) {
-        console.error(err.message);
+    else {
+        res.status(400).json({ message: "Mauvaise structure de données. La structure attendue est : { 'products' : Product[] ,'client' : Client }" });
     }
 }));
 exports.default = commandRouter;

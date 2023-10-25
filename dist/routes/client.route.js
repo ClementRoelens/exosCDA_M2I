@@ -18,6 +18,19 @@ const path_1 = require("path");
 const crypto_1 = __importDefault(require("crypto"));
 const clientRouter = express_1.default.Router();
 const dao = new ClientDao_1.ClientDao((0, path_1.resolve)("db/clientsDb.json"));
+function typeCheck(body) {
+    const anonymousClient = {
+        firstname: "",
+        lastname: "",
+        phoneNumber: ""
+    };
+    for (const key in anonymousClient) {
+        if (!(key in body) || (typeof body[key] !== typeof anonymousClient[key])) {
+            return false;
+        }
+    }
+    return true;
+}
 clientRouter.get("/", (req, res) => {
     res.status(200).json({ clients: dao.getClients() });
 });
@@ -31,23 +44,28 @@ clientRouter.get("/:id", (req, res) => {
     }
 });
 clientRouter.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const newClient = {
-            id: crypto_1.default.randomUUID(),
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            phoneNumber: req.body.phoneNumber
-        };
-        const response = yield dao.addClient(newClient);
-        if (typeof response === "string") {
-            res.status(500).json({ messsage: "Le produit n'a pas pu être ajouté" });
+    if (typeCheck(req.body)) {
+        try {
+            const newClient = {
+                id: crypto_1.default.randomUUID(),
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                phoneNumber: req.body.phoneNumber
+            };
+            const response = yield dao.addClient(newClient);
+            if (typeof response === "string") {
+                res.status(500).json({ messsage: "Le produit n'a pas pu être ajouté" });
+            }
+            else {
+                res.status(201).json({ client: newClient });
+            }
         }
-        else {
-            res.status(201).json({ client: newClient });
+        catch (err) {
+            console.error(err.message);
         }
     }
-    catch (err) {
-        console.error(err.message);
+    else {
+        res.status(400).json({ message: "Mauvaise structure de données. La structure attendue est : { 'firstname' : string , 'lastname' : string , 'phoneNumber' : string }" });
     }
 }));
 exports.default = clientRouter;
