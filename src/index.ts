@@ -14,6 +14,20 @@ async function readTodos(): Promise<Todo[]> {
     return JSON.parse(await readFile(dataFile)).todos as Todo[];
 }
 
+function typeCheck(body:any, acceptedKeys:string[]) : boolean {
+    for (const key in body){
+        if (!acceptedKeys.includes(key)){
+            return false;
+        }
+    }
+    
+    for (const key of acceptedKeys) {
+        if (!(key in body)){
+            return false;
+        }
+    }
+    return true;
+}
 
 
 app.use(express.json());
@@ -59,6 +73,27 @@ app.get("/todos/:id", async (req: Request, res: Response) => {
     }
 });
 
+app.post("/todos", async (req: Request, res: Response) => {
+    if (typeCheck(req.body,["title","isDone"])){
+        try {
+            const todos = await readTodos();
+            const newId = (todos[todos.length - 1].id) + 1;
+            const newTodo = { ...req.body, id: newId } as Todo;
+            todos.push(newTodo);
+    
+            await writeFile(dataFile, JSON.stringify({ todos: todos }));
+            res.status(201).json(newTodo);
+        }
+        catch (err: any) {
+            console.error("Erreur lors de la création d'une todo\n", err.message);
+            res.status(500).json({ message: err.message });
+        }
+    } else {
+        console.error("Le corps de la requête est mauvais");
+        res.status(400).json({message:"Mauvaise requête. Vous devez passer un objet de type {'title':string , 'isDone':boolean}"});
+    }
+});
+
 app.patch("/todos/:id", async (req: Request, res: Response) => {
     if (!isNaN(+req.params.id)) {
         try {
@@ -81,22 +116,6 @@ app.patch("/todos/:id", async (req: Request, res: Response) => {
         res.status(400).json({ message: "Le paramètre doit être un nombre" });
     }
 });
-
-app.post("/todos", async (req: Request, res: Response) => {
-    try {
-        const todos = await readTodos();
-        const newId = (todos[todos.length - 1].id) + 1;
-        const newTodo = { ...req.body, id: newId } as Todo;
-        todos.push(newTodo);
-
-        await writeFile(dataFile, JSON.stringify({ todos: todos }));
-        res.status(201).json(newTodo);
-    }
-    catch (err: any) {
-        console.error("Erreur lors de la création d'une todo\n", err.message);
-        res.status(500).json({ message: err.message });
-    }
-})
 
 app.delete("/todos/:id", async (req: Request, res: Response) => {
     if (!isNaN(+req.params.id)) {
