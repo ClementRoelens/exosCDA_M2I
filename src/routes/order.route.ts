@@ -1,15 +1,15 @@
 import express, { Request, Response } from "express";
-import { CommandDao } from "../models/CommandDao";
+import { OrderDao } from "../models/OrderDao";
 import { resolve } from "path";
-import { Command } from "../models/Command";
+import { Order } from "../models/Order";
 import crypto from "crypto";
 
-const commandRouter = express.Router();
-const dao = new CommandDao(resolve("db/commandsDb.json"));
+const orderRouter = express.Router();
+const dao = new OrderDao(resolve("db/ordersDb.json"));
 
 
 function typeCheck(body:any) : boolean {
-    const anonymousCommand:Command = {
+    const anonymousOrder:Order = {
         products:[],
         client : {
             id:"",
@@ -19,41 +19,41 @@ function typeCheck(body:any) : boolean {
         }
     };
 
-    for (const key in anonymousCommand) {
-        if (!(key in body) || (typeof body[key] !== typeof anonymousCommand[key])){
+    for (const key in anonymousOrder) {
+        if (!(key in body) || (typeof body[key] !== typeof anonymousOrder[key])){
             return false;
         }
     }
     return true;
 }
 
-commandRouter.get("/", (req: Request, res: Response) => {
-    res.status(200).json({ commands: dao.getCommands() });
+orderRouter.get("/", (req: Request, res: Response) => {
+    res.status(200).json({ orders: dao.getOrders() });
 });
 
-commandRouter.get("/:id", (req: Request, res: Response) => {
-    const foundCommand = dao.getOneCommand(req.params.id);
+orderRouter.get("/:id", (req: Request, res: Response) => {
+    const foundOrder = dao.getOneOrder(req.params.id);
 
-    if (foundCommand) {
-        res.status(200).json({ command: foundCommand });
+    if (foundOrder) {
+        res.status(200).json({ order: foundOrder });
     } else {
-        res.status(404).json({ message: "Aucune commande trouvé" });
+        res.status(404).json({ message: "Aucune ordere trouvé" });
     }
 });
 
-commandRouter.post("/", async (req: Request, res: Response) => {
+orderRouter.post("/", async (req: Request, res: Response) => {
     if (typeCheck(req.body)){
         try {
-            const newCommand: Command = {
+            const newOrder: Order = {
                 id: crypto.randomUUID(),
                 client : req.body.client,
                 products : req.body.products
             };
-            const response = await dao.addCommand(newCommand);
+            const response = await dao.addOrder(newOrder);
             if (typeof response === "string") {
                 res.status(500).json({ messsage: "Le produit n'a pas pu être ajouté" });
             } else {
-                res.status(201).json({ command: newCommand });
+                res.status(201).json({ order: newOrder });
             }
         }
         catch (err: any) {
@@ -64,4 +64,4 @@ commandRouter.post("/", async (req: Request, res: Response) => {
     }
 });
 
-export default commandRouter;
+export default orderRouter;
