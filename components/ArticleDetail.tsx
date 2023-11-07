@@ -15,9 +15,9 @@ const ArticleDetail = (props: ArticleDetailInterface) => {
     return (
         <Modal visible={props.visible}>
             <View style={styles.global}>
-                <Text style={styles.name}>{props.article.name}</Text>
-                <Text>{props.article.price}€</Text>
-                <Text style={styles.priceArea}>Quantité : {props.article.quantity}  |  Prix total : {props.article.price*props.article.quantity}€</Text>
+                <Text style={[styles.name, styles.globalText]}>{props.article.name}</Text>
+                <Text style={styles.globalText}>{props.article.price}€</Text>
+                <Text style={[styles.priceArea,styles.globalText]}>Quantité : {props.article.quantity}  |  Prix total : {props.article.price*props.article.quantity}€</Text>
                 {/* <TextInput inputMode='numeric' onChangeText={e => setQuantity(+e)} defaultValue={props.article.quantity.toString()} /> */}
                 <Button title='Supprimer' color="red" onPress={props.deleteHandler} />
                 <Pressable style={styles.cancel} onPress={props.close}>
@@ -40,6 +40,9 @@ const styles = StyleSheet.create({
         alignItems:"center",
         alignSelf:"center",
         width:"60%"
+    },
+    globalText : {
+        color:"gray"
     },
     name : {
         fontSize:25,

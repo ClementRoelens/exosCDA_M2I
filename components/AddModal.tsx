@@ -40,7 +40,8 @@ function AddModal(props: ModaleProps) {
         },
         textInput :  {
             textAlign:"center",
-            marginBottom:0
+            marginBottom:0,
+            color:"gray"
         },
         inputArea :{
             marginVertical:25
