@@ -2,46 +2,52 @@ import { useState } from "react";
 import { Button, FlatList, Image, StyleSheet, Text, TextInput, View } from "react-native";
 import AddModal from "./AddModal";
 import CartElement from "./CartElement";
+import { Article } from "../models/Article";
+import ArticleDetail from "./ArticleDetail";
 
 function CartList() {
     const styles = StyleSheet.create({
         initialStyle: {
             marginTop: 15
         },
-        list : {
-            marginTop:15
+        list: {
+            marginTop: 15
         }
     });
 
-    const [cart, setCart] = useState<string[]>([]);
+    const [cart, setCart] = useState<Article[]>([]);
+    const [article,setArticle] = useState<Article | null>(null);
     const [isAddMode, setIsAddMode] = useState(false);
+    const [isDetailMode,setIsDetailmode] = useState(false);
 
-    function addToCart(item: string) {
-        if (item.trim() !== ""){
-            setCart(prevCart => [...prevCart, item]);
-        }
+    function addToCart(article: Article) {
+        setCart(prevCart => [...prevCart, article]);
         setIsAddMode(false);
     }
 
-    function deleteFromCart(index:number){
-        setCart((prevCart:string[]) => {
-            const newCart = [...prevCart];
-            newCart.splice(index,1);
-            return newCart;
-        });
+    function deleteFromCart(id: string) {
+        setCart(prevCart => prevCart.filter((article: Article) => article.id !== id));
+        setIsDetailmode(false);
+        setArticle(null);
+    }
+
+    function showArticle(shownArticle:Article){
+        setArticle(shownArticle);
+        setIsDetailmode(true);
     }
 
     return (
         <View style={styles.initialStyle}>
             <Button title="Ajouter à la liste" onPress={() => setIsAddMode(true)} />
             <FlatList style={styles.list} data={cart} renderItem={(item) => {
-                return <CartElement item={item.item} deleteHandler={() => deleteFromCart(item.index)}/>
+                return <CartElement article={item.item} trigger={() => showArticle(item.item)} />
             }} keyExtractor={(item, index) => {
                 return index.toString();
             }}
             ></FlatList>
-            <AddModal visible={isAddMode} addToCart={(item: string) => addToCart(item)} close={() => setIsAddMode(false)} />
-            
+            <AddModal visible={isAddMode} addToCart={(article: Article) => addToCart(article)} close={() => setIsAddMode(false)} />
+            {article &&
+                <ArticleDetail visible={isDetailMode} article={article!} deleteHandler={() => deleteFromCart(article!.id)} close={() => setIsDetailmode(false)}/>}
         </View>
     );
 

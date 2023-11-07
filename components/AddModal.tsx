@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { Button, Image, Modal, StyleSheet, TextInput, View } from "react-native";
+import { Button, Image, Modal, StyleSheet, Text, TextInput, View } from "react-native";
+import { Article } from "../models/Article";
 
 function AddModal(props: ModaleProps) {
-    const [inputText, setInputText] = useState("");
+    const [name, setName] = useState("");
+    const [price,setPrice] = useState(0);
+    const [quantity, setQuantity] = useState(0);
 
     const styles = StyleSheet.create({
         global: {
-            flex:1,
-            justifyContent:"center"
+            flex: 1,
+            justifyContent: "center"
         },
         input: {
             borderWidth: 1,
@@ -15,7 +18,7 @@ function AddModal(props: ModaleProps) {
             borderRadius: 12,
             marginHorizontal: 50,
             marginTop: 30,
-            color:"gray"
+            color: "gray"
         },
         inputActions: {
             flexDirection: "row",
@@ -26,21 +29,48 @@ function AddModal(props: ModaleProps) {
         image: {
             width: 100,
             height: 100,
-            alignSelf: "center"
+            alignSelf: "center",
+            marginTop:0
+        },
+        inputElement : {
+            width : "60%",
+            justifyContent:"center",
+            alignSelf:"center",
+            marginBottom:15
+        },
+        textInput :  {
+            textAlign:"center",
+            marginBottom:0
+        },
+        inputArea :{
+            marginVertical:25
         }
     });
 
-    function updateText(e: string) {
-        setInputText(e);
+    function addArticle(){
+        props.addToCart(new Article(name,price,quantity));
     }
 
     return (
-        <Modal visible={props.visible}>
+        <Modal visible={props.visible} animationType="fade">
             <View style={styles.global}>
                 <Image style={styles.image} source={require("../assets/cart.png")} width={100} height={100} />
-                <TextInput style={styles.input} onChangeText={updateText}/>
+                <View style={styles.inputArea}>
+                    <View style={styles.inputElement}>
+                        <Text style={styles.textInput}>Nom : </Text>
+                        <TextInput style={styles.input} onChangeText={e => setName(e)} />
+                    </View>
+                    <View style={styles.inputElement}>
+                        <Text style={styles.textInput}>Prix : </Text>
+                        <TextInput inputMode="numeric" style={styles.input} onChangeText={e => setPrice(+e)} />
+                    </View>
+                    <View style={styles.inputElement}>
+                        <Text style={styles.textInput}>Quantité : </Text>
+                        <TextInput inputMode="numeric" style={styles.input} onChangeText={e => setQuantity(+e)} />
+                    </View>
+                </View>
                 <View style={styles.inputActions}>
-                    <Button title="Ajouter article" onPress={() => props.addToCart(inputText)} />
+                    <Button title="Ajouter article" onPress={addArticle} />
                     <Button title="Annnuler" color="red" onPress={() => props.close()} />
                 </View>
             </View>
@@ -50,8 +80,8 @@ function AddModal(props: ModaleProps) {
 
 interface ModaleProps {
     visible: boolean;
-    addToCart: (item: string) => void;
-    close: () => void
+    addToCart: (article: Article) => void;
+    close: () => void;
 }
 
 export default AddModal;

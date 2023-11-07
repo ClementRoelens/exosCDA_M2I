@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
+import { Article } from "../models/Article";
 
-function CartElement(props:CartElementInterface) {
+function ArticleThumb(props: ArticleThumbInterface) {
     const styles = StyleSheet.create({
         cartItem: {
             backgroundColor: "#5e0acc",
@@ -13,15 +14,15 @@ function CartElement(props:CartElementInterface) {
     });
 
     return (
-        <Pressable onPress={props.deleteHandler}>
-            <Text style={styles.cartItem}>{props.item}</Text>
+        <Pressable onPress={props.trigger}>
+            <Text style={styles.cartItem}>{props.article.name}</Text>
         </Pressable>
     );
 }
 
-interface CartElementInterface {
-    item:string;
-    deleteHandler : () => void;
+interface ArticleThumbInterface {
+    article: Article;
+    trigger : () => void;
 }
 
-export default CartElement;
+export default ArticleThumb;
