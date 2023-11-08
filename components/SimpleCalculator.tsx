@@ -72,7 +72,7 @@ const SimpleCalculator = () => {
           case "-":
             result = calculator.firstNumber - secondNumber;
             break;
-          case "*":
+          case "X":
             result = calculator.firstNumber * secondNumber;
             break;
           case "/":
@@ -81,19 +81,23 @@ const SimpleCalculator = () => {
         }
         let newCalculator:Calculator;
         // Si l'opération est un "=", alors on affiche juste le résultat
-        newCalculator = {
-          firstNumber:0,
-          firstLineText:"",
-          selectedOperation:"",
-          inputText : result.toString()
-        };
+        if (keyPressed === "="){
+          newCalculator = {
+            firstNumber:0,
+            firstLineText: `${calculator.firstLineText} ${secondNumber} =`,
+            selectedOperation:"",
+            inputText : result.toString()
+          };
+        } 
         // Sinon, la ligne du haut affichera le calcul et l'opération
-        newCalculator = {
-          firstNumber: result,
-          firstLineText : result.toString() + " " + keyPressed,
-          selectedOperation: keyPressed,
-          inputText: ""
-        };
+        else {
+          newCalculator = {
+            firstNumber: result,
+            firstLineText : result.toString() + " " + keyPressed,
+            selectedOperation: keyPressed,
+            inputText: ""
+          };
+        }
         setCalculator(newCalculator);
       }
       // Sinon, on commence par enregistrer notre saisie comme un nombre
@@ -108,8 +112,8 @@ const SimpleCalculator = () => {
           case "-":
             selectedOperation = "-";
             break;
-          case "*":
-            selectedOperation = "*";
+          case "X":
+            selectedOperation = "X";
             break;
           case "/":
             selectedOperation = "/";
@@ -119,7 +123,7 @@ const SimpleCalculator = () => {
         const newCalculator: Calculator = {
           inputText: "",
           firstNumber: firstNumber,
-          firstLineText : firstNumber.toString(),
+          firstLineText : firstNumber.toString() + " " + selectedOperation,
           selectedOperation: selectedOperation
         };
         setCalculator(newCalculator);
@@ -129,7 +133,7 @@ const SimpleCalculator = () => {
 
   return (
     <SafeAreaView>
-      {/* <Text style={[styles.displayInput, styles.storedText]}>{storedCalculText}</Text> */}
+      <Text style={[styles.displayInput, styles.storedText]}>{calculator.firstLineText}</Text>
       <Text style={[styles.displayInput, styles.currentInput]}>{calculator.inputText}</Text>
       <View style={styles.keysArea}>
         <Key onKeyPress={keyPressed => keyPress(keyPressed)} keyName='AC' isOperation={true} />
