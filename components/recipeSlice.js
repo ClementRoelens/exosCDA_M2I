@@ -37,10 +37,10 @@ const recipeSlice = createSlice({
             state.recipes = parseRecipes(recipes);
         },
         selectOneRecipe: (state, action) => {
-            state.selectedRecipe = state.recipes.find(recipe => recipe.id === action);
+            state.selectedRecipe = state.recipes.find(recipe => recipe.id === action.payload);
         },
         selectRecipesFromOneCategory: (state, action) => {
-            const recipes = RECIPES.filter(recipe => recipe.categoryIds.includes(action));
+            const recipes = RECIPES.filter(recipe => recipe.categoryIds.includes(action.payload));
             state.recipes = parseRecipes(recipes);
         }
     }

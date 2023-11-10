@@ -1,10 +1,10 @@
-import { StyleSheet, ScrollView, FlatList } from 'react-native'
+import { StyleSheet, FlatList } from 'react-native'
 import React, { useEffect } from 'react'
 import RecipeListThumb from '../components/RecipeListThumb'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCategories } from '../components/categorySlice'
 
-const Home = () => {
+const Home = ({ navigation }) => {
   // const recipes = useSelector(state => state.recipe.recipes);
   const categories = useSelector(state => state.category.categories);
   const dispatch = useDispatch();
@@ -19,7 +19,15 @@ const Home = () => {
       data={categories}
       numColumns={2}
       renderItem={itemData => {
-        return <RecipeListThumb color={itemData.item.color} id={itemData.item.id} style={styles.thumb}>{itemData.item.title}</RecipeListThumb>
+        return (
+          <RecipeListThumb
+              navigation={navigation}
+              title={itemData.item.title}
+              color={itemData.item.color}
+              id={itemData.item.id}
+              style={styles.thumb}>
+              {itemData.item.title}
+          </RecipeListThumb>)
       }}
       keyExtractor={item => item.id} />
   )
