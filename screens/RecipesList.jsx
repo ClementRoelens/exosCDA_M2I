@@ -1,11 +1,24 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, FlatList, Text, View,Image } from 'react-native'
+import React, {useEffect} from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { selectRecipesFromOneCategory } from '../components/recipeSlice';
 
-const RecipesList = () => {
+const RecipesList = (route) => {
+  const categoryId = route.params.id;
+  const recipes = useSelector(state => state.recipe.recipes);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(selectRecipesFromOneCategory(categoryId));
+  },[]);
+
   return (
+   <FlatList data={recipes} renderItem={itemData => {
+    return (
     <View>
-      <Text>RecipesList</Text>
+      <Image />
     </View>
+    )}}/>
   )
 }
 

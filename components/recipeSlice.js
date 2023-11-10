@@ -2,6 +2,29 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RECIPES } from "../data";
 
+function parseRecipes(recipes){
+    const parsedRecipes = [];
+    recipes.forEach(recipe => {
+        parsedRecipes.push({
+            id: recipe.id,
+            categoryIds: recipe.categoryIds,
+            title: recipe.title,
+            affordability: recipe.affordability,
+            complexity: recipe.complexity,
+            imageUrl: recipe.imageUrl,
+            duration: recipe.duration,
+            ingredients: recipe.ingredients,
+            steps: recipe.steps,
+            isGlutenFree: recipe.isGlutenFree,
+            isVegan: recipe.isVegan,
+            isVegetarian: recipe.isVegetarian,
+            isLactoseFree: recipe.isLactoseFree
+        })
+    });
+
+    return parsedRecipes;
+}
+
 const recipeSlice = createSlice({
     name: "recipe",
     initialState: {
@@ -9,14 +32,19 @@ const recipeSlice = createSlice({
         selectedRecipe: null
     },
     reducers: {
-        getAllRecipes : (state) => {
-            state.recipes = RECIPES;
+        getAllRecipes: (state) => {
+            const recipes = RECIPES;
+            state.recipes = parseRecipes(recipes);
         },
-        selectOneRecipe : (state,action) => {
+        selectOneRecipe: (state, action) => {
             state.selectedRecipe = state.recipes.find(recipe => recipe.id === action);
+        },
+        selectRecipesFromOneCategory: (state, action) => {
+            const recipes = RECIPES.filter(recipe => recipe.categoryIds.includes(action));
+            state.recipes = parseRecipes(recipes);
         }
     }
 });
 
-export const {getAllRecipes, selectOneRecipe} = recipeSlice.actions;
+export const { getAllRecipes, selectOneRecipe, selectRecipesFromOneCategory } = recipeSlice.actions;
 export default recipeSlice.reducer;

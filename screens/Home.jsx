@@ -14,13 +14,14 @@ const Home = () => {
   }, []);
 
   return (
-    <FlatList style={styles.global} 
-              contentContainerStyle={styles.listContent}
-              data={categories} 
-              numColumns={2} 
-              renderItem={itemData => {
-      return <RecipeListThumb color={itemData.item.color} style={styles.thumb}>{itemData.item.title}</RecipeListThumb>
-    }}/>
+    <FlatList style={styles.global}
+      contentContainerStyle={styles.listContent}
+      data={categories}
+      numColumns={2}
+      renderItem={itemData => {
+        return <RecipeListThumb color={itemData.item.color} id={itemData.item.id} style={styles.thumb}>{itemData.item.title}</RecipeListThumb>
+      }}
+      keyExtractor={item => item.id} />
   )
 }
 
@@ -28,11 +29,11 @@ export default Home;
 
 const styles = StyleSheet.create({
   global: {
-    flex:1,
-    marginTop:10
+    marginTop: 10
   },
-  listContent : {
-    alignItems:"center",
-    gap : 15
+  listContent: {
+    alignItems: "center"
+  },
+  thumb: {
   }
 })
