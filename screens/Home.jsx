@@ -22,7 +22,6 @@ const Home = ({ navigation }) => {
         return (
           <RecipeListThumb
               navigation={navigation}
-              title={itemData.item.title}
               color={itemData.item.color}
               id={itemData.item.id}
               style={styles.thumb}>

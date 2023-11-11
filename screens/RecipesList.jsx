@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectRecipesFromOneCategory } from '../components/recipeSlice';
 import RecipeThumb from '../components/RecipeThumb';
 
-const RecipesList = ({ route }) => {
+const RecipesList = ({ route, navigation }) => {
   const categoryId = route.params.id;
   const recipes = useSelector(state => state.recipe.recipes);
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const RecipesList = ({ route }) => {
 
   return (
     <FlatList data={recipes} contentContainerStyle={styles.listContent} renderItem={itemData => {
-      return <RecipeThumb recipe={itemData.item}/>
+      return <RecipeThumb recipe={itemData.item} navigation={navigation}/>
     }} />
   )
 }

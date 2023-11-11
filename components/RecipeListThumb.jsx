@@ -1,9 +1,9 @@
 import { StyleSheet , Pressable, Text } from 'react-native'
 import React from 'react'
 
-const RecipeListThumb = ({ navigation, color, title, id, children }) => {
+const RecipeListThumb = ({ navigation, color, id, children }) => {
     return (
-        <Pressable onPress={() => navigation.navigate(title, {id : id} )} style={[styles.container, { backgroundColor: color }]}>
+        <Pressable onPress={() => navigation.navigate("MealsOverview", {id : id} )} style={[styles.container, { backgroundColor: color }]}>
             <Text style={styles.text}>{children}</Text>
         </Pressable>
     )

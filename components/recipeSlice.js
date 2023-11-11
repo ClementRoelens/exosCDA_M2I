@@ -37,6 +37,7 @@ const recipeSlice = createSlice({
             state.recipes = parseRecipes(recipes);
         },
         selectOneRecipe: (state, action) => {
+            console.log("recipeSlice.selectOneRecipe() : id reçue = " + action.payload);
             state.selectedRecipe = state.recipes.find(recipe => recipe.id === action.payload);
         },
         selectRecipesFromOneCategory: (state, action) => {
