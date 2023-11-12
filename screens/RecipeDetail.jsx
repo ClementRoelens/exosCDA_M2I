@@ -10,7 +10,6 @@ const RecipeDetail = ({ route }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("RecipeDetail, id reçu : " + id);
     dispatch(selectOneRecipe(id));
   }, [id]);
 
