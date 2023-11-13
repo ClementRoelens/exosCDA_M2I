@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getCategories } from '../components/categorySlice'
 
 const Home = ({ navigation }) => {
-  // const recipes = useSelector(state => state.recipe.recipes);
   const categories = useSelector(state => state.category.categories);
   const dispatch = useDispatch();
 

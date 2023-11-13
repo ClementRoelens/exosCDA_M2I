@@ -13,7 +13,7 @@ const RecipeThumb = ({ recipe, navigation }) => {
           containerStyle={styles.container}
           >
       <Pressable style={styles.recipe} onPress={() => navigation.navigate("About the Meal", {id:recipe.id})}>
-        <Image width={"100%"} height={200} source={{ uri: recipe.imageUrl }} />
+        <Image style={styles.image} source={{ uri: recipe.imageUrl }} />
         <Text style={styles.title}>{recipe.title}</Text>
         <View style={styles.footer}>
           <Text style={styles.footerText}>{recipe.duration}m</Text>
@@ -39,6 +39,10 @@ const styles = StyleSheet.create({
   },
   container : {
     margin:3
+  },
+  image : {
+    width:"100%",
+    height:200
   },
   title: {
     fontSize: 25,

@@ -14,38 +14,16 @@ const RecipeDetail = ({ route }) => {
   }, [id]);
 
   return (<>
-    {recipe &&
-       <ScrollView style={styles.global}>
-          <Image source={{ uri: recipe.imageUrl }} width={"100%"} height={300} />
-          <Text style={styles.title}>{recipe.title}</Text>
-          <View style={styles.annotations}>
-            <Text style={styles.annotationsText}>{recipe.duration}m</Text>
-            <Text style={styles.annotationsText}>{recipe.complexity.toUpperCase()}</Text>
-            <Text style={styles.annotationsText}>{recipe.affordability.toUpperCase()}</Text>
-          </View>
-          <Text style={styles.listTitle}>Ingredients</Text>
-          <FlatList data={recipe.ingredients} renderItem={itemData => {
-            return (
-              <View style={styles.listItem}>
-                <Text style={styles.listText}>{itemData.item}</Text>
-              </View>
-            )
-          }}
-            keyExtractor={(item, index) => index} />
-          <Text style={styles.listTitle}>Steps</Text>
-          <FlatList
-            data={recipe.steps} renderItem={itemData => {
-              return (
-                <View style={styles.listItem}>
-                  <Text style={styles.listText}>{itemData.item}</Text>
-                </View>
-              )
-            }}
-            keyExtractor={(item, index) => index} />
-      </ScrollView> 
-    }
     {/* {recipe &&
-      <View>
+      <ScrollView style={styles.global}>
+        <Image source={{ uri: recipe.imageUrl }} width={"100%"} height={300} />
+        <Text style={styles.title}>{recipe.title}</Text>
+        <View style={styles.annotations}>
+          <Text style={styles.annotationsText}>{recipe.duration}m</Text>
+          <Text style={styles.annotationsText}>{recipe.complexity.toUpperCase()}</Text>
+          <Text style={styles.annotationsText}>{recipe.affordability.toUpperCase()}</Text>
+        </View>
+        <Text style={styles.listTitle}>Ingredients</Text>
         <FlatList data={recipe.ingredients} renderItem={itemData => {
           return (
             <View style={styles.listItem}>
@@ -56,9 +34,22 @@ const RecipeDetail = ({ route }) => {
           keyExtractor={(item, index) => index} />
         <Text style={styles.listTitle}>Steps</Text>
         <FlatList
+          data={recipe.steps} renderItem={itemData => {
+            return (
+              <View style={styles.listItem}>
+                <Text style={styles.listText}>{itemData.item}</Text>
+              </View>
+            )
+          }}
+          keyExtractor={(item, index) => index} />
+      </ScrollView>
+    } */}
+    {recipe &&
+      <View style={styles.global}>
+        <FlatList
           ListHeaderComponent={
             <>
-              <Image source={{ uri: recipe.imageUrl }} width={"100%"} height={300} />
+              <Image style={styles.image} source={{ uri: recipe.imageUrl }} />
               <Text style={styles.title}>{recipe.title}</Text>
               <View style={styles.annotations}>
                 <Text style={styles.annotationsText}>{recipe.duration}m</Text>
@@ -66,6 +57,15 @@ const RecipeDetail = ({ route }) => {
                 <Text style={styles.annotationsText}>{recipe.affordability.toUpperCase()}</Text>
               </View>
               <Text style={styles.listTitle}>Ingredients</Text>
+              <FlatList data={recipe.ingredients} renderItem={itemData => {
+                return (
+                  <View style={styles.listItem}>
+                    <Text style={styles.listText}>{itemData.item}</Text>
+                  </View>
+                )
+              }}
+                keyExtractor={(item, index) => index} />
+              <Text style={styles.listTitle}>Steps</Text>
             </>
           }
           data={recipe.steps} renderItem={itemData => {
@@ -78,7 +78,7 @@ const RecipeDetail = ({ route }) => {
           keyExtractor={(item, index) => index}
           ListFooterComponent={<></>} />
       </View>
-    } */}
+    }
   </>
   )
 }
@@ -86,8 +86,8 @@ const RecipeDetail = ({ route }) => {
 export default RecipeDetail
 
 const styles = StyleSheet.create({
-  global : {
-    marginBottom:20
+  global: {
+    marginBottom: 20
   },
   annotations: {
     fontSize: 25,
@@ -106,6 +106,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginVertical: 10,
     color: "black"
+  },
+  image: {
+    width: "100%",
+    height: 300
   },
   listTitle: {
     fontSize: 25,
@@ -132,7 +136,7 @@ const styles = StyleSheet.create({
   listText: {
     color: "black",
     fontSize: 15,
-    textAlign:"center"
+    textAlign: "center"
   },
   footer: {
     fontSize: 25,
