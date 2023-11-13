@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: "center",
     fontWeight: "500",
-    marginVertical: 10
+    marginVertical: 10,
+    color:"black"
   },
   footer: {
     fontSize: 25,

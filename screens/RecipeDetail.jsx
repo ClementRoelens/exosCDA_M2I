@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, FlatList, Pressable } from 'react-native'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectOneRecipe } from '../components/recipeSlice';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { favAction, selectOneRecipe } from '../components/recipeSlice';
 
 const RecipeDetail = ({ route }) => {
   const id = route.params.id;
   const recipe = useSelector(state => state.recipe.selectedRecipe);
+  const favedRecipes = useSelector(state => state.recipe.favedRecipes);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -14,36 +14,6 @@ const RecipeDetail = ({ route }) => {
   }, [id]);
 
   return (<>
-    {/* {recipe &&
-      <ScrollView style={styles.global}>
-        <Image source={{ uri: recipe.imageUrl }} width={"100%"} height={300} />
-        <Text style={styles.title}>{recipe.title}</Text>
-        <View style={styles.annotations}>
-          <Text style={styles.annotationsText}>{recipe.duration}m</Text>
-          <Text style={styles.annotationsText}>{recipe.complexity.toUpperCase()}</Text>
-          <Text style={styles.annotationsText}>{recipe.affordability.toUpperCase()}</Text>
-        </View>
-        <Text style={styles.listTitle}>Ingredients</Text>
-        <FlatList data={recipe.ingredients} renderItem={itemData => {
-          return (
-            <View style={styles.listItem}>
-              <Text style={styles.listText}>{itemData.item}</Text>
-            </View>
-          )
-        }}
-          keyExtractor={(item, index) => index} />
-        <Text style={styles.listTitle}>Steps</Text>
-        <FlatList
-          data={recipe.steps} renderItem={itemData => {
-            return (
-              <View style={styles.listItem}>
-                <Text style={styles.listText}>{itemData.item}</Text>
-              </View>
-            )
-          }}
-          keyExtractor={(item, index) => index} />
-      </ScrollView>
-    } */}
     {recipe &&
       <View style={styles.global}>
         <FlatList
@@ -56,6 +26,11 @@ const RecipeDetail = ({ route }) => {
                 <Text style={styles.annotationsText}>{recipe.complexity.toUpperCase()}</Text>
                 <Text style={styles.annotationsText}>{recipe.affordability.toUpperCase()}</Text>
               </View>
+              <Pressable style={styles.faved} onPress={() => dispatch(favAction(recipe))}>
+                <Text style={styles.annotationsText}>{favedRecipes.find(favedRecipe => favedRecipe.id === recipe.id) ? "Retirer des " : "Ajouter aux "}favoris</Text>
+                <Image style={[styles.notFavedIcon, styles.favedIcon]}
+                  source={favedRecipes.find(favedRecipe => favedRecipe.id === recipe.id) ? require("../assets/heart_filled.png") : require("../assets/heart.png")} />
+              </Pressable>
               <Text style={styles.listTitle}>Ingredients</Text>
               <FlatList data={recipe.ingredients} renderItem={itemData => {
                 return (
@@ -110,6 +85,18 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 300
+  },
+  faved: {
+    width: "45%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 20
+  },
+  notFavedIcon: {
+    width: 35,
+    height: 30,
   },
   listTitle: {
     fontSize: 25,
