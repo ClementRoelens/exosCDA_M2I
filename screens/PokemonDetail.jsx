@@ -2,22 +2,28 @@ import { StyleSheet, Text, View, Pressable, FlatList, Image } from 'react-native
 import React, { useEffect } from 'react'
 import { Shadow } from 'react-native-shadow-2';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFamily } from '../components/pokemonSlice';
+import { addToFavs, getFamily, isFaved, removeFromFavs } from '../components/pokemonSlice';
 import EvolutionCard from '../components/EvolutionCard';
 
 const PokemonDetail = ({ route }) => {
     const pokemon = route.params.pokemon;
     const textColor = route.params.textColor;
     const family = useSelector(state => state.pokemon.selectedFamily);
+    const stateIsFaved = useSelector(state => state.pokemon.isFaved);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log("PokemonDetail.useEffect : lancement de getFamily sur "+pokemon.evolutionChainUrl);
         dispatch(getFamily(pokemon.evolutionChainUrl));
+        dispatch(isFaved(pokemon.id));
     }, []);
 
-    function addToFavorites(){
-
+    async function favClick() {
+        if (stateIsFaved) {
+            await dispatch(removeFromFavs(pokemon));
+        } else {
+            await dispatch(addToFavs(pokemon));
+        }
+        dispatch(isFaved(pokemon.id));
     }
 
     return (
@@ -59,16 +65,20 @@ const PokemonDetail = ({ route }) => {
                     </Shadow>
                 </View>
                 <View style={styles.buttonContainer}>
-                <Shadow
+                    <Shadow
                         distance={4}
                         startColor="rgba(20,20,20,0.2)"
                         endColor="rgba(20,20,20,0)"
                         radius={10}
-                        >
-                    <Pressable style={[styles.button, {backgroundColor:pokemon.color}]} onPress={addToFavorites}>
-                        <Text style={[styles.buttonText, {color:textColor}]}>Ajouter aux favoris</Text>
-                    </Pressable>
-                </Shadow>
+                    >
+                        <Pressable style={[styles.button, { backgroundColor: pokemon.color }]} onPress={favClick}>
+                            {!stateIsFaved ?
+                                <Text style={[styles.buttonText, { color: textColor }]}>Ajouter aux favoris</Text>
+                                :
+                                <Text style={[styles.buttonText, { color: textColor }]}>Retirer des favoris</Text>
+                            }
+                        </Pressable>
+                    </Shadow>
                 </View>
                 <View style={styles.familyContainer}>
                     <Text style={[styles.title, styles.blackText]}>Chaîne d'évolutions</Text>
@@ -76,9 +86,9 @@ const PokemonDetail = ({ route }) => {
             </>}
             data={family} contentContainerStyle={styles.evolutions} keyExtractor={(item, index) => index} renderItem={({ item }) => {
                 return (
-                <View>
-                    <EvolutionCard pokemon={item}/>
-                </View>
+                    <View>
+                        <EvolutionCard pokemon={item} />
+                    </View>
                 )
             }} />
 
@@ -141,30 +151,30 @@ const styles = StyleSheet.create({
         marginBottom: 7,
         color: "gray"
     },
-    buttonContainer : {
-        alignSelf:"center",
-        marginTop:5,
-        marginBottom:15
+    buttonContainer: {
+        alignSelf: "center",
+        marginTop: 5,
+        marginBottom: 15
     },
-    button : {
-        borderRadius:100,
-        width:120,
-        height:70,
+    button: {
+        borderRadius: 100,
+        width: 120,
+        height: 70,
         // borderWidth:1,
         // borderColor:"black",
-        alignSelf:"center",
-        justifyContent:"center"
+        alignSelf: "center",
+        justifyContent: "center"
     },
-    buttonText :{
-        alignSelf:"center",
-        textAlign:"center",
-        fontSize:15
+    buttonText: {
+        alignSelf: "center",
+        textAlign: "center",
+        fontSize: 15
     },
     familyContainer: {
         marginHorizontal: 15
-    }, 
-    evolutions : {
-        alignItems:"center",
-        paddingBottom:20
+    },
+    evolutions: {
+        alignItems: "center",
+        paddingBottom: 20
     }
 })

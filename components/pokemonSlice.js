@@ -42,9 +42,10 @@ async function getOnePokemon(url) {
 
 export const getAllPokemons = createAsyncThunk(
     "pokemon/get",
-    async () => {
+    async (pokemonNumbers) => {
+        console.log("C'est parti pour récupérer " + pokemonNumbers + " Pokémons");
         try {
-            const pokemonInfos = await axios.get(BASE_URL + "?offset=0&limit=251");
+            const pokemonInfos = await axios.get(BASE_URL + "?offset=0&limit="+pokemonNumbers);
             const pokemonUrls = pokemonInfos.data.results.map(pokemon => pokemon.url);
             const pokemons = await Promise.all(pokemonUrls.map(async url => {
                 const rawPokemon = await axios.get(url);
@@ -89,11 +90,18 @@ const pokemonSlice = createSlice({
     initialState: {
         pokemons: [],
         selectedFamily: [],
-        favedPokemons : []
+        favedPokemons : [],
+        loaded:false,
+        isLoading : false,
+        isFaved : false
     },
     reducers: {
         resetFamily: (state, action) => {
             state.selectedFamily = [];
+        },
+        isFaved : (state,action) => {
+            const index = state.favedPokemons.findIndex(pokemon => pokemon.id === action.payload);
+            state.isFaved = (index !== -1);
         },
         addToFavs : (state,action) => {
             state.favedPokemons.push(action.payload);
@@ -104,8 +112,13 @@ const pokemonSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+        builder.addCase(getAllPokemons.pending, (state,action) => {
+            state.isLoading = true;
+        }),
         builder.addCase(getAllPokemons.fulfilled, (state, action) => {
             state.pokemons = action.payload;
+            state.isLoading = false;
+            state.loaded = true;
         }),
             builder.addCase(getAllPokemons.rejected, (state, action) => {
                 console.error("Erreur lors de la récupération des pokémons", action.error);
@@ -119,5 +132,5 @@ const pokemonSlice = createSlice({
     }
 });
 
-export const { resetFamily } = pokemonSlice.actions;
+export const { resetFamily, isFaved, addToFavs, removeFromFavs } = pokemonSlice.actions;
 export default pokemonSlice.reducer;
