@@ -240,12 +240,11 @@ public class Main {
         // Exo 5.7
 
         int biggestNumber = Integer.MIN_VALUE;
-        int[] array = new int[20];
 
-        for (int i = 0 ; i < array.length ; i++ ) {
+        for (int i = 0 ; i < 20 ; i++ ) {
             System.out.println("\nEntrez le nombre numéro " + (i+1));
-            array[i] = scanner.nextInt();
-            biggestNumber = (array[i] > biggestNumber) ? array[i] : biggestNumber;
+            int currentNumber = scanner.nextInt();
+            biggestNumber = (currentNumber > biggestNumber) ? currentNumber : biggestNumber;
         }
 
         System.out.println("Le plus grand de ces nombres est " + biggestNumber);
@@ -253,22 +252,25 @@ public class Main {
 
         // Exo 5.7.2
 
+        biggestNumber = Integer.MIN_VALUE;
         int position = 0;
-        int[] arrayBis = new int[20];
 
-        for (int i = 0 ; i < arrayBis.length ; i++ ) {
+        for (int i = 0 ; i < 20 ; i++ ) {
             System.out.println("\nEntrez le nombre numéro " + (i+1));
-            arrayBis[i] = scanner.nextInt();
-            position = (arrayBis[i] > arrayBis[position]) ? i : position;
+            int currentNumber = scanner.nextInt();
+            if (currentNumber > biggestNumber){
+                position = i;
+                biggestNumber = currentNumber;
+            }
         }
 
-        System.out.println("Le plus grand de ces nombres est " + arrayBis[position] +" et c'était le numéro " + (position+1));
+        System.out.println("Le plus grand de ces nombres est " + biggestNumber +" et c'était le numéro " + (position+1));
 
 
         // Exo 5.7.3 (officiellement 5.9)
 
-        int positionBis = 0;
-        int maxNumber = Integer.MIN_VALUE;
+        position = 0;
+        biggestNumber = Integer.MIN_VALUE;
         int i = 0;
         int currentInputNb = 1;
 
@@ -277,28 +279,32 @@ public class Main {
             currentInputNb = scanner.nextInt();
 
             if (currentInputNb != 0){
-                if (currentInputNb > maxNumber){
-                    positionBis = i;
-                    maxNumber = currentInputNb;
+                if (currentInputNb > biggestNumber){
+                    position = i;
+                    biggestNumber = currentInputNb;
                 }
                 i++;
             }
         }
 
-        System.out.println("Le plus grand de ces nombres est " + maxNumber +" et c'était le numéro " + positionBis);
+        System.out.println("Le plus grand de ces nombres est " + biggestNumber +" et c'était le numéro " + position);
 
 
         // 5.8
 
         int fact = 1;
+
         System.out.println("\nEntrez le nombre dont on va calculer la factorielle");
         beginningNb = scanner.nextInt();
 
+        String message = beginningNb + "! = ";
         for (int j = beginningNb; j > 0 ; j--) {
+            message += j + " x ";
             fact *= j;
         }
+        message = message.substring(0,message.lastIndexOf("x ")) + " = " + fact;
 
-        System.out.println(beginningNb + "! = " + fact);
+        System.out.println(message);
 
 
         // 5.10
