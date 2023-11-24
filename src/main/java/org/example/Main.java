@@ -1,6 +1,8 @@
 package org.example;
 
 import org.example.TP_1.*;
+import org.example.TP_2.Client;
+import org.example.TP_2.HCI;
 import org.example.TP_2.Hostel;
 
 import java.util.Scanner;
@@ -64,36 +66,66 @@ public class Main {
         // Exo 2
 
         String input;
-        boolean isChoiceCorrect;
         Hostel hostel = new Hostel();
+        HCI hci = new HCI(hostel);
 
         do {
-            isChoiceCorrect = true;
-            System.out.println("1 - Ajouter un client" +
-                    "2 - Afficher la liste des clients" +
-                    "3 - Afficher les réservations d'un client" +
-                    "4 - Ajouter une réservation" +
-                    "5 - Annuler une réservation" +
-                    "6 - Afficher la liste des réservations"
+            System.out.println("\n1 - Ajouter un client\n" +
+                    "2 - Afficher la liste des clients\n" +
+                    "3 - Afficher les réservations d'un client\n" +
+                    "4 - Ajouter une réservation\n" +
+                    "5 - Annuler une réservation\n" +
+                    "6 - Afficher la liste des réservations\n" +
+                    "0 - Quitter\n"
             );
             input = scintigraphy.nextLine();
             switch (input) {
-                case "1":
+                case "1" ->  {
+                    String firstName;
+                    String lastName;
+                    String phoneNumber;
 
-                    break;
-                case "2":
-                    break;
-                case "3":
-                    break;
-                case "4":
-                    break;
-                case "5":
-                    break;
-                case "6":
-                    break;
-                default:
-                    isChoiceCorrect = false;
+                    System.out.print("Nom de famille : ");
+                    firstName = scintigraphy.nextLine();
+                    System.out.print("Prénom : ");
+                    lastName = scintigraphy.nextLine();
+                    System.out.print("Numéro de téléphone : ");
+                    phoneNumber = scintigraphy.nextLine();
+
+                    hci.addClient(firstName,lastName,phoneNumber);
+                }
+                case "2" -> hci.printClients();
+                case "3" -> {
+                    String phoneNumber;
+
+                    System.out.println("Quel est le numéro de téléphone de ce client ?");
+                    phoneNumber = scintigraphy.nextLine();
+
+                    hci.printReservationsFromOneClient(phoneNumber);
+                }
+                case "4" -> {
+                    int clientId;
+                    int occupantsNumber;
+
+                    System.out.println("Quel est votre numéro de client ?");
+                    clientId = scintigraphy.nextInt();
+                    System.out.println("Pour combien de personnes voulez-vous réserver ?");
+                    occupantsNumber = scintigraphy.nextInt();
+                    scintigraphy.nextLine();
+
+                    hci.addReservation(clientId,occupantsNumber);
+                }
+                case "5" -> {
+                    int reservartionId;
+
+                    System.out.println("Quel est le numéro de la réservation à annuler ?");
+                    reservartionId = scintigraphy.nextInt();
+                    scintigraphy.nextLine();
+
+                    hci.cancelReservation(reservartionId);
+                }
+                case "6" -> hci.printAllReservations();
             }
-        } while (!isChoiceCorrect);
+        } while (input != "0");
     }
 }

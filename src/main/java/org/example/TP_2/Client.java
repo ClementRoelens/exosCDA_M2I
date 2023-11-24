@@ -4,11 +4,11 @@ public class Client {
     private int id;
     private String firstName;
     private String lastName;
-    private int phoneNumber;
+    private String phoneNumber;
     private static int counter;
 
 
-    public Client(String firstName, String lastName, int phoneNumber) {
+    public Client(String firstName, String lastName, String phoneNumber) {
         this.id = counter;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -27,7 +27,7 @@ public class Client {
     public String getLastName() {
         return this.lastName;
     }
-    public int getPhoneNumber(){
+    public String getPhoneNumber(){
         return this.phoneNumber;
     }
 }

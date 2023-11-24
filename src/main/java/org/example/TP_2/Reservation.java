@@ -10,10 +10,11 @@ public class Reservation {
     private static int counter;
 
 
-    public Reservation(Client client, int occupantsNumber) {
+    public Reservation(Client client, int occupantsNumber, int[] roomsNumber) {
         this.id = counter;
         this.client = client;
         this.occupantsNumber = occupantsNumber;
+        this.roomsNumber = roomsNumber;
     }
 
     { counter++; }
@@ -21,6 +22,14 @@ public class Reservation {
 
     public Client getClient() {
         return this.client;
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
+    public int[] getRoomsNumber(){
+        return this.roomsNumber;
     }
 
     @Override

@@ -21,4 +21,12 @@ public class Room {
     public Status getStatus(){
         return this.status;
     }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public int getId() {
+        return this.id;
+    }
 }
