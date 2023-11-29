@@ -9,6 +9,7 @@ public abstract class Article {
         this.id = count++;
     }
 
+
     public int getId() {
         return id;
     }

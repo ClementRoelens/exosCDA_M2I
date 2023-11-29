@@ -2,11 +2,11 @@ package org.example.classes;
 
 public class Batch extends Article {
     private Article article;
-    private int quantity;
-    private int discountRate;
+    private short quantity;
+    private byte discountRate;
 
 
-    public Batch(Article article, int quantity, int discountRate) {
+    public Batch(Article article, short quantity, byte discountRate) {
         this.article = article;
         this.quantity = quantity;
         this.discountRate = discountRate;

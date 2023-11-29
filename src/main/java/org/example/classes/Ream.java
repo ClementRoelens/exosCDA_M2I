@@ -1,10 +1,10 @@
 package org.example.classes;
 
 public class Ream extends UniqueArticle {
-    private int weight;
+    private byte weight;
 
 
-    public Ream(String name, float price, int weight) {
+    public Ream(String name, float price, byte weight) {
         super(name, price);
         this.weight = weight;
     }
