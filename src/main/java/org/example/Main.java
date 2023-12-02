@@ -3,15 +3,11 @@ package org.example;
 import org.example.Exceptions.ElementDoesNotExistException;
 import org.example.Exceptions.IncorrectPriceException;
 import org.example.Exceptions.IncorrecteCapacityException;
-import org.example.classes.Client;
-import org.example.classes.Event;
-import org.example.classes.Place;
-import org.example.classes.Service;
+import org.example.classes.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -47,7 +43,11 @@ public class Main {
                         displaySecondMenu("lieu");
                         secondChoice = petScan.nextLine();
                         switch (secondChoice) {
-                            case "1" -> System.out.println(Service.getPlaces());
+                            case "1" -> {
+                                for (Place place : Service.getPlaces()){
+                                    System.out.println(place);
+                                }
+                            }
                             case "2" -> {
                                 System.out.println("Nom de l'endroit :");
                                 String name = petScan.nextLine();
@@ -74,20 +74,24 @@ public class Main {
                                 }
                             }
                         }
-                    } while (secondChoice != "0");
+                    } while (!secondChoice.equals("0"));
                 }
                 case "2" -> {
                     do {
                         displaySecondMenu("événement");
                         secondChoice = petScan.nextLine();
                         switch (secondChoice) {
-                            case "1" -> System.out.println(Service.getEvents());
+                            case "1" -> {
+                                for (Event event : Service.getEvents()){
+                                    System.out.println(event);
+                                }
+                            }
                             case "2" -> {
                                 System.out.println("Nom de l'événement :");
                                 String name = petScan.nextLine();
-                                System.out.println("Date de l'événement : ");
+                                System.out.println("Date de l'événement (au format \"2023-12-02\"): ");
                                 LocalDate date = LocalDate.parse(petScan.nextLine());
-                                System.out.println("Heure de l'événément");
+                                System.out.println("Heure de l'événément (au format \"15:30:00\") : ");
                                 LocalTime time = LocalTime.parse(petScan.nextLine());
                                 Place place = null;
 
@@ -126,14 +130,18 @@ public class Main {
                                 }
                             }
                         }
-                    } while (secondChoice != "0");
+                    } while (!secondChoice.equals("0"));
                 }
                 case "3" -> {
                     do {
                         displaySecondMenu("client");
                         secondChoice = petScan.nextLine();
                         switch (secondChoice) {
-                            case "1" -> System.out.println(Service.getClients());
+                            case "1" -> {
+                                for (Client client : Service.getClients()){
+                                    System.out.println(client);
+                                }
+                            }
                             case "2" -> {
                                 System.out.println("Prénom :");
                                 String firstname = petScan.nextLine();
@@ -145,51 +153,56 @@ public class Main {
                                 Service.addClient(new Client(firstname, lastname, email));
                             }
                         }
-                    } while (secondChoice != "0");
+                    } while (!secondChoice.equals("0"));
                 }
                 case "4" -> {
                     do {
                         System.out.println("1 - Acheter\n0 - Annuler");
                         secondChoice = petScan.nextLine();
-                    } while (secondChoice != "0" && secondChoice != "1");
+                    } while (!secondChoice.equals("0") && !secondChoice.equals("1"));
 
                     boolean incorrectInput;
                     do {
                         try {
-                            System.out.println("Id de l'événement : ");
+                            System.out.println("Id de l'événement");
                             int eventId = petScan.nextInt();
-                            Event event = Service.getOneEvent(eventId);
+                            incorrectInput = false;
                             do {
+                                System.out.println("Id du client");
                                 try {
-                                    System.out.println("Id du client");
                                     int clientId = petScan.nextInt();
                                     Client client = Service.getOneClient(clientId);
-                                    incorrectInput = false;
-
-                                    if (secondChoice == "0") {
-                                        client.returnTicket(eventId);
+                                    if (secondChoice.equals("1")){
+                                        if (client.buyTicket(eventId)){
+                                            System.out.println("Félicitations, place réservée");
+                                        } else {
+                                            System.out.println("Il semble que cet id ne corresponde à aucun événement");
+                                            incorrectInput = true;
+                                        }
                                     } else {
-                                        client.buyTicket(eventId);
+                                        if (client.returnTicket(eventId)){
+                                            System.out.println("Félicitations, réservaiton annulée");
+                                        } else {
+                                            System.out.println("Il semble que cet id ne corresponde à aucun événement");
+                                            incorrectInput = true;
+                                        }
                                     }
-                                } catch (InputMismatchException e) {
+                                } catch (InputMismatchException e){
                                     System.out.println("Un id est forcément un nombre entier");
                                     incorrectInput = true;
-                                } catch (ElementDoesNotExistException e) {
-                                    System.out.println(e.getMessage());
+                                } catch (ElementDoesNotExistException e){
+                                    System.out.println("Il n'y a aucun client de cet id");
                                     incorrectInput = true;
                                 }
                             } while (incorrectInput);
-                        } catch (InputMismatchException e) {
+                        } catch (InputMismatchException e){
                             System.out.println("Un id est forcément un nombre entier");
-                            incorrectInput = true;
-                        } catch (ElementDoesNotExistException e) {
-                            System.out.println(e.getMessage());
                             incorrectInput = true;
                         }
                     } while (incorrectInput);
                 }
 
             }
-        } while (choice != "0");
+        } while (!choice.equals("0"));
     }
 }

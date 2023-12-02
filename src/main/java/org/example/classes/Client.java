@@ -41,7 +41,7 @@ public class Client extends Element {
             }
             return false;
         } catch (ElementDoesNotExistException e) {
-            System.out.println(e);
+            System.out.printf("L'événement %d n'existe pas\n",eventId);
             return false;
         }
     }
@@ -53,7 +53,7 @@ public class Client extends Element {
             this.boughtTicketsEvents.remove(event);
             return true;
         } catch (ElementDoesNotExistException e) {
-            System.out.println(e);
+            System.out.printf("L'événement %d n'existe pas\n",eventId);
             return false;
         }
     }
