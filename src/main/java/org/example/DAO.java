@@ -10,7 +10,7 @@ public class DAO {
 
     private Connection connection = null;
 
-    private void getConnection() throws SQLException {
+    private void openConnection() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/jdbc";
         this.connection = DriverManager.getConnection(url, "root", "1234");
     }
@@ -21,7 +21,7 @@ public class DAO {
         Student newStudent = student;
 
         try {
-            this.getConnection();
+            this.openConnection();
             PreparedStatement statement = this.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, student.getFirstName());
             statement.setString(2, student.getLastName());
@@ -68,7 +68,7 @@ public class DAO {
     public List<Student> fetchStudents(String query) {
         List<Student> students = new ArrayList<>();
         try {
-            this.getConnection();
+            this.openConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
@@ -97,7 +97,7 @@ public class DAO {
 
     public void eraseStudent(int id) {
         try {
-            this.getConnection();
+            this.openConnection();
             Statement statement = connection.createStatement();
 
             int nbResults = statement.executeUpdate("DELETE FROM students WHERE id = " + id);
