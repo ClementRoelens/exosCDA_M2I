@@ -1,0 +1,25 @@
+CREATE DATABASE IF NOT EXISTS exo_banque;
+
+USE exo_banque;
+
+CREATE TABLE IF NOT EXISTS client(
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS account(
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    client_id INT NOT NULL,
+    balance DOUBLE NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES client(id)
+);
+
+CREATE TABLE IF NOT EXISTS operation(
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    amount DOUBLE NOT NULL,
+    status VARCHAR(10) NOT NULL,
+    account_id INT NOT NULL,
+    FOREIGN KEY (account_id) REFERENCES account(id)
+);
+
