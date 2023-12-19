@@ -1,10 +1,10 @@
-package org.example;
+package org.example.DAO;
+
+import org.example.Models.Student;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Scanner;
 
 public class DAO {
 
@@ -91,9 +91,6 @@ public class DAO {
 
         return students;
     }
-
-
-
 
     public void eraseStudent(int id) {
         try {

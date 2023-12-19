@@ -1,4 +1,7 @@
-package org.example;
+package org.example.HCI;
+
+import org.example.DAO.DAO;
+import org.example.Models.Student;
 
 import java.sql.*;
 import java.util.InputMismatchException;
