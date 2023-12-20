@@ -14,5 +14,4 @@ public abstract class BaseDAO<T> {
 
     public abstract T create(T object) throws SQLException;
     public abstract T read(int id) throws SQLException;
-
 }

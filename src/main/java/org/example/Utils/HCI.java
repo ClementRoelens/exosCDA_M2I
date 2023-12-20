@@ -27,57 +27,66 @@ public class HCI {
             } finally {
                 scanner.nextLine();
             }
-            if (choice == 1) {
-                clientMenu();
-            } else {
-                createClient();
+        }
+
+        if (choice == 1) {
+            int id = -1;
+
+            while (id == -1) {
+                try {
+                    System.out.println("Entrez votre identifiant");
+                    id = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("Entrez un nombre entier");
+                }
+                finally {
+                    scanner.nextLine();
+                }
             }
+
+            Client client = service.getClient(id);
+
+            if (client != null) {
+                clientMenu(client);
+            } else {
+                System.out.println("Désolé, il semble que vous n'ayez pas de compte chez nous");
+            }
+        } else {
+            createClient();
         }
     }
 
-    public void clientMenu() {
-        int id = -1;
-        int choice = 0;
+    public void clientMenu(Client client) {
+        int choice = -1;
 
-        while (id == -1) {
+        System.out.printf("Bienvenue cher(e) %s %s. Voulez-vous créer un nouveau compte ou effectuer des opérations sur l'un des vôtres ?\n"
+                , client.getFirstName(), client.getLastname());
+
+        while (choice != 0 && choice != 1 && choice != 2) {
+            System.out.println("1 - Créer un nouveau compte\n" +
+                    "2 - Effectuer des opérations sur un compte existant\n" +
+                    "0 - Retour à l'accueil");
             try {
-                System.out.println("Entrez votre identifiant");
-                id = scanner.nextInt();
+                choice = scanner.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Entrez un nombre entier");
+                System.out.println("Entrez un nombre");
+            } finally {
+                scanner.nextLine();
             }
-        }
 
-        Client client = service.findClient(id);
-
-        if (client != null) {
-            System.out.printf("Bienvenue cher(e) %s %s. Voulez-vous créer un nouveau compte ou effectuer des opérations sur l'un des vôtres ?\n"
-                    , client.getFirstName(), client.getLastname());
-
-            while (choice != 1 && choice != 2) {
-                System.out.println("1 - Créer un nouveau compte\n" +
-                        "2 - Effectuer des opérations sur un compte existant");
-                try {
-                    choice = scanner.nextInt();
-                } catch (InputMismatchException e) {
-                    System.out.println("Entrez un nombre");
-                } finally {
-                    scanner.nextLine();
-                }
-
-                if (choice == 1) {
-                    if (service.createAccount(client) != null) {
+            switch (choice) {
+                case 0 -> menu();
+                case 1 -> {
+                    if (service.createAccount(client.getId()) != null) {
                         System.out.println("Votre compte a bien été créé");
                     } else {
                         System.out.println("Votre compte n'a pas pu être créé");
                     }
-                } else {
-                    operationChoice(client);
                 }
+                case 2 -> operationChoice(client);
             }
-        } else {
-            System.out.println("Désolé, il semble que vous n'ayez pas de compte chez nous");
         }
+
 
         menu();
     }
@@ -130,18 +139,16 @@ public class HCI {
             }
         }
 
-        menu();
+        clientMenu(client);
     }
 
     public void displayAccount(Account account) {
-        System.out.printf("Solde : %.2f\n", account.getBalance());
+        System.out.printf("Solde : %.2f€\n", account.getBalance());
         for (int i = account.getOperations().size() - 1; i >= 0; i--) {
             Operation operation = account.getOperations().get(i);
             String operationValue = (operation.getStatus() == Status.DEPOSIT) ? "Dépôt" : "Retrait";
-            System.out.printf("%d - %2.f€ - %s\n", operation.getId(), operation.getAmount(), operationValue);
+            System.out.printf("%d - %.2f€ - %s\n", operation.getId(), operation.getAmount(), operationValue);
         }
-
-        menu();
     }
 
     public void operation(Account account, boolean isDeposit) {
@@ -167,8 +174,6 @@ public class HCI {
         } else {
             System.out.printf("Votre %s n'a pas pu être effectué\n", operation);
         }
-
-        menu();
     }
 
     public void createClient() {
@@ -180,8 +185,12 @@ public class HCI {
         System.out.println("Entrez votre nom");
         lastName = scanner.nextLine();
 
-        if (service.createClient(firstName, lastName) != null) {
-            System.out.println("Votre compte a été créé avec succès");
+        Client client = service.createClient(firstName, lastName);
+
+        if (client != null) {
+            System.out.printf("Votre compte client a été créé avec succès, et un compte bancaire également\n" +
+                            "Votre id est %d et l'id de votre compte est %d\n",
+                    client.getId(), client.getAccounts().get(0).getId());
         } else {
             System.out.println("Votre compte n'a pas pu être créé");
         }

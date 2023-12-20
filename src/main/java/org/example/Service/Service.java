@@ -10,6 +10,7 @@ import org.example.Models.Status;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Service {
@@ -21,8 +22,8 @@ public class Service {
 
     public Service(){
         clientDAO = ClientDAO.getInstance();
-        this.accountDAO = AccountDAO.getInstance();
-        this.operationDAO = OperationDAO.getInstance();
+        accountDAO = AccountDAO.getInstance();
+        operationDAO = OperationDAO.getInstance();
     }
 
 
@@ -30,7 +31,8 @@ public class Service {
         Client client = null;
 
         try {
-            client = clientDAO.create(new Client(0,firstName, lastName, new ArrayList<>()));
+            client = clientDAO.create(new Client(firstName, lastName));
+            client.addAccount(createAccount(client.getId()));
         } catch (SQLException e){
             System.out.println(e);
         }
@@ -38,35 +40,32 @@ public class Service {
         return client;
     }
 
-    public Client findClient(int id) {
+    public Account createAccount(int clientId) {
+        Account newAccount = null;
+
+        try {
+            newAccount = accountDAO.create(new Account(clientId));
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+
+        return newAccount;
+    }
+
+    public Client getClient(int id) {
         Client client = null;
 
         try {
             client = clientDAO.read(id);
+            client.setAccounts(accountDAO.readFromClient(client));
+            for (Account account : client.getAccounts()){
+                account.setOperations(operationDAO.readFromAccount(account));
+            }
         } catch (SQLException e){
             System.out.println(e);
         }
 
         return client;
-    }
-
-    public boolean depositOrWithdraw(int accountId, double amount, boolean isDeposit) {
-        try {
-            Account account = accountDAO.read(accountId);
-            if (account != null){
-                operationDAO.create(new Operation(accountId,amount, isDeposit ? Status.DEPOSIT : Status.WITHDRAWAL));
-                account.setBalance(isDeposit ?
-                                account.getBalance() + amount :
-                                account.getBalance() - amount);
-                accountDAO.update(account);
-                return true;
-            }
-            System.out.println("Aucun compte n'a été trouvé à ce numéro");
-            return false;
-        } catch (SQLException e){
-            System.out.println(e);
-            return false;
-        }
     }
 
     public Account getAccount(int id) {
@@ -81,15 +80,24 @@ public class Service {
         return account;
     }
 
-    public Account createAccount(Client client) {
-        Account newAccount = null;
-
+    public boolean depositOrWithdraw(int accountId, double amount, boolean isDeposit) {
         try {
-            newAccount = accountDAO.create(new Account(0,client,0,new ArrayList<>()));
+            Account account = accountDAO.read(accountId);
+            if (account != null){
+                operationDAO.create(new Operation(amount, isDeposit ? Status.DEPOSIT : Status.WITHDRAWAL, accountId));
+                account.setBalance(isDeposit ?
+                                account.getBalance() + amount :
+                                account.getBalance() - amount);
+                return  accountDAO.update(account);
+            }
+            System.out.println("Aucun compte n'a été trouvé à ce numéro");
+            return false;
         } catch (SQLException e){
             System.out.println(e);
+            return false;
         }
-
-        return newAccount;
     }
+
+
+
 }

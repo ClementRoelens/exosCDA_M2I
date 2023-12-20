@@ -68,8 +68,7 @@ public class ClientDAO extends BaseDAO<Client> {
             client = new Client(
                     resultSet.getInt("id"),
                     resultSet.getString("first_name"),
-                    resultSet.getString("last_name"),
-                    new ArrayList<>()
+                    resultSet.getString("last_name")
             );
         }
 
