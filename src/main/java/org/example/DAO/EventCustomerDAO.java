@@ -16,7 +16,7 @@ public class EventCustomerDAO extends BaseDAO<EventCustomer> {
     }
 
     @Override
-    protected EventCustomer createObjectFromResultSet(ResultSet resultSet) throws SQLException {
+    public EventCustomer createObjectFromResultSet(ResultSet resultSet) throws SQLException {
         return new EventCustomer(
                 resultSet.getInt("customer_id"),
                 resultSet.getInt("event_id")

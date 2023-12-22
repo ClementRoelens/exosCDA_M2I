@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS event_location(
     capacity INT NOT NULL
 );
 
--- DROP TABLE customer_event;
 
 CREATE TABLE IF NOT EXISTS event(
 	id INT PRIMARY KEY AUTO_INCREMENT,

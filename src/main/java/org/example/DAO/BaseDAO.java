@@ -14,7 +14,7 @@ public abstract class BaseDAO<T> {
     protected String tableName;
 
 
-    protected abstract T createObjectFromResultSet(ResultSet resultSet) throws SQLException;
+//    public abstract T createObjectFromResultSet(ResultSet resultSet) throws SQLException;
     protected abstract void preparedStatementWithObject(PreparedStatement preparedStatement, T object) throws SQLException;
 
     public abstract List<T> read() throws SQLException;

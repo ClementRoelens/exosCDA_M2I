@@ -218,11 +218,27 @@ public class TickettingService {
                 System.out.println("Aïe, quelque chose s'est mal passé...");
                 return false;
 
-
-
         } catch (SQLException e) {
             System.out.println(e);
             return false;
+        }
+    }
+
+    public List<Event> getAvailableEvents(){
+        try {
+            return eventDAO.readAvailableEvents();
+        } catch (SQLException e){
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    public List<Event> getTicketsByClient(int clientId){
+        try {
+            return eventDAO.readClientTickets(clientId);
+        } catch (SQLException e){
+            System.out.println(e);
+            return null;
         }
     }
 }

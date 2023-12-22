@@ -1,6 +1,7 @@
 package org.example.DAO;
 
 import org.example.Entity.Event;
+import org.example.Entity.EventLocation;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,17 +14,17 @@ public class EventDAO extends BaseDAO<Event> {
         this.tableName = "event";
     }
 
-    @Override
-    protected Event createObjectFromResultSet(ResultSet resultSet) throws SQLException {
-        return new Event(
-                resultSet.getInt("id"),
-                resultSet.getString("name"),
-                resultSet.getTimestamp("date_time").toLocalDateTime(),
-                resultSet.getInt("event_location_id"),
-                resultSet.getDouble("price"),
-                resultSet.getInt("tickets_sold_number")
-        );
-    }
+//    @Override
+//    public Event createObjectFromResultSet(ResultSet resultSet) throws SQLException {
+//        return new Event(
+//                resultSet.getInt("id"),
+//                resultSet.getString("name"),
+//                resultSet.getTimestamp("date_time").toLocalDateTime(),
+//                resultSet.getInt("event_location_id"),
+//                resultSet.getDouble("price"),
+//                resultSet.getInt("tickets_sold_number")
+//        );
+//    }
 
     @Override
     protected void preparedStatementWithObject(PreparedStatement preparedStatement, Event event) throws SQLException{
@@ -43,7 +44,7 @@ public class EventDAO extends BaseDAO<Event> {
 
         List<Event> events = new ArrayList<>();
         while (resultSet.next()){
-            events.add(createObjectFromResultSet(resultSet));
+            events.add(DAO_Utils.createEventFromResultSet(resultSet));
         }
         statement.close();
 
@@ -61,7 +62,7 @@ public class EventDAO extends BaseDAO<Event> {
 
         Event event = null;
         while (resultSet.next()){
-            event = createObjectFromResultSet(resultSet);
+            event = DAO_Utils.createEventFromResultSet(resultSet);
         }
         statement.close();
 
@@ -107,5 +108,49 @@ public class EventDAO extends BaseDAO<Event> {
 
         preparedStatement.close();
         return nbRows != 0;
+    }
+
+
+    public List<Event> readAvailableEvents() throws SQLException {
+        query = "SELECT * " +
+                "FROM event " +
+                "   INNER JOIN event_location " +
+                "   ON event.event_location_id = event_location.id " +
+                "WHERE tickets_sold_number < capacity";
+        statement = connection.createStatement();
+
+        resultSet = statement.executeQuery(query);
+
+        List<Event> events = new ArrayList<>();
+        while (resultSet.next()){
+            EventLocation eventLocation = DAO_Utils.createEventLocationFromResultSet(resultSet);
+            Event event = DAO_Utils.createEventFromResultSet(resultSet);
+            event.setEventLocation(eventLocation);
+
+            events.add(event);
+        }
+
+        statement.close();
+        return events;
+    }
+
+
+    public List<Event> readClientTickets(int id) throws SQLException {
+        query = "SELECT * " +
+                "FROM event " +
+                "   INNER JOIN customer_event " +
+                "   ON customer_event.customer_id = event.id " +
+                "WHERE customer_id = ?";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, id);
+
+        resultSet = preparedStatement.executeQuery();
+
+        List<Event> events = new ArrayList<>();
+        while (resultSet.next()){
+            events.add(DAO_Utils.createEventFromResultSet(resultSet));
+        }
+
+        return events;
     }
 }

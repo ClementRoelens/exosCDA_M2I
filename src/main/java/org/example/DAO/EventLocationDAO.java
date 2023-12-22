@@ -13,20 +13,20 @@ public class EventLocationDAO extends BaseDAO<EventLocation> {
         this.tableName = "event_location";
     }
 
-    @Override
-    protected EventLocation createObjectFromResultSet(ResultSet resultSet) throws SQLException {
-        try {
-            return new EventLocation(
-                    resultSet.getInt("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("address"),
-                    resultSet.getInt("capacity")
-            );
-        } catch (CustomFormatException e){
-            System.out.println(e);
-            return null;
-        }
-    }
+//    @Override
+//    public EventLocation createObjectFromResultSet(ResultSet resultSet) throws SQLException {
+//        try {
+//            return new EventLocation(
+//                    resultSet.getInt("id"),
+//                    resultSet.getString("name"),
+//                    resultSet.getString("address"),
+//                    resultSet.getInt("capacity")
+//            );
+//        } catch (CustomFormatException e){
+//            System.out.println(e);
+//            return null;
+//        }
+//    }
 
     @Override
     protected void preparedStatementWithObject(PreparedStatement preparedStatement, EventLocation eventLocation) throws SQLException {
@@ -44,7 +44,7 @@ public class EventLocationDAO extends BaseDAO<EventLocation> {
 
         List<EventLocation> eventLocations = new ArrayList<>();
         while (resultSet.next()) {
-            eventLocations.add(createObjectFromResultSet(resultSet));
+            eventLocations.add(DAO_Utils.createEventLocationFromResultSet(resultSet));
         }
         statement.close();
 
@@ -63,7 +63,7 @@ public class EventLocationDAO extends BaseDAO<EventLocation> {
 
         EventLocation eventLocation = null;
         while (resultSet.next()) {
-            eventLocation = createObjectFromResultSet(resultSet);
+            eventLocation = DAO_Utils.createEventLocationFromResultSet(resultSet);
         }
         statement.close();
 

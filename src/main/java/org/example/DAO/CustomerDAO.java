@@ -15,15 +15,15 @@ public class CustomerDAO extends BaseDAO<Customer> {
         super();
         tableName = "customer";
     }
-    @Override
-    protected Customer createObjectFromResultSet(ResultSet resultSet) throws SQLException {
-        return new Customer(
-                resultSet.getInt("id"),
-                resultSet.getString("firstname"),
-                resultSet.getString("lastname"),
-                resultSet.getString("email")
-        );
-    }
+//    @Override
+//    public Customer createObjectFromResultSet(ResultSet resultSet) throws SQLException {
+//        return new Customer(
+//                resultSet.getInt("id"),
+//                resultSet.getString("firstname"),
+//                resultSet.getString("lastname"),
+//                resultSet.getString("email")
+//        );
+//    }
 
     @Override
     protected void preparedStatementWithObject(PreparedStatement preparedStatement, Customer customer) throws SQLException {
@@ -68,7 +68,7 @@ public class CustomerDAO extends BaseDAO<Customer> {
         List<Customer> customers = new ArrayList<>();
         while (resultSet.next()) {
             try {
-                customers.add(createObjectFromResultSet(resultSet));
+                customers.add(DAO_Utils.createCustomerFromResultSet(resultSet));
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -92,7 +92,7 @@ public class CustomerDAO extends BaseDAO<Customer> {
         Customer customer = null;
         while (resultSet.next()) {
             try {
-                customer = createObjectFromResultSet(resultSet);
+                customer = DAO_Utils.createCustomerFromResultSet(resultSet);
             } catch (Exception e) {
                 System.out.println(e);
             }
