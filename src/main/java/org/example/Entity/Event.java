@@ -16,15 +16,15 @@ public class Event {
 
 
     // Pour créer un Event depuis l'IHM
-    public Event(String name, LocalDateTime dateTime, int eventLocationId, double price) {
-        this.name = name;
+    public Event(String name, LocalDateTime dateTime, int eventLocationId, double price) throws CustomFormatException {
+        setName(name);
         this.dateTime = dateTime;
-        this.eventLocationId = eventLocationId;
-        this.price = price;
+        setEventLocationId(eventLocationId);
+        setPrice(price);
     }
 
     // Récupéré depuis la DB
-    public Event(int id, String name, LocalDateTime dateTime, int eventLocationId, double price, int ticketsSoldNumber) {
+    public Event(int id, String name, LocalDateTime dateTime, int eventLocationId, double price, int ticketsSoldNumber) throws CustomFormatException {
         this(name,dateTime,eventLocationId,price);
         this.id = id;
         this.ticketsSoldNumber = ticketsSoldNumber;
@@ -35,14 +35,8 @@ public class Event {
 
     @Override
     public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", dateTime=" + dateTime +
-                ", eventLocation=" + eventLocation +
-                ", price=" + price +
-                ", ticketsSoldNumber=" + ticketsSoldNumber +
-                '}';
+        return String.format("%d - %s au %s le %s\n%d places disponibles",
+                id, name, eventLocation.getName(), dateTime, eventLocation.getCapacity()-getTicketsSoldNumber());
     }
     public int getId() {
         return id;
@@ -103,6 +97,10 @@ public class Event {
 
     public int getEventLocationId() {
         return eventLocationId;
+    }
+
+    public void setEventLocationId(int eventLocationId) {
+        this.eventLocationId = eventLocationId;
     }
 
     public boolean checkTicketSoldPossibility() {

@@ -15,11 +15,10 @@ CREATE TABLE IF NOT EXISTS event_location(
 CREATE TABLE IF NOT EXISTS event(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(250) NOT NULL,
-    date DATE NOT NULL,
+    date_time DATETIME NOT NULL,
     event_location_id INT NOT NULL,
     price DOUBLE NOT NULL,
     tickets_sold_number INT NOT NULL,
-    customer_event_id INT NOT NULL,
     FOREIGN KEY (event_location_id) REFERENCES event_location (id)
 );
 
@@ -27,8 +26,7 @@ CREATE TABLE IF NOT EXISTS customer(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     firstname VARCHAR(100) NOT NULL,
     lastname VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    customer_event_id INT NOT NULL
+    email VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS customer_event(

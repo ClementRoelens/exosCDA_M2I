@@ -65,7 +65,7 @@ public class EventLocationDAO extends BaseDAO<EventLocation> {
         while (resultSet.next()) {
             eventLocation = DAO_Utils.createEventLocationFromResultSet(resultSet);
         }
-        statement.close();
+        preparedStatement.close();
 
         return eventLocation;
     }
@@ -96,8 +96,8 @@ public class EventLocationDAO extends BaseDAO<EventLocation> {
     public boolean update(EventLocation eventLocation) throws SQLException {
         query = "UPDATE event_location " +
                 "SET " +
-                "  name = ? " +
-                "  address = ? " +
+                "  name = ? ," +
+                "  address = ? ," +
                 "  capacity = ? " +
                 "WHERE id = ?";
         preparedStatement = connection.prepareStatement(query);

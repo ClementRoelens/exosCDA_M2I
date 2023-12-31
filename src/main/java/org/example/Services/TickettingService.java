@@ -43,7 +43,7 @@ public class TickettingService {
         }
     }
 
-    public Customer createCustomer(String firstname, String lastname, String email) {
+    public Customer createCustomer(String firstname, String lastname, String email) throws CustomFormatException {
         try {
             Customer customer = customerDAO.create(new Customer(firstname, lastname, email));
             System.out.println("Votre compte a bien été créé. Votre id est " + customer.getId());
@@ -54,9 +54,9 @@ public class TickettingService {
         }
     }
 
-    public boolean editCustomer(String firstname, String lastname, String email) {
+    public boolean editCustomer(int id, String firstname, String lastname, String email) throws CustomFormatException {
         try {
-            return customerDAO.update(new Customer(firstname, lastname, email));
+            return customerDAO.update(new Customer(id, firstname, lastname, email));
         } catch (SQLException e) {
             System.out.println(e);
             return false;
@@ -101,9 +101,9 @@ public class TickettingService {
         }
     }
 
-    public boolean editEventLocation(String name, String address, int capacity) throws CustomFormatException {
+    public boolean editEventLocation(int id, String name, String address, int capacity) throws CustomFormatException {
         try {
-            return eventLocationDAO.update(new EventLocation(name, address, capacity));
+            return eventLocationDAO.update(new EventLocation(id, name, address, capacity));
         } catch (SQLException e) {
             System.out.println(e);
             return false;
@@ -112,7 +112,7 @@ public class TickettingService {
 
     public boolean deleteEventLocation(int id) {
         try {
-            return customerDAO.delete(id);
+            return eventLocationDAO.delete(id);
         } catch (SQLException e) {
             System.out.println(e);
             return false;
@@ -120,8 +120,13 @@ public class TickettingService {
     }
 
     public List<Event> getEvents() {
+        List<Event> events;
         try {
-            return eventDAO.read();
+            events = eventDAO.read();
+            for (Event event : events) {
+                event.setEventLocation(eventLocationDAO.read(event.getEventLocationId()));
+            }
+            return events;
         } catch (SQLException e) {
             System.out.println(e);
             return null;
@@ -137,7 +142,7 @@ public class TickettingService {
         }
     }
 
-    public Event createEvent(String name, LocalDateTime dateTime, int eventLocationId, double price) {
+    public Event createEvent(String name, LocalDateTime dateTime, int eventLocationId, double price) throws CustomFormatException {
         try {
             Event event = eventDAO.create(new Event(name, dateTime, eventLocationId, price));
             System.out.println("L'événement a bien été créé. Son id est " + event.getId());
@@ -148,9 +153,9 @@ public class TickettingService {
         }
     }
 
-    public boolean editEvent(String name, LocalDateTime dateTime, int eventLocationId, double price) {
+    public boolean editEvent(int id, String name, LocalDateTime dateTime, int eventLocationId, double price, int ticketsSoldNumber) throws CustomFormatException {
         try {
-            return eventDAO.update(new Event(name, dateTime, eventLocationId, price));
+            return eventDAO.update(new Event(id, name, dateTime, eventLocationId, price, ticketsSoldNumber));
         } catch (SQLException e) {
             System.out.println(e);
             return false;
@@ -159,7 +164,7 @@ public class TickettingService {
 
     public boolean deleteEvent(int id) {
         try {
-            return customerDAO.delete(id);
+            return eventDAO.delete(id);
         } catch (SQLException e) {
             System.out.println(e);
             return false;
@@ -177,12 +182,11 @@ public class TickettingService {
                     tickets.add(event);
                     customer.setEventsTicket(tickets);
 
-                    if (customerDAO.update(customer)){
 
-                        if (eventCustomerDAO.create(new EventCustomer(customer.getId(), event.getId())) != null) {
-                            return true;
-                        }
+                    if (eventCustomerDAO.create(new EventCustomer(customer.getId(), event.getId())) != null) {
+                        return true;
                     }
+
                 }
 
                 System.out.println("Aïe, quelque chose s'est mal passé...");
@@ -197,26 +201,24 @@ public class TickettingService {
         }
     }
 
-    public boolean cancelTickets(Customer customer, Event event){
+    public boolean cancelTickets(Customer customer, Event event) {
         try {
-                event.cancelTicket();
+            event.cancelTicket();
 
-                if (eventDAO.update(event)) {
+            if (eventDAO.update(event)) {
 
-                    List<Event> tickets = customer.getEventsTicket();
-                    tickets.remove(event);
-                    customer.setEventsTicket(tickets);
+                List<Event> tickets = customer.getEventsTicket();
+                tickets.remove(event);
+                customer.setEventsTicket(tickets);
 
-                    if (customerDAO.update(customer)){
-
-                        if (eventCustomerDAO.create(new EventCustomer(customer.getId(), event.getId())) != null) {
-                            return true;
-                        }
-                    }
+                if (eventCustomerDAO.delete(new EventCustomer(customer.getId(), event.getId()))) {
+                    return true;
                 }
 
-                System.out.println("Aïe, quelque chose s'est mal passé...");
-                return false;
+            }
+
+            System.out.println("Aïe, quelque chose s'est mal passé...");
+            return false;
 
         } catch (SQLException e) {
             System.out.println(e);
@@ -224,19 +226,27 @@ public class TickettingService {
         }
     }
 
-    public List<Event> getAvailableEvents(){
+    public List<Event> getAvailableEvents() {
         try {
-            return eventDAO.readAvailableEvents();
-        } catch (SQLException e){
+            List<Event> events = eventDAO.readAvailableEvents();
+            for (Event event : events){
+                event.setEventLocation(getEventLocation(event.getEventLocationId()));
+            }
+            return events;
+        } catch (SQLException e) {
             System.out.println(e);
             return null;
         }
     }
 
-    public List<Event> getTicketsByClient(int clientId){
+    public List<Event> getTicketsByClient(int clientId) {
         try {
-            return eventDAO.readClientTickets(clientId);
-        } catch (SQLException e){
+            List<Event> events = eventDAO.readClientTickets(clientId);
+            for (Event event : events){
+                event.setEventLocation(getEventLocation(event.getEventLocationId()));
+            }
+            return events;
+        } catch (SQLException e) {
             System.out.println(e);
             return null;
         }

@@ -57,6 +57,7 @@ public class EventDAO extends BaseDAO<Event> {
                 "FROM event " +
                 "WHERE id = ?";
         preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1,id);
 
         resultSet = preparedStatement.executeQuery();
 
@@ -64,7 +65,7 @@ public class EventDAO extends BaseDAO<Event> {
         while (resultSet.next()){
             event = DAO_Utils.createEventFromResultSet(resultSet);
         }
-        statement.close();
+        preparedStatement.close();
 
         return event;
     }
@@ -95,14 +96,15 @@ public class EventDAO extends BaseDAO<Event> {
     public boolean update(Event event) throws SQLException {
         query = "UPDATE event " +
                 "SET " +
-                "  name = ? " +
-                "  date_time = ? " +
-                "  event_location_id = ? " +
-                "  price = ? " +
+                "  name = ? ," +
+                "  date_time = ? ," +
+                "  event_location_id = ? ," +
+                "  price = ? ," +
                 "  tickets_sold_number = ? " +
                 "WHERE id = ?";
         preparedStatement = connection.prepareStatement(query);
         preparedStatementWithObject(preparedStatement, event);
+        preparedStatement.setInt(6,event.getId());
 
         int nbRows = preparedStatement.executeUpdate();
 

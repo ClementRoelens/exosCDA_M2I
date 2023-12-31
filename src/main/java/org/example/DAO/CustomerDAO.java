@@ -107,10 +107,10 @@ public class CustomerDAO extends BaseDAO<Customer> {
         query = String.format(
                         "UPDATE %s " +
                         "SET " +
-                        " firstname = ? " +
-                        " lastname = ? " +
-                        " email = ? " +
-                        " WHERE id = ? ");
+                        "  firstname = ? ," +
+                        "  lastname = ? ," +
+                        "  email = ? " +
+                        "WHERE id = ? ", tableName);
         preparedStatement = connection.prepareStatement(query);
         preparedStatementWithObject(preparedStatement, customer);
         preparedStatement.setInt(4, customer.getId());

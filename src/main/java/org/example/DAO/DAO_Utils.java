@@ -11,14 +11,19 @@ import java.sql.SQLException;
 public class DAO_Utils {
 
     public static Event createEventFromResultSet(ResultSet resultSet) throws SQLException {
-        return new Event(
-                resultSet.getInt("id"),
-                resultSet.getString("name"),
-                resultSet.getTimestamp("date_time").toLocalDateTime(),
-                resultSet.getInt("event_location_id"),
-                resultSet.getDouble("price"),
-                resultSet.getInt("tickets_sold_number")
-        );
+        try {
+            return new Event(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getTimestamp("date_time").toLocalDateTime(),
+                    resultSet.getInt("event_location_id"),
+                    resultSet.getDouble("price"),
+                    resultSet.getInt("tickets_sold_number")
+            );
+        } catch (CustomFormatException e){
+            System.out.println(e);
+            return null;
+        }
     }
 
     public static Customer createCustomerFromResultSet(ResultSet resultSet) throws SQLException {

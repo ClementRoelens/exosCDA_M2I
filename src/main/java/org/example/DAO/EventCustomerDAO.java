@@ -15,7 +15,6 @@ public class EventCustomerDAO extends BaseDAO<EventCustomer> {
         this.tableName = "customer_event";
     }
 
-    @Override
     public EventCustomer createObjectFromResultSet(ResultSet resultSet) throws SQLException {
         return new EventCustomer(
                 resultSet.getInt("customer_id"),
@@ -84,20 +83,36 @@ public class EventCustomerDAO extends BaseDAO<EventCustomer> {
 
     @Override
     public boolean update(EventCustomer eventCustomer) throws SQLException {
-        query = String.format(
-                        "UPDATE %s " +
-                        "SET " +
-                        " customer_id = ? " +
-                        " event_id = ? " +
-                        "WHERE id =  "
-                , tableName);
+//        query = String.format(
+//                        "UPDATE %s " +
+//                        "SET " +
+//                        " customer_id = ? ," +
+//                        " event_id = ? " +
+//                        "WHERE id = ?"
+//                , tableName);
+//
+//        preparedStatement = connection.prepareStatement(query);
+//        preparedStatementWithObject(preparedStatement,eventCustomer);
+//        preparedStatement.setInt(3,eventCustomer.);
+//
+//        int nbRows = preparedStatement.executeUpdate();
+//
+//        preparedStatement.close();
+//        return nbRows != 0;
+        return false;
+    }
 
+    public boolean delete(EventCustomer eventCustomer) throws SQLException{
+        query = String.format(
+                "DELETE FROM %s " +
+                "WHERE customer_id = ? AND event_id = ?", tableName);
         preparedStatement = connection.prepareStatement(query);
-        preparedStatementWithObject(preparedStatement,eventCustomer);
+        preparedStatement.setInt(1, eventCustomer.getCustomerId());
+        preparedStatement.setInt(2, eventCustomer.getEventId());
 
         int nbRows = preparedStatement.executeUpdate();
-
         preparedStatement.close();
-        return nbRows != 0;
+
+        return nbRows == 1;
     }
 }

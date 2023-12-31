@@ -15,10 +15,10 @@ public class Customer {
 
 
     // Créé depuis l'IHM
-    public Customer(String firstname, String lastname, String email) {
+    public Customer(String firstname, String lastname, String email) throws CustomFormatException {
         this.firstname = firstname;
         this.lastname = lastname;
-        this.email = email;
+        setEmail(email);
     }
 
     // Reçu depuis la DB

@@ -20,7 +20,7 @@ public class EventLocation {
 
     public EventLocation(int id, String name, String address, int capacity) throws CustomFormatException {
         this(name,address,capacity);
-        this.capacity = capacity;
+        this.id = id;
     }
 
     public int getId() {

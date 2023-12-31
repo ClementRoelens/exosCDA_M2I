@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public abstract class ConnectionManager {
     private static Connection connection;
     private static final Object lock = new Object();
-    private static final String url = "jdbc:mysql://localhost:3306/exo_banque";
+    private static final String url = "jdbc:mysql://localhost:3306/exo_billetterie";
     private static final String user = "root";
     private static final String password = "1234";
 
