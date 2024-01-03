@@ -1,6 +1,7 @@
 package DAO;
 
 import Entity.ToDo;
+import Entity.TodoInfos;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -15,7 +16,10 @@ public class ToDoDAOImpl extends BaseDAO<ToDo> {
 
         try {
             ToDo newTodo = new ToDo(todo.getName());
+            newTodo.setTodoInfos(todo.getTodoInfos());
+
             em.persist(newTodo);
+
             em.getTransaction().commit();
             return newTodo;
         } catch (Exception e){
@@ -76,6 +80,9 @@ public class ToDoDAOImpl extends BaseDAO<ToDo> {
             ToDo updatedTodo = em.find(ToDo.class, todo.getId());
             updatedTodo.setName(todo.getName());
             updatedTodo.setDone(todo.isDone());
+            TodoInfos infos = todo.getTodoInfos();
+            updatedTodo.setTodoInfos(infos);
+
             em.getTransaction().commit();
             return true;
         } catch (Exception e){

@@ -1,9 +1,6 @@
 package Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class ToDo {
@@ -12,6 +9,9 @@ public class ToDo {
     private int id;
     private String name;
     private boolean isDone;
+    @OneToOne
+    @JoinColumn(name="infos_id", referencedColumnName = "id_infos")
+    private TodoInfos todoInfos;
 
 
 
@@ -48,9 +48,16 @@ public class ToDo {
         isDone = done;
     }
 
+    public TodoInfos getTodoInfos() {
+        return todoInfos;
+    }
+
+    public void setTodoInfos(TodoInfos todoInfos) {
+        this.todoInfos = todoInfos;
+    }
 
     @Override
     public String toString() {
-        return "Tâche numéro " + id + " - " + name + (isDone ? " - Finie" : " - Non-finie");
+        return "Tâche numéro " + id + " - " + name + (isDone ? " - Finie" : " - Non-finie\n" + todoInfos);
     }
 }
