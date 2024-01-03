@@ -51,10 +51,6 @@ public class ToDo {
 
     @Override
     public String toString() {
-        return "ToDo{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", isDone=" + isDone +
-                '}';
+        return "Tâche numéro " + id + " - " + name + (isDone ? " - Finie" : " - Non-finie");
     }
 }

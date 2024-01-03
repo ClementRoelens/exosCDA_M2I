@@ -1,15 +1,15 @@
 package Service;
 
-import DAO.ToDoDAO;
+import DAO.ToDoDAOImpl;
 import Entity.ToDo;
 
 import java.util.List;
 
 public class TodoService {
-    private ToDoDAO toDoDAO = new ToDoDAO();
+    private ToDoDAOImpl toDoDAO = new ToDoDAOImpl();
 
-    public int postTodo(String name){
-        return toDoDAO.create(new ToDo(name)).getId();
+    public ToDo postTodo(String name){
+        return toDoDAO.create(new ToDo(name));
     }
 
     public List<ToDo> getTodos(){
