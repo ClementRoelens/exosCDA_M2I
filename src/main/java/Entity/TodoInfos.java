@@ -12,7 +12,7 @@ public class TodoInfos {
     private String description;
     private Date deadline;
     private int priority;
-    @OneToOne(mappedBy = "todoInfos", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "todoInfos")
     private ToDo todo;
 
 

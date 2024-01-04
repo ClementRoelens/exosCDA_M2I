@@ -9,7 +9,7 @@ public class ToDo {
     private int id;
     private String name;
     private boolean isDone;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="infos_id", referencedColumnName = "id_infos")
     private TodoInfos todoInfos;
 

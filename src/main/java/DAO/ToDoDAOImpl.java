@@ -16,9 +16,12 @@ public class ToDoDAOImpl extends BaseDAO<ToDo> {
 
         try {
             ToDo newTodo = new ToDo(todo.getName());
-            newTodo.setTodoInfos(todo.getTodoInfos());
+            TodoInfos infos = todo.getTodoInfos();
+//            infos.setTodo(todo);
+            newTodo.setTodoInfos(infos);
 
             em.persist(newTodo);
+            em.persist(infos);
 
             em.getTransaction().commit();
             return newTodo;
@@ -77,11 +80,11 @@ public class ToDoDAOImpl extends BaseDAO<ToDo> {
         em.getTransaction().begin();
 
         try {
-            ToDo updatedTodo = em.find(ToDo.class, todo.getId());
-            updatedTodo.setName(todo.getName());
-            updatedTodo.setDone(todo.isDone());
             TodoInfos infos = todo.getTodoInfos();
-            updatedTodo.setTodoInfos(infos);
+            infos.setTodo(todo);
+
+            em.merge(infos);
+            em.merge(todo);
 
             em.getTransaction().commit();
             return true;
