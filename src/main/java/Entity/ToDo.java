@@ -12,14 +12,19 @@ public class ToDo {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="infos_id", referencedColumnName = "id_infos")
     private TodoInfos todoInfos;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
 
     public ToDo() {
     }
 
-    public ToDo(String name) {
+    public ToDo(String name, TodoInfos todoInfos, User user) {
         this.name = name;
+        this.todoInfos = todoInfos;
+        this.user = user;
         this.isDone = false;
     }
 
@@ -56,8 +61,17 @@ public class ToDo {
         this.todoInfos = todoInfos;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
-        return "Tâche numéro " + id + " - " + name + (isDone ? " - Finie" : " - Non-finie\n" + todoInfos);
+        return "\nTâche numéro " + id + " - " + name + (isDone ? " - Finie\n" : " - Non-finie\n" + todoInfos)
+                + "\nà faire par \n" + user;
     }
 }

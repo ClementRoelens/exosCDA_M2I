@@ -20,7 +20,11 @@ public class TodoInfos {
     public TodoInfos() {
     }
 
-
+    public TodoInfos(String description, Date deadline, int priority) {
+        this.description = description;
+        this.deadline = deadline;
+        this.priority = priority;
+    }
 
     public int getId() {
         return id;

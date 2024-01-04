@@ -1,30 +1,24 @@
 package DAO;
 
-import Entity.ToDo;
-import Entity.TodoInfos;
+import Entity.User;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToDoDAOImpl extends BaseDAO<ToDo> {
-
+public class UserDAOImpl extends BaseDAO<User> {
     @Override
-    public ToDo create(ToDo todo) {
+    public User create(User user) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
 
         try {
-            TodoInfos infos = todo.getTodoInfos();
-
-            em.persist(todo);
-            em.persist(infos);
-
+            em.persist(user);
             em.getTransaction().commit();
-            return todo;
-        } catch (Exception e){
+            return user;
+        } catch (Exception e) {
             System.out.println(e);
-            if (em.getTransaction().isActive()){
+            if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
             return null;
@@ -34,35 +28,35 @@ public class ToDoDAOImpl extends BaseDAO<ToDo> {
     }
 
     @Override
-    public List<ToDo> read() {
-        List<ToDo> todos = new ArrayList<>();
+    public List<User> read() {
         EntityManager em = emf.createEntityManager();
+        List<User> users = new ArrayList<>();
         em.getTransaction().begin();
 
         try {
-            todos = em.createQuery("SELECT t FROM ToDo t", ToDo.class).getResultList();
+            users = em.createQuery("SELECT u FROM User u", User.class).getResultList();
         } catch (Exception e){
             System.out.println(e);
-            if (em.getTransaction().isActive()){
+            if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
         } finally {
             em.close();
         }
 
-        return todos;
+        return users;
     }
 
     @Override
-    public ToDo read(int id){
+    public User read(int id) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
 
         try {
-            return em.find(ToDo.class, id);
+            return em.find(User.class, id);
         } catch (Exception e){
             System.out.println(e);
-            if (em.getTransaction().isActive()){
+            if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
             return null;
@@ -72,28 +66,8 @@ public class ToDoDAOImpl extends BaseDAO<ToDo> {
     }
 
     @Override
-    public boolean update(ToDo todo) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-
-        try {
-            TodoInfos infos = todo.getTodoInfos();
-            infos.setTodo(todo);
-
-            em.merge(infos);
-            em.merge(todo);
-
-            em.getTransaction().commit();
-            return true;
-        } catch (Exception e){
-            System.out.println(e);
-            if (em.getTransaction().isActive()){
-                em.getTransaction().rollback();
-            }
-            return false;
-        } finally {
-            em.close();
-        }
+    public boolean update(User object) {
+        return false;
     }
 
     @Override
@@ -102,13 +76,13 @@ public class ToDoDAOImpl extends BaseDAO<ToDo> {
         em.getTransaction().begin();
 
         try {
-            ToDo removedTodo = em.find(ToDo.class, id);
-            em.remove(removedTodo);
+            User user = em.find(User.class,id);
+            em.remove(user);
             em.getTransaction().commit();
             return true;
-        }catch (Exception e){
+        } catch (Exception e){
             System.out.println(e);
-            if (em.getTransaction().isActive()){
+            if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
             return false;
