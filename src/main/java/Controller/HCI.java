@@ -69,14 +69,16 @@ public class HCI {
     public void menu() {
         int choice;
 
-        choice = scanInt("1 - Créer une tâche\n" +
+        choice = scanInt("\n" +
+                "1 - Créer une tâche\n" +
                 "2 - Voir les tâches existantes\n" +
                 "3 - Finir une tâche\n" +
                 "4 - Modifier une tâche\n" +
                 "5 - Supprimer une tâche\n" +
                 "6 - Créer un utilisateur\n" +
-                "7 - Supprimer un utilisateur (et toutes ses tâches !)\n" +
-                "8 - Au revoir");
+                "7 - Afficher toutes les tâches d'un utilisateur\n" +
+                "8 - Supprimer un utilisateur (et toutes ses tâches !)\n" +
+                "9 - Au revoir");
 
         switch (choice) {
             case 1 -> createTodo();
@@ -85,8 +87,9 @@ public class HCI {
             case 4 -> updateTodo();
             case 5 -> deleteTodo();
             case 6 -> createUser();
-            case 7 -> removeUser();
-            case 8 -> end();
+            case 7 -> showTasksFromOneUser();
+            case 8 -> removeUser();
+            case 9 -> end();
         }
 
         if (choice != 8) {
@@ -257,6 +260,26 @@ public class HCI {
             System.out.println("User créé, l'id est " + user.getId());
         } else {
             System.out.println("User non créé, quelque chose s'est mal passé");
+        }
+    }
+
+    private void showTasksFromOneUser(){
+        int id;
+        User user;
+
+        for (User tempUser : userService.getUsers()){
+            System.out.println(tempUser);
+        }
+        id = scanInt("Entrez l'id de l'utilisateur dont vous voulez voir les tâches");
+
+        user = userService.getUser(id);
+
+        if (user != null){
+            for (ToDo todo : user.getTodos()){
+                System.out.println(todo.getName());
+            }
+        } else {
+            System.out.println("Aucun user ne correrspond à cet id");
         }
     }
 
