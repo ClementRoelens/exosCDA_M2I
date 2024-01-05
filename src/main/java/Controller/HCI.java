@@ -1,8 +1,10 @@
 package Controller;
 
+import Entity.Category;
 import Entity.ToDo;
 import Entity.TodoInfos;
 import Entity.User;
+import Service.CategoryService;
 import Service.TodoService;
 import Service.UserService;
 
@@ -16,6 +18,9 @@ public class HCI {
     Scanner scanner = new Scanner(System.in);
     TodoService todoService = new TodoService();
     UserService userService = new UserService();
+    CategoryService categoryService = new CategoryService();
+
+
 
     private int scanInt(String message) {
         int returnedValue = 0;
@@ -66,6 +71,9 @@ public class HCI {
         return (returnedValue.isEmpty() ? defaultValue : returnedValue);
     }
 
+
+
+
     public void menu() {
         int choice;
 
@@ -78,7 +86,12 @@ public class HCI {
                 "6 - Créer un utilisateur\n" +
                 "7 - Afficher toutes les tâches d'un utilisateur\n" +
                 "8 - Supprimer un utilisateur (et toutes ses tâches !)\n" +
-                "9 - Au revoir");
+                "9 - Ajouter une catégorie\n" +
+                "10 - Supprimer une catégorie\n" +
+                "11 - Afficher les tâches d'une catégorie\n" +
+                "12 - Ajouter une tâche à une catégorie\n" +
+                "13 - Retirer une tâche d'une catégorie\n" +
+                "14 - Au revoir");
 
         switch (choice) {
             case 1 -> createTodo();
@@ -89,10 +102,15 @@ public class HCI {
             case 6 -> createUser();
             case 7 -> showTasksFromOneUser();
             case 8 -> removeUser();
-            case 9 -> end();
+            case 9 -> addCategory();
+            case 10 -> deleteCategory();
+            case 11 -> showTasksFromOneCategory();
+            case 12 -> addTaskToOneCategory();
+            case 13 -> removeOneTaskFromOneCategory();
+            case 14 -> end();
         }
 
-        if (choice != 8) {
+        if (choice != 14) {
             menu();
         }
     }
@@ -244,7 +262,7 @@ public class HCI {
         if (success) {
             System.out.println("Tâche supprimée");
         } else {
-            System.out.println("Cet id ne correspond à aucune tâche");
+            System.out.println("Tâche non-supprimée, l'id est probablement mauvais");
         }
     }
 
@@ -295,6 +313,124 @@ public class HCI {
             System.out.println("Utilisateur supprimé");
         } else {
             System.out.println("Utilisateur non-supprimé, l'id devait être mauvais");
+        }
+    }
+
+    private void addCategory(){
+        String name;
+        Category category;
+
+        name = scanString("Entrez le nom de la nouvelle catégorie");
+
+        category = new Category(name);
+        category = categoryService.postCategory(category);
+
+        if (category != null){
+            System.out.println("Nouvelle catégorie bien créée, son id est " + category.getId());
+        } else {
+            System.out.println("Catégorie non créée, quelque chose s'est mal passé");
+        }
+    }
+
+    private void deleteCategory(){
+        int id;
+        boolean success;
+
+        for (Category category : categoryService.getCategories()){
+            System.out.println(category);
+        }
+        id = scanInt("Entrez l'id de la catégorie que vous voulez supprimer");
+
+        success = categoryService.deleteCategory(id);
+
+        System.out.println(success ? "Catégorie supprimée" : "Catégorie non-supprimée, l'id doit être mauvais");
+    }
+
+    private void showTasksFromOneCategory(){
+        int id;
+        Category category;
+
+        for (Category tempCategory : categoryService.getCategories()){
+            System.out.println(tempCategory);
+        }
+        id = scanInt("Entrez l'id de la catégorie dont vous voulez voir les tâches");
+
+        category = categoryService.getCategorie(id);
+        if (category != null){
+            if (!category.getTodos().isEmpty()) {
+                System.out.println("Voici les tâches de la catégorie " + category.getName());
+                for (ToDo todo : category.getTodos()) {
+                    System.out.println(todo);
+                }
+            } else {
+                System.out.println("Aucune catégorie n'est encore reliée à cette tâche");
+            }
+        } else {
+            System.out.println("Aucune catégorie à cet id");
+        }
+    }
+
+    private void addTaskToOneCategory(){
+        int todoId;
+        int categoryId;
+        Category category;
+        ToDo todo;
+        boolean success;
+
+        for (ToDo tempTodo : todoService.getTodos()){
+            System.out.println(tempTodo);
+        }
+        todoId = scanInt("Entrez l'id de la tâche que vous voulez catégoriser");
+        todo = todoService.getTodo(todoId);
+
+        if (todo != null){
+            for (Category tempCategory : categoryService.getCategories()){
+                System.out.println(tempCategory);
+            }
+            categoryId = scanInt("Entrez l'id de la catégorie que vous voulez ajouter à la tâche");
+            category = categoryService.getCategorie(categoryId);
+
+            if (category != null){
+                category.getTodos().add(todo);
+                success = categoryService.updateCategory(category);
+                System.out.println(success ? "Opération réussie" : "Opération échouée");
+            } else {
+                System.out.println("Aucune catégorie ne correspond à cet id");
+            }
+        } else {
+            System.out.println("Aucune tâche ne correspond à cet id");
+        }
+    }
+
+    private void removeOneTaskFromOneCategory(){
+        int todoId;
+        int categoryId;
+        Category category;
+        ToDo todo;
+        boolean success;
+
+        for (ToDo tempTodo : todoService.getTodos()){
+            System.out.println(tempTodo);
+        }
+        todoId = scanInt("Entrez l'id de la tâche que vous voulez décatégoriser");
+        todo = todoService.getTodo(todoId);
+
+        if (todo != null){
+            for (Category tempCategory : categoryService.getCategories()){
+                System.out.println(tempCategory);
+            }
+            categoryId = scanInt("Entrez l'id de la catégorie à laquelle vous voulez retirer la tâche");
+            category = categoryService.getCategorie(categoryId);
+
+            if (category != null){
+                category.getTodos().remove(todo);
+                success = categoryService.updateCategory(category);
+                System.out.println(success ? "Opération réussie" : "Opération échouée");
+            } else {
+                System.out.println("Aucune catégorie ne correspond à cet id");
+            }
+        } else {
+            System.out.println("Aucune tâche ne correspond à cet id");
         }
     }
 

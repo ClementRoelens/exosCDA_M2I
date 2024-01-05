@@ -1,6 +1,8 @@
 package Entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class ToDo {
@@ -15,13 +17,17 @@ public class ToDo {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToMany(mappedBy = "todos", cascade = CascadeType.REMOVE)
+    private List<Category> categories;
 
 
 
     public ToDo() {
+        this.categories = new ArrayList<>();
     }
 
     public ToDo(String name, TodoInfos todoInfos, User user) {
+        this();
         this.name = name;
         this.todoInfos = todoInfos;
         this.user = user;
@@ -69,9 +75,28 @@ public class ToDo {
         this.user = user;
     }
 
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+
+
+
+
+
     @Override
     public String toString() {
-        return "\nTâche numéro " + id + " - " + name + (isDone ? " - Finie\n" : " - Non-finie\n" + todoInfos)
-                + "\nà faire par \n" + user;
+        StringBuilder returnedValue = new StringBuilder("\nTâche numéro " + id + " - " + name + (isDone ? " - Finie\n" : " - Non-finie\n"
+                + todoInfos + "\nCatégories : "));
+        for (Category category : categories){
+            returnedValue.append(category.getName() + " ");
+        }
+        returnedValue.append("\nà faire par \n" + user);
+
+        return returnedValue.toString();
     }
 }

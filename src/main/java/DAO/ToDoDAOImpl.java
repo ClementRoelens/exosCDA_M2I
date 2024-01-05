@@ -1,5 +1,6 @@
 package DAO;
 
+import Entity.Category;
 import Entity.ToDo;
 import Entity.TodoInfos;
 
@@ -103,6 +104,10 @@ public class ToDoDAOImpl extends BaseDAO<ToDo> {
 
         try {
             ToDo removedTodo = em.find(ToDo.class, id);
+            for (Category category : removedTodo.getCategories()){
+                category.getTodos().remove(removedTodo);
+            }
+            removedTodo.setCategories(new ArrayList<>());
             em.remove(removedTodo);
             em.getTransaction().commit();
             return true;
