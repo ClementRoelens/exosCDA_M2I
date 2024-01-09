@@ -3,6 +3,7 @@ package Service;
 import DAO.ProductDAOImpl;
 import Entities.Product;
 
+import java.sql.Date;
 import java.util.List;
 
 public class ProductService {
@@ -33,8 +34,29 @@ public class ProductService {
         return dao.read();
     }
 
+
     public Product getProduct(int id){
         return dao.read(id);
+    }
+
+    public List<Product> getProductsBetweenTwoDates(Date dateOne, Date dateTwo){
+        return dao.readBetweenDates(dateOne,dateTwo);
+    }
+
+    public List<Product> getProductsWhereStockLowerThan(int stockLimit){
+        return dao.readWhereStockLowerThan(stockLimit);
+    }
+
+    public double getTotalValueFromMark(String mark){
+        return dao.readTotalValueFromMark(mark);
+    }
+
+    public List<Product> getProductsFromMark(String mark){
+        return dao.readFromOneMark(mark);
+    }
+
+    public double getAveragePrice(){
+        return dao.readAveragePrice();
     }
 
     public boolean updateProduct(Product product){
@@ -47,6 +69,10 @@ public class ProductService {
             return dao.delete(product);
         }
         return false;
+    }
+
+    public int deleteAllFromOneMark(String mark){
+        return dao.deleteAllFromOneMark(mark);
     }
 
     public void close(){

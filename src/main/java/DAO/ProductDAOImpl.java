@@ -6,7 +6,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.Query;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,9 @@ public class ProductDAOImpl implements IDAO<Product> {
             session.getTransaction().commit();
             return product;
         } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
             System.out.println(e);
             return null;
         } finally {
@@ -62,6 +67,9 @@ public class ProductDAOImpl implements IDAO<Product> {
             products = session.createQuery("FROM Product").list();
             session.getTransaction().commit();
         } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
             System.out.println(e);
         } finally {
             session.close();
@@ -78,10 +86,119 @@ public class ProductDAOImpl implements IDAO<Product> {
         try {
             return session.get(Product.class,id);
         } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
             System.out.println(e);
             return null;
         } finally {
             session.close();
+        }
+    }
+
+    public List<Product> readBetweenDates(Date dateOne, Date dateTwo){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<Product> products = new ArrayList<>();
+        Query<Product> query;
+
+        try {
+            query = session.createQuery("FROM Product WHERE buyDate BETWEEN :dateOne AND :dateTwo");
+            query.setParameter("dateOne", dateOne);
+            query.setParameter("dateTwo", dateTwo);
+            products = query.list();
+            session.getTransaction().commit();
+        } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
+            System.out.println(e);
+        } finally {
+            session.close();
+        }
+
+        return products;
+    }
+
+    public List<Product> readWhereStockLowerThan(int stockLimit){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List<Product> products = new ArrayList<>();
+        Query<Product> query;
+
+        try {
+            query = session.createQuery("FROM Product WHERE stock < :stock");
+            query.setParameter("stock", stockLimit);
+            products = query.list();
+            session.getTransaction().commit();
+        } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
+            System.out.println(e);
+        } finally{
+            session.close();
+        }
+
+        return products;
+    }
+
+    public double readTotalValueFromMark(String mark){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Query<Double> query;
+
+        try {
+            query = session.createQuery("SELECT SUM(stock*price) FROM Product WHERE mark = :mark");
+            query.setParameter("mark", mark);
+            return query.uniqueResult();
+        } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
+            System.out.println(e);
+            return -1;
+        } finally {
+            session.close();
+        }
+    }
+
+    public List<Product> readFromOneMark(String mark){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Query<Product> query;
+        List<Product> products = new ArrayList<>();
+
+        try {
+            query = session.createQuery("FROM Product WHERE mark = :mark");
+            query.setParameter("mark", mark);
+            products = query.list();
+        }catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
+            System.out.println(e);
+        } finally {
+            session.close();
+        }
+
+        return products;
+    }
+
+    public double readAveragePrice(){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Query<Double> query;
+
+        try {
+            query = session.createQuery("SELECT AVG(price) FROM Product");
+            return query.uniqueResult();
+        } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
+            System.out.println(e);
+            return -1D;
         }
     }
 
@@ -95,6 +212,9 @@ public class ProductDAOImpl implements IDAO<Product> {
             session.getTransaction().commit();
             return true;
         } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
             System.out.println(e);
             return false;
         } finally {
@@ -112,8 +232,31 @@ public class ProductDAOImpl implements IDAO<Product> {
             session.getTransaction().commit();
             return true;
         } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
             System.out.println(e);
             return false;
+        } finally {
+            session.close();
+        }
+    }
+
+    public int deleteAllFromOneMark(String mark){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Query query;
+
+        try {
+            query = session.createQuery("DELETE Product WHERE mark = :mark");
+            query.setParameter("mark", mark);
+            return query.executeUpdate();
+        } catch (Exception e){
+            if (session.getTransaction().isActive()){
+                session.getTransaction().rollback();
+            }
+            System.out.println(e);
+            return -1;
         } finally {
             session.close();
         }
