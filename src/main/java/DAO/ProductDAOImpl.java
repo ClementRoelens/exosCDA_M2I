@@ -13,26 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAOImpl implements IDAO<Product> {
-
-    private static ProductDAOImpl instance = null;
-    private static Object lock = new Object();
     private StandardServiceRegistry standardServiceRegistry;
     private SessionFactory sessionFactory;
 
 
-    private ProductDAOImpl(){
+    public ProductDAOImpl(){
         standardServiceRegistry = new StandardServiceRegistryBuilder().configure().build();
         sessionFactory = new MetadataSources(standardServiceRegistry).buildMetadata().buildSessionFactory();
-    }
-
-
-    public static ProductDAOImpl getInstance(){
-        if (instance == null){
-            synchronized (lock){
-                instance = new ProductDAOImpl();
-            }
-        }
-        return instance;
     }
 
 
@@ -201,6 +188,8 @@ public class ProductDAOImpl implements IDAO<Product> {
             return -1D;
         }
     }
+
+
 
     @Override
     public boolean update(Product product) {

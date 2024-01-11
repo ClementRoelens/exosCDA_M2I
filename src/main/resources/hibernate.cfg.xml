@@ -8,6 +8,10 @@
 
     <session-factory>
         <mapping class="Entities.Product"/>
+        <mapping class="Entities.Comment"/>
+        <mapping class="Entities.Image"/>
+        <mapping class="Entities.Command"/>
+        <mapping class="Entities.Address"/>
     </session-factory>
 
 </hibernate-configuration>

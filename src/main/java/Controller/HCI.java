@@ -1,9 +1,10 @@
 package Controller;
 
-import Entities.Product;
-import Service.ProductService;
+import Entities.*;
+import Service.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -12,15 +13,19 @@ import java.util.Scanner;
 public class HCI {
     private Scanner scanner = new Scanner(System.in);
 
-    private ProductService productService = ProductService.getInstance();
+    private ProductServiceImpl productService = ProductServiceImpl.getInstance();
+    private CommentServiceImpl commentService = CommentServiceImpl.getInstance();
+    private ImageServiceImpl imageService = ImageServiceImpl.getInstance();
+    private CommandServiceImpl commandService = CommandServiceImpl.getInstance();
+    private AddressServiceImpl addressService = AddressServiceImpl.getInstance();
 
 
 
 
 
     private int scanInt(String message) {
-        int returnedValue = 0;
-        while (returnedValue == 0) {
+        int returnedValue = -1;
+        while (returnedValue == -1) {
             try {
                 System.out.println(message);
                 returnedValue = scanner.nextInt();
@@ -131,10 +136,16 @@ public class HCI {
                 "4 - Afficher les produits au stock inférieur à...\n" +
                 "5 - Afficher la valeur totale cumulée d'une marque\n" +
                 "6 - Afficher le prix moyen de tous les produits\n" +
-                "7 - Créer un produit\n" +
-                "8 - Modifier un produit\n" +
-                "9 - Supprimer un produit\n" +
-                "10 - Supprimer tous les produits d'une marque\n" +
+                "7 - Afficher les produits avec au moins une note supérieure à ...\n" +
+                "8 - Créer un produit\n" +
+                "9 - Modifier un produit\n" +
+                "10 - Supprimer un produit\n" +
+                "11 - Supprimer tous les produits d'une marque\n" +
+                "12 - Créer une image\n" +
+                "13 - Écrire un commentaire\n" +
+                "14 - Créer une commande\n" +
+                "15 - Afficher les commandes\n" +
+                "16 - Afficher les commandes du jour\n" +
                 "0 - Au revoir");
 
         switch (choice) {
@@ -145,10 +156,16 @@ public class HCI {
             case 4 -> getProductsAccordingToStock();
             case 5 -> showTotalStockFromOneMark();
             case 6 -> showAveragePrice();
-            case 7 -> createProduct();
-            case 8 -> editProduct();
-            case 9 -> removeProduct();
-            case 10 -> removeAllProductFromOneMark();
+            case 7 -> showProductsWithCommentRatingsHigherThan();
+            case 8 -> createProduct();
+            case 9 -> editProduct();
+            case 10 -> removeProduct();
+            case 11 -> removeAllProductFromOneMark();
+            case 12 -> createImage();
+            case 13 -> createComment();
+            case 14 -> createCommand();
+            case 15 -> showCommands();
+            case 16 -> showTodayCommands();
         }
 
         if (choice != 0) {
@@ -157,7 +174,11 @@ public class HCI {
     }
 
     private void getProducts() {
-        for (Product p : productService.getProducts()) {
+        List<Product> products = productService.getAll();
+
+        for (Product p : products) {
+            List<Comment> comments = commentService.getAllAboutOneProduct(p.getId());
+            p.setComments(comments);
             System.out.println(p);
         }
     }
@@ -178,8 +199,16 @@ public class HCI {
        }
     }
 
-    public void showAveragePrice(){
+    private void showAveragePrice(){
         System.out.printf("Prix moyen : %.2f€\n", productService.getAveragePrice());
+    }
+
+    private void showProductsWithCommentRatingsHigherThan(){
+        int threshold = scanInt("Entrez la limite de note");
+
+        for (Product p : productService.getProductsWithCommentRatingsHigherThan(threshold)){
+            System.out.println(p);
+        }
     }
 
     private void showTotalStockFromOneMark(){
@@ -247,7 +276,7 @@ public class HCI {
         stock = scanInt("Entrez le stock du produit");
         buyDate = scanDate("Entrez la date d'achat (au format 2023-12-31");
         product = new Product(reference, mark, buyDate, price, stock);
-        product = productService.postProduct(product);
+        product = productService.post(product);
 
         if (product != null) {
             System.out.println("Produit créé, son id est " + product.getId());
@@ -261,14 +290,13 @@ public class HCI {
         Product product;
         String reference;
         String mark;
-        String strDate;
-        Date buyDate = null;
+        Date buyDate;
         double price;
         int stock;
         boolean success;
 
         productId = scanInt("Entrez l'id du produit à modifier");
-        product = productService.getProduct(productId);
+        product = productService.getOne(productId);
 
         if (product != null) {
             reference = scanString("Le nom du produit actuel est " + product.getReference() +
@@ -287,7 +315,7 @@ public class HCI {
                     "\nEntrez le nouveau stock du produit ou 0 pour laisser tel quel", product.getStock());
             product.setStock(stock);
 
-            success = productService.updateProduct(product);
+            success = productService.update(product);
 
             System.out.println(success ? "Produit bien mis à jour" : "Produit non mis à jour");
         } else {
@@ -302,7 +330,7 @@ public class HCI {
 
         id = scanInt("Entrez l'id du produit à supprimer");
 
-        success = productService.deleteProduct(id);
+        success = productService.delete(id);
 
         System.out.println(success ? "Produit supprimé" : "Produit non supprimé (sûrement un mauvais id)");
     }
@@ -314,8 +342,159 @@ public class HCI {
         System.out.println(result + " produits ont été supprimés");
     }
 
+    private void createImage(){
+        List<Product> products;
+        int productId;
+        Product product;
+        String url;
+        Image image;
+
+        products = productService.getAll();
+        for (Product p : products){
+            System.out.println(p.getId() + " - " + p.getReference());
+        }
+        productId = scanInt("Entrez l'id du produit auquel vous voulez assigner l'image");
+        product = products.stream().filter(p -> p.getId() == productId).findFirst().orElse(null);
+
+        if (product != null){
+             url = scanString("Entrez l'URL de l'image");
+
+            image = new Image(url, product);
+            image = imageService.post(image);
+
+            if (image != null){
+                System.out.println("Image créée, son id est " + image.getId());
+            } else {
+                System.out.println("Image non-créée");
+            }
+        } else {
+            System.out.println("Cet id ne correspond à aucun produit");
+        }
+
+
+    }
+
+    private void createComment(){
+        int productId;
+        List<Product> products;
+        Product product;
+        String content;
+        int rating = -1;
+        Comment comment;
+        
+        products = productService.getAll();
+        for (Product p : products){
+            System.out.println(p.getReference());
+        }
+        
+        productId = scanInt("Entrez l'id du produit que vous voulez commenter");
+        product = products.stream().filter(p -> p.getId() == productId).findFirst().orElse(null);
+        
+        if (product != null){
+            content = scanString("Rédigez votre commentaire");
+            while (rating < 0 || rating > 5){
+                rating = scanInt("Quelle note donnez-vous au produit ? De 0 à 5");
+            }
+            
+            comment = new Comment(content,Date.valueOf(LocalDate.now()),rating,product);
+            comment = commentService.post(comment);
+
+            if (comment != null){
+                System.out.println("Commentaire posté, son id est : " + comment.getId());
+            } else {
+                System.out.println("Commentaire non-posté");
+            }
+        } else {
+            System.out.println("Cet id ne correspond à aucun produit");
+        }
+    }
+
+    private void createCommand(){
+        List<Product> allProducts;
+        List<Product> commandProducts = new ArrayList<>();
+        boolean ended = false;
+        int choice;
+        double totalPrice = 0D;
+        List<Address> addresses;
+        int addressId;
+        int number;
+        String road;
+        String town;
+        String zipCode = "";
+        Address address;
+        Command command;
+
+        allProducts = productService.getAll();
+        for (Product p : allProducts){
+            List<Comment> comments = commentService.getAllAboutOneProduct(p.getId());
+            p.setComments(comments);
+            System.out.println(p);
+        }
+
+        while (!ended){
+            choice = scanInt("Entrez l'id du produit à ajouter à votre commande (ou 0 pour arrêter)");
+
+            if (choice != 0){
+                int finalChoice = choice;
+                Product product = allProducts.stream().filter(p -> p.getId() == finalChoice).findFirst().orElse(null);
+                if (product != null){
+                    commandProducts.add(product);
+                    totalPrice += product.getPrice();
+                    System.out.println(product.getReference() + " ajouté");
+                } else {
+                    System.out.println("Cet id ne correspond à aucun produit");
+                }
+            } else {
+                ended = true;
+            }
+        }
+
+        addresses = addressService.getAll();
+        for (Address a : addresses){
+            System.out.println(a);
+        }
+        addressId = scanInt("Si votre adresse est déjà enregistrée, entrez son id");
+        address = addresses.stream().filter(a -> a.getId() == addressId).findFirst().orElse(null);
+
+        if (address == null){
+            number = scanInt("Entrez votre numéro de rue");
+            road = scanString("Entrez le nom de votre rue");
+            while (zipCode.length() != 5){
+                zipCode = scanString("Entrez votre code postal (5 chiffres)");
+            }
+            town = scanString("Entrez le nom de votre ville");
+
+            address = new Address(number,road,zipCode,town);
+        }
+
+        command = new Command(totalPrice,Date.valueOf(LocalDate.now()),commandProducts,address);
+        command = commandService.post(command);
+
+        if (command != null){
+            System.out.println("Commande créée, son id est " + command.getId());
+        } else {
+            System.out.println("Commande non-créée");
+        }
+    }
+
+    private void showCommands(){
+        for (Command c : commandService.getAll()){
+            System.out.println(c);
+        }
+    }
+
+    private void showTodayCommands(){
+        for (Command c : commandService.getTodayCommands()){
+            System.out.println(c);
+        }
+    }
+
     private void close() {
         productService.close();
+        imageService.close();
+        commentService.close();
+        commandService.close();
+        addressService.close();
         System.out.println("Très bien, au revoir");
     }
 

@@ -2,6 +2,7 @@ package Entities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 
 @Entity
@@ -15,6 +16,12 @@ public class Product {
     private Date buyDate;
     private double price;
     private int stock;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<Image> images;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+    @ManyToMany(mappedBy = "products", cascade = CascadeType.REMOVE)
+    private List<Command> commands;
 
 
 
@@ -79,10 +86,36 @@ public class Product {
         this.stock = stock;
     }
 
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     @Override
     public String toString() {
-        return String.format("Produit %d - %s de marque %s acheté le %s à %.2f€. %d en stock",
-                id, reference, mark, buyDate, price, stock);
+        StringBuilder returnedValue = new StringBuilder(String.format("Produit %d - %s de marque %s acheté le %s à %.2f€. %d en stock\n",
+                id, reference, mark, buyDate, price, stock));
+        if (!comments.isEmpty()){
+            for (Comment comment : comments){
+                returnedValue.append(comment);
+            }
+        }
+        if (!images.isEmpty()){
+            for (Image image : images){
+                returnedValue.append(String.format("- Image n°%d - %s\n", image.getId(), image.getUrl()));
+            }
+        }
+        return returnedValue.toString();
     }
 }
