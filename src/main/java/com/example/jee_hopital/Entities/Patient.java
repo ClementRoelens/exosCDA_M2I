@@ -3,6 +3,7 @@ package com.example.jee_hopital.Entities;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.List;
 
 @Entity
 public class Patient {
@@ -15,6 +16,8 @@ public class Patient {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] picture;
+    @OneToMany(mappedBy = "patient")
+    private List<Appointment> appointments;
 
     public Patient() {
     }
@@ -26,12 +29,13 @@ public class Patient {
         this.picture = picture;
     }
 
-    public Patient(int id, String firstname, String lastname, Date birthdate, byte[] picture) {
+    public Patient(int id, String firstname, String lastname, Date birthdate, byte[] picture, List<Appointment> appointments) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
         this.picture = picture;
+        this.appointments = appointments;
     }
 
     public int getId() {
@@ -72,6 +76,14 @@ public class Patient {
 
     public void setPicture(byte[] picture) {
         this.picture = picture;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     @Override

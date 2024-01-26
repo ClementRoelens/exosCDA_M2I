@@ -8,6 +8,10 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.Query;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PatientDAOImpl implements IDAO<Patient> {
     private StandardServiceRegistry standardServiceRegistry;
@@ -56,6 +60,53 @@ public class PatientDAOImpl implements IDAO<Patient> {
         } finally {
             session.close();
         }
+    }
+
+    public List<Patient> read(){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.getTransaction();
+        Query<Patient> query;
+        List<Patient> patients = new ArrayList<>();
+
+        transaction.begin();
+
+        try {
+            query = session.createQuery("FROM Patient");
+            patients = query.list();
+            transaction.commit();
+        } catch (Exception e){
+            if (transaction.isActive()){
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
+
+        return patients;
+    }
+
+    public List<Patient> readByName(String name){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.getTransaction();
+        Query<Patient> query;
+        List<Patient> patients = new ArrayList<>();
+
+        transaction.begin();
+
+        try {
+            query = session.createQuery("FROM Patient WHERE lastname = :name");
+            query.setParameter("name",name);
+            patients = query.list();
+            transaction.commit();
+        } catch (Exception e){
+            if (transaction.isActive()){
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
+
+        return patients;
     }
 
     @Override

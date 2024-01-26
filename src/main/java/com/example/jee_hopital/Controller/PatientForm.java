@@ -3,6 +3,7 @@ package com.example.jee_hopital.Controller;
 import com.example.jee_hopital.Entities.Patient;
 import com.example.jee_hopital.Service.Service;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import java.sql.Date;
 
 @WebServlet(name="patient-form",value="/patient-form")
+@MultipartConfig(maxFileSize = 1024 * 1024 * 10)
 public class PatientForm extends HttpServlet {
     private Service service;
     private boolean isLogged;
