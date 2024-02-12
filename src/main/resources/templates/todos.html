@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo list</title>
+</head>
+<body>
+<main>
+    <h1>Todo list</h1>
+    <ul>
+        <li th:each="t : ${todos}">
+            <h2 th:text="${t.title}"></h2>
+            <p th:text="${t.description}"></p>
+            <strong th:if="${t.ended}">Terminé</strong>
+            <strong th:unless="${t.ended}">En cours</strong>
+        </li>
+    </ul>
+</main>
+</body>
+</html>
