@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"²>
+<head>
+    <meta charset="UTF-8">
+    <title>Détail personnes</title>
+</head>
+<body>
+<main>
+    <h1>Peeeersoooooonnes</h1>
+    <hr>
+<!--    <p>Firstname : <span th:text="${firstName}"></span></p>-->
+<!--    <p>Lastname : <span th:text="${lastName}"></span></p>-->
+
+    <ul th:if="${!persons.isEmpty()}">
+        <li th:each="p : ${persons}"><span th:text="${p}"></span></li>
+    </ul>
+</main>
+</body>
+</html>

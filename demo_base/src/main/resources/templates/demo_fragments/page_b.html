@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Page B</title>
+    <span th:replace="~{demo_fragments/page_a :: bootstrapImport}"></span>
+</head>
+<body>
+<header>
+<h1>Page B</h1>
+    <nav>
+        <a th:href="@{demo_fragments}">Page d'accueil</a>
+    </nav>
+</header>
+<a th:href="@{/detail/{id}(id = ${idBunny})}">Détail d'un lapin au pif</a>
+</body>
+</html>

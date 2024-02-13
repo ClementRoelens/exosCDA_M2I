@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Détail lapinou</title>
+    <span th:replace="~{demo_fragments/page_a :: bootstrapImport}"></span>
+</head>
+<body>
+<main>
+    <h2>Détails de mon lapinou</h2>
+    <p>Nom : <span th:text="${bunny.name}"></span></p>
+    <p>Race : <span th:text="${bunny.breed}"></span></p>
+</main>
+</body>
+</html>
