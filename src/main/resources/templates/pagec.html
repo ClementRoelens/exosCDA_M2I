@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Lapin</title>
+    <span th:replace="~{pagea :: bootstrapImports}"></span>
+</head>
+<body>
+<header>
+    <a th:href="@{/}">Retour à l'accueil</a>
+</header>
+    <main>
+        <h2>Détail de mon lapin</h2>
+        <p>Nom : <span th:text="${monlapin.name}"></span></p>
+        <p>Race : <span th:text="${monlapin.breed}"></span></p>
+    </main>
+
+</body>
+</html>
