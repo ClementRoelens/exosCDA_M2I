@@ -1,0 +1,19 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:replace="~{pages/index :: bootstrapImports}"></th:block>
+</head>
+<body>
+<th:block th:replace="~{pages/index :: header}"></th:block>
+<main class="container">
+    <ul class="group-list">
+        <li class="group-list_item" th:each="s : ${students}">
+            <p><th:block th:text="${s.firstName}"></th:block> <th:block th:text="${s.lastName}"></th:block></p>
+            <a class="btn btn-outline-primary"></a>
+        </li>
+    </ul>
+</main>
+</body>
+</html>
