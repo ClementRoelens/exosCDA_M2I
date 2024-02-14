@@ -1,17 +1,16 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Liste des étudiants</title>
     <th:block th:replace="~{pages/index :: bootstrapImports}"></th:block>
 </head>
 <body>
 <th:block th:replace="~{pages/index :: header}"></th:block>
-<main class="container">
+<main class="container mx-auto text-center">
     <ul class="group-list">
-        <li class="group-list_item" th:each="s : ${students}">
+        <li class="group-list_item w-50 d-flex flex-direction-row justify-content-between my-2 mx-auto" th:each="s : ${students}">
             <p><th:block th:text="${s.firstName}"></th:block> <th:block th:text="${s.lastName}"></th:block></p>
-            <a class="btn btn-outline-primary"></a>
+            <a class="btn btn-outline-primary" th:href="@{/details/{id}(id=${s.id})}"><i class="bi bi-eye-fill"></i>  Voir détails</a>
         </li>
     </ul>
 </main>

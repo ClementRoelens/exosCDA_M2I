@@ -4,6 +4,9 @@ import org.example.tp_student_spring.entity.Student;
 import org.example.tp_student_spring.service.StudentService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,13 +16,12 @@ public class StudentServiceImpl implements StudentService {
     private List<Student> students;
 
     public StudentServiceImpl() {
-        students = List.of(
-                new Student("Clément","Roelens",32,"clement.roelens@hotmail.com"),
-                new Student("Nassim","Sakhri",27,"nassim.sakhri@gmail.com"),
-                new Student("Pauline","Laout",31,"p.laout@gmail.com"),
-                new Student("Olivia","Pigani",28,"oliv.p@gmail.com"),
-                new Student("Clémence","Petit",30,"jesaispaslol@ixdé.com")
-        );
+        students = new ArrayList<>();
+        students.add(new Student("Clément", "Roelens", LocalDate.of(1991, 9, 2), "clement.roelens@hotmail.com"));
+        students.add(new Student("Nassim", "Sakhri", LocalDate.of(1996, 3, 17), "nassim.sakhri@gmail.com"));
+        students.add(new Student("Pauline", "Laout", LocalDate.of(1992, 12, 20), "p.laout@gmail.com"));
+        students.add(new Student("Olivia", "Pigani", LocalDate.of(1995, 10, 1), "oliv.p@gmail.com"));
+        students.add(new Student("Clémence", "Petit", LocalDate.of(1994, 1, 5), "jesaispaslol@ixdé.com"));
     }
 
     @Override
@@ -35,17 +37,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> seekStudentsByName(String name) {
         return students.stream()
-                .filter(s -> s.getFirstName().contains(name) || s.getLastName().contains(name))
+                .filter(s -> s.getFirstName().toLowerCase().contains(name.toLowerCase()) || s.getLastName().toLowerCase().contains(name.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public boolean createStudent(String firstName, String lastName, int age, String email) {
-        if (age < 18){
-            System.out.println("Un étudiant doit avoir 18 ans");
-            return false;
-        }
-        Student student = new Student(firstName,lastName,age,email);
+    public boolean createStudent(Student student) {
         students.add(student);
         return true;
     }

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Échec</title>
+    <th:block th:replace="~{pages/index :: bootstrapImports}"></th:block>
+</head>
+<body>
+<th:block th:replace="~{pages/index :: header}"></th:block>
+<main class="container mx-auto text-center pt-4">
+    <h1>Quelle tristesse, une erreur est survenue</h1>
+    <img th:src="@{images/fail.webp}" alt="Lapin triste" class="w-50 rounded">
+    <p class="mt-2">Vous allez être redirigé</p>
+</main>
+<script th:inline="javascript">
+    setTimeout(() => window.location.href = '/', 3000);
+</script>
+</body>
+</html>

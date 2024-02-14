@@ -1,11 +1,13 @@
 package org.example.tp_student_spring.entity;
 
 
+import java.time.LocalDate;
+
 public class Student {
     private int id;
     private String firstName;
     private String lastName;
-    private int age;
+    private LocalDate birthdate;
     private String email;
     private static int count;
 
@@ -14,11 +16,11 @@ public class Student {
         id = count++;
     }
 
-    public Student(String firstName, String lastName, int age, String email) {
+    public Student(String firstName, String lastName, LocalDate birthdate, String email) {
         this();
         this.firstName = firstName;
         this.lastName = lastName;
-        this.age = age;
+        this.birthdate = birthdate;
         this.email = email;
     }
 
@@ -47,12 +49,12 @@ public class Student {
         this.lastName = lastName;
     }
 
-    public int getAge() {
-        return age;
+    public LocalDate getBirthdate() {
+        return birthdate;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setbirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
     }
 
     public String getEmail() {
@@ -61,13 +63,5 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public static int getCount() {
-        return count;
-    }
-
-    public static void setCount(int count) {
-        Student.count = count;
     }
 }

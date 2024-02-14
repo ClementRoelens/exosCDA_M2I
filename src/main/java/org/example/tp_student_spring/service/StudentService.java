@@ -8,5 +8,5 @@ public interface StudentService {
     List<Student> getAllStudents();
     Student getStudentByid(int id);
     List<Student> seekStudentsByName(String name);
-    boolean createStudent(String firstName, String lastName, int age, String email);
+    boolean createStudent(Student student);
 }
