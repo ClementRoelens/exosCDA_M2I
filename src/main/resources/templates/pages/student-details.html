@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Détails d'un étudiant</title>
@@ -9,7 +9,10 @@
 <th:block th:replace="~{pages/index :: header}"></th:block>
 <main class="container mx-auto text-center">
     <h1><th:block th:text="${student.firstName}"></th:block> <th:block th:text="${student.lastName}"></th:block></h1>
-    <p>Né le <th:block th:text="${student.birthdate.dayOfMonth}+'/'+${student.birthdate.getMonthValue()}+'/'+${student.birthdate.year}"></th:block></p>
+    <p>Né le <th:block
+            th:text="${student.birthdate.dayOfMonth < 10 ? '0' + student.birthdate.dayOfMonth : student.birthdate.dayOfMonth }+'/'
+            +${student.birthdate.getMonthValue() < 10 ? '0' + student.birthdate.getMonthValue() : student.birthdate.getMonthValue()}
+            +'/'+${student.birthdate.year}"></th:block></p>
     <p>Joignable à <span class="link-offset-1" th:text="${student.email}"></span></p>
 </main>
 </body>

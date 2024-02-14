@@ -43,6 +43,24 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public boolean createStudent(Student student) {
+        // Vérification bien dégueulasse si l'étudiant a bien 18 ans...
+        if (LocalDate.now().getYear() - student.getBirthdate().getYear() < 18) {
+            return false;
+        }
+        if ((LocalDate.now().getYear() - student.getBirthdate().getYear() == 18)
+                &&
+                (LocalDate.now().getMonthValue() - student.getBirthdate().getMonthValue() < 0)) {
+            return false;
+        }
+        if ((LocalDate.now().getYear() - student.getBirthdate().getYear() == 18)
+                &&
+                (LocalDate.now().getMonthValue() - student.getBirthdate().getMonthValue() == 0)
+                &&
+                (LocalDate.now().getDayOfMonth() - student.getBirthdate().getDayOfMonth() < 0)
+        ) {
+            return false;
+        }
+
         students.add(student);
         return true;
     }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Échec</title>
@@ -8,8 +8,9 @@
 <body>
 <th:block th:replace="~{pages/index :: header}"></th:block>
 <main class="container mx-auto text-center pt-4">
-    <h1>Quelle tristesse, une erreur est survenue</h1>
-    <img th:src="@{images/fail.webp}" alt="Lapin triste" class="w-50 rounded">
+    <h1 class="fs-4">Quelle tristesse, une erreur est survenue</h1>
+    <h2 class="fs-5" th:text="${message}"></h2>
+    <img th:src="@{/images/fail.webp}" alt="Lapin triste" class="w-25 rounded my-5">
     <p class="mt-2">Vous allez être redirigé</p>
 </main>
 <script th:inline="javascript">
