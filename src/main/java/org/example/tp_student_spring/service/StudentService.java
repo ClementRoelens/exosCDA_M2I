@@ -9,4 +9,6 @@ public interface StudentService {
     Student getStudentByid(int id);
     List<Student> seekStudentsByName(String name);
     boolean createStudent(Student student);
+    boolean updateStudent(Student student);
+    boolean deleteStudent(int id);
 }

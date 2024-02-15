@@ -3,34 +3,24 @@ package org.example.tp_student_spring.entity;
 
 import java.time.LocalDate;
 
-public class Student {
+public class StudentForm {
     private int id;
     private String firstName;
     private String lastName;
-    private LocalDate birthdate;
+    private String birthdate;
     private String email;
-//    private static int count;
 
-
-    public Student() {
-//        id = count++;
+    public StudentForm() {
     }
 
-    public Student(String firstName, String lastName, LocalDate birthdate, String email) {
-//        this();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdate = birthdate;
-        this.email = email;
-    }
-
-    public Student(int id, String firstName, String lastName, LocalDate birthdate, String email) {
+    public StudentForm(int id, String firstName, String lastName, String birthdate, String email) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthdate = birthdate;
         this.email = email;
     }
+
 
     public int getId() {
         return id;
@@ -56,11 +46,11 @@ public class Student {
         this.lastName = lastName;
     }
 
-    public LocalDate getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
     }
 
-    public void setbirthdate(LocalDate birthdate) {
+    public void setBirthdate(String birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -72,7 +62,7 @@ public class Student {
         this.email = email;
     }
 
-    public StudentForm toStudentForm(){
-        return new StudentForm(id,firstName,lastName,birthdate.toString(),email);
+    public Student toStudent(){
+        return new Student(id,firstName,lastName, LocalDate.parse(birthdate),email);
     }
 }

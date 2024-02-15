@@ -8,12 +8,16 @@
 <body>
 <th:block th:replace="~{pages/index :: header}"></th:block>
 <main class="container mx-auto text-center">
-    <h1><th:block th:text="${student.firstName}"></th:block> <th:block th:text="${student.lastName}"></th:block></h1>
+    <h1 class="mt-4"><th:block th:text="${student.firstName}"></th:block> <th:block th:text="${student.lastName}"></th:block></h1>
     <p>Né le <th:block
             th:text="${student.birthdate.dayOfMonth < 10 ? '0' + student.birthdate.dayOfMonth : student.birthdate.dayOfMonth }+'/'
             +${student.birthdate.getMonthValue() < 10 ? '0' + student.birthdate.getMonthValue() : student.birthdate.getMonthValue()}
-            +'/'+${student.birthdate.year}"></th:block></p>
+            +'/'+${student.birthdate.year}"></th:block> <span class="fw-bold" th:text="'('+${age}+' ans)'"></span></p>
     <p>Joignable à <span class="link-offset-1" th:text="${student.email}"></span></p>
+    <div class="actions mt-2">
+        <a th:href="@{/edit/{id}(id=${student.id})}" class="btn btn-warning me-2"><i class="bi bi-pencil-square"></i> Modifier</a>
+        <a th:href="@{/delete/{id}(id=${student.id})}" class="btn btn-danger ms-2"><i class="bi bi-trash"></i> Supprimer</a>
+    </div>
 </main>
 </body>
 </html>
