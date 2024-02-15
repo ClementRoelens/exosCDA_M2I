@@ -38,14 +38,14 @@ public class StudentController {
     }
 
     @PostMapping("/addStudentAction")
-    public String addStudent(@Valid @ModelAttribute("student") Student student, BindingResult bindingResult){
+    public String addStudent(@Valid @ModelAttribute("student") Student student, BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors()){
             return "pages/form-student";
         }
-//        if (studentService.createStudent(student)){
-//            return "pages/success";
-//        }
-//        model.addAttribute("message", "Un étudiant doit avoir 18 ans");
+        if (studentService.createStudent(student)){
+            return "pages/success";
+        }
+        model.addAttribute("message", "Un étudiant doit avoir 18 ans");
         return "pages/fail";
     }
 

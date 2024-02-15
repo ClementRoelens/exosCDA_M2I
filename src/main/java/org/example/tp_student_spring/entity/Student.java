@@ -1,10 +1,7 @@
 package org.example.tp_student_spring.entity;
 
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,10 +11,10 @@ import java.time.LocalDate;
 public class Student {
     private int id;
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3, max = 20)
     private String firstName;
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3, max = 20)
     private String lastName;
     @NotNull
     private LocalDate birthdate;
