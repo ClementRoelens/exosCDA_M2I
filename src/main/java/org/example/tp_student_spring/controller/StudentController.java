@@ -1,11 +1,13 @@
 package org.example.tp_student_spring.controller;
 
+import jakarta.validation.Valid;
 import org.example.tp_student_spring.entity.Student;
 import org.example.tp_student_spring.entity.StudentForm;
 import org.example.tp_student_spring.service.StudentService;
 import org.example.tp_student_spring.util.Util;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,11 +38,14 @@ public class StudentController {
     }
 
     @PostMapping("/addStudentAction")
-    public String addStudent(@ModelAttribute("student") Student student, Model model){
-        if (studentService.createStudent(student)){
-            return "pages/success";
+    public String addStudent(@Valid @ModelAttribute("student") Student student, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return "pages/form-student";
         }
-        model.addAttribute("message", "Un étudiant doit avoir 18 ans");
+//        if (studentService.createStudent(student)){
+//            return "pages/success";
+//        }
+//        model.addAttribute("message", "Un étudiant doit avoir 18 ans");
         return "pages/fail";
     }
 
@@ -80,7 +85,10 @@ public class StudentController {
     }
 
     @PostMapping("/editAction")
-    public String editAction(@ModelAttribute("student") StudentForm student){
+    public String editAction(@Valid @ModelAttribute("student") StudentForm student, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return "pages/form-student";
+        }
         if (studentService.updateStudent(student.toStudent())){
             return "pages/success";
         }

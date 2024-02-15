@@ -1,28 +1,41 @@
 package org.example.tp_student_spring.entity;
 
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.Data;
+
 import java.time.LocalDate;
+
 
 public class Student {
     private int id;
+    @NotNull
+    @Size(min = 3)
     private String firstName;
+    @NotNull
+    @Size(min = 3)
     private String lastName;
+    @NotNull
     private LocalDate birthdate;
+    @NotNull
+    @Pattern(regexp = "^(.+)@(\\S+)$", message = "Un e-mail doit être de type 'user@domain.com'")
     private String email;
-//    private static int count;
 
 
     public Student() {
-//        id = count++;
     }
 
     public Student(String firstName, String lastName, LocalDate birthdate, String email) {
-//        this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthdate = birthdate;
         this.email = email;
     }
+
 
     public Student(int id, String firstName, String lastName, LocalDate birthdate, String email) {
         this.id = id;
