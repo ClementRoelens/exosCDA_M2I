@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajout d'un article</title>
+  <th:block th:replace="~{home :: bootstrap}"></th:block>
+</head>
+<body>
+<main class="container">
+  <h1 class="text-center display-6 mt-4">Nouvel article !</h1>
+  <form th:action="@{/createPostAction}" method="POST" th:object="${post}" class="w-50 mx-auto mt-5">
+    <div class="mb-3">
+      <label for="title" class="form-label">Titre : </label>
+      <input type="text" class="form-control" id="title" th:field="*{title}" required>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description :</label>
+      <input type="text" class="form-control" id="description" th:field="*{description}" required>
+    </div>
+    <div class="mb-3">
+      <label for="content" class="form-label">Contenu : </label>
+      <input type="text" class="form-control" id="content" th:field="*{content}" required>
+    </div>
+    <button class="btn btn-outline-success mt-2 d-block mx-auto">Valider</button>
+  </form>
+</main>
+</body>
+</html>
