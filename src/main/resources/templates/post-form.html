@@ -7,19 +7,24 @@
 </head>
 <body>
 <main class="container">
+
   <h1 class="text-center display-6 mt-4">Nouvel article !</h1>
+
   <form th:action="@{/createPostAction}" method="POST" th:object="${post}" class="w-50 mx-auto mt-5">
     <div class="mb-3">
       <label for="title" class="form-label">Titre : </label>
       <input type="text" class="form-control" id="title" th:field="*{title}" required>
+      <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></p>
     </div>
     <div class="mb-3">
       <label for="description" class="form-label">Description :</label>
       <input type="text" class="form-control" id="description" th:field="*{description}" required>
+      <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></p>
     </div>
     <div class="mb-3">
       <label for="content" class="form-label">Contenu : </label>
-      <input type="text" class="form-control" id="content" th:field="*{content}" required>
+      <textarea type="text" class="form-control" id="content" th:field="*{content}" required></textarea>
+      <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger"></p>
     </div>
     <button class="btn btn-outline-success mt-2 d-block mx-auto">Valider</button>
   </form>

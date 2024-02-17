@@ -1,12 +1,22 @@
 package com.example.tp_blog.entity;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Post {
     private int id;
+    @NotNull
+    @NotBlank
     private String title;
+    @NotNull
+    @NotBlank
     private String description;
+    @NotNull
+    @NotBlank
     private String content;
     private List<Comment> comments;
 

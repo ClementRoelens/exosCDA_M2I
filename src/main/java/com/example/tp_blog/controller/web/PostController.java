@@ -3,8 +3,10 @@ package com.example.tp_blog.controller.web;
 import com.example.tp_blog.entity.Comment;
 import com.example.tp_blog.entity.Post;
 import com.example.tp_blog.service.impl.BlogServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +34,10 @@ public class PostController {
     }
 
     @PostMapping("/createPostAction")
-    public String createPostAction(@ModelAttribute("post") Post post){
+    public String createPostAction(@Valid @ModelAttribute("post") Post post, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return "post-form";
+        }
         blogService.createPost(post);
         return "redirect:/";
     }
