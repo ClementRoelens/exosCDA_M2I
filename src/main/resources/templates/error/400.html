@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Erreur</title>
+    <th:block th:replace="~{home :: bootstrap}"></th:block>
+</head>
+<body>
+<main class="container">
+    <h1 class="text-center mt-5">Il semble que vous avez essayé de faire une bêtise... Redirection en cours</h1>
+</main>
+<script th:inline="javascript">
+    setTimeout(() => window.location.href =  '/', 3000);
+</script>
+</body>
+</html>

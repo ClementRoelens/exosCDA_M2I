@@ -1,38 +1,44 @@
-package com.example.tp_blog.entity;
+package com.example.tp_blog.dto;
 
-import com.example.tp_blog.dto.PostDTO;
-import jakarta.persistence.*;
+import com.example.tp_blog.entity.Comment;
+import com.example.tp_blog.entity.Post;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "post")
-public class Post {
-    @Id
+public class PostDTO {
     private UUID id;
+    @NotNull
+    @NotBlank
     private String title;
+    @NotNull
+    @NotBlank
     private String description;
-    @Column(columnDefinition = "TEXT")
+    @NotNull
+    @NotBlank
     private String content;
-    @OneToMany(mappedBy = "attachedPost")
-    private List<Comment> comments;
+    private List<CommentDTO> comments;
 
 
-    public Post() {
+    public PostDTO() {
         this.comments = new ArrayList<>();
+        id = UUID.randomUUID();
     }
 
-    public Post(String title, String description, String content) {
+    public PostDTO(String title, String description, String content) {
         this();
         this.title = title;
         this.description = description;
         this.content = content;
     }
 
-    public Post(UUID id, String title, String description, String content, List<Comment> comments) {
+    public PostDTO(UUID id, String title, String description, String content, List<CommentDTO> comments) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -72,20 +78,20 @@ public class Post {
         this.content = content;
     }
 
-    public List<Comment> getComments() {
+    public List<CommentDTO> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(List<CommentDTO> comments) {
         this.comments = comments;
     }
 
 
-    public void addComment(Comment comment){
+    public void addComment(CommentDTO comment){
         comments.add(comment);
     }
 
-    public PostDTO toDTO(){
-        return new PostDTO(id,title,description,content,comments.stream().map(Comment::toDTO).collect(Collectors.toList()));
+    public Post toPost(){
+        return new Post(id,title,description,content,comments.stream().map(CommentDTO::toComment).collect(Collectors.toList()));
     }
 }

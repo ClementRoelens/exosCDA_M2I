@@ -22,9 +22,9 @@
         </li>
     </ul>
 
-    <h2 class="fs-5 my-4">Poster votre propre commentaire</h2>
+    <h2 class="fs-5 mt-5">Poster votre propre commentaire</h2>
 
-    <form th:action="@{/postComment/{id}(id=${post.id})}" method="POST" th:object="${comment}" class="w-50 mx-auto text-start">
+    <form th:action="@{/postComment/{id}(id=${post.id})}" method="POST" th:object="${comment}" class="w-50 mx-auto my-5 text-start ">
         <div class="mb-3">
             <label for="name" class="form-label">Titre : </label>
             <input type="text" class="form-control" id="name" th:field="*{name}">

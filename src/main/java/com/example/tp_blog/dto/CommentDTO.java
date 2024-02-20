@@ -1,47 +1,53 @@
-package com.example.tp_blog.entity;
+package com.example.tp_blog.dto;
 
-import com.example.tp_blog.dto.CommentDTO;
-import jakarta.persistence.*;
+import com.example.tp_blog.entity.Comment;
+import com.example.tp_blog.entity.Post;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-@Entity
-public class Comment {
-    @Id
+public class CommentDTO {
     private UUID id;
+    @NotNull
+    @NotBlank
     private String name;
+    @NotNull
+    @NotBlank
     private String email;
-    @Column(columnDefinition = "TEXT")
+    @NotNull
+    @NotBlank
     private String content;
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post attachedPost;
+    private PostDTO attachedPost;
 
 
-    public Comment() {
+    public CommentDTO() {
+        id = UUID.randomUUID();
     }
 
-    public Comment(String name, String email, String content) {
+    public CommentDTO(String name, String email, String content) {
+        this();
         this.name = name;
         this.email = email;
         this.content = content;
     }
 
-    public Comment(String name, String email, String content, Post attachedPost) {
+    public CommentDTO(String name, String email, String content, PostDTO attachedPost) {
+        this();
         this.name = name;
         this.email = email;
         this.content = content;
         this.attachedPost = attachedPost;
     }
 
-    public Comment(UUID id, String name, String email, String content) {
+    public CommentDTO(UUID id, String name, String email, String content) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.content = content;
     }
 
-    public Comment(UUID id, String name, String email, String content, Post attachedPost) {
+    public CommentDTO(UUID id, String name, String email, String content, PostDTO attachedPost) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -82,15 +88,15 @@ public class Comment {
         this.content = content;
     }
 
-    public Post getAttachedPost() {
+    public PostDTO getAttachedPost() {
         return attachedPost;
     }
 
-    public void setAttachedPost(Post attachedPost) {
+    public void setAttachedPost(PostDTO attachedPost) {
         this.attachedPost = attachedPost;
     }
 
-    public CommentDTO toDTO(){
-        return new CommentDTO(id,name,email,content);
+    public Comment toComment(){
+        return new Comment(id,name,email,content);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.tp_blog.controller.rest;
 
+import com.example.tp_blog.dto.PostDTO;
 import com.example.tp_blog.entity.Post;
 import com.example.tp_blog.service.impl.BlogServiceImpl;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/post")
@@ -22,7 +24,7 @@ public class PostRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createPost(@RequestBody @Valid Post post, BindingResult bindingResult){
+    public ResponseEntity<Object> createPost(@RequestBody @Valid PostDTO post, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             StringBuilder errors = new StringBuilder();
 
@@ -33,6 +35,7 @@ public class PostRestController {
 
             return new ResponseEntity<>(errors.toString(), HttpStatus.BAD_REQUEST);
         }
+
         post = blogService.createPost(post);
         if (post != null){
             return new ResponseEntity<>(post, HttpStatus.CREATED);
@@ -41,12 +44,12 @@ public class PostRestController {
     }
 
     @GetMapping("/")
-    public List<Post> getPosts(){
+    public List<PostDTO> getPosts(){
         return blogService.getPosts();
     }
 
     @GetMapping("/{id}")
-    public Post getPostById(@PathVariable int id){
+    public PostDTO getPostById(@PathVariable UUID id){
         return blogService.getPostById(id);
     }
 
