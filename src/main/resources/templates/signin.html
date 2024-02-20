@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Authentification</title>
+    <th:block th:replace="~{fragments/bootstrapCDN :: bootstrap}"></th:block>
+</head>
+<body>
+<main class="container w-25">
+    <h1 th:if="${message != null}" th:text="${message}" class="display-5 text-center my-5"></h1>
+    <form th:action="@{/signinAction}" method="POST">
+        <input type="text" class="form-control" name="desiredPage" th:value="${desiredPage}" hidden>
+        <div class="my-3">
+            <label for="name" class="form-label">Nom : </label>
+            <input type="text" id="name" class="form-control" name="name">
+        </div>
+        <div class="my-3">
+            <label for="password" class="form-label">Mot de passe : </label>
+            <input type="password" id="password" class="form-control" name="password">
+        </div>
+        <button class="btn btn-outline-dark mx-auto d-block">Valider</button>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajout d'un article</title>
+    <th:block th:replace="~{fragments/bootstrapCDN :: bootstrap}"></th:block>
+</head>
+<body>
+<main class="container">
+    <th:block th:fragment="commentForm">
+        <form th:action="@{/postComment/{id}(id=${post.id})}" method="POST" th:object="${comment}"
+              class="w-50 mx-auto my-5 text-start ">
+            <div class="mb-3">
+                <label for="name" class="form-label">Titre : </label>
+                <input type="text" class="form-control" id="name" th:field="*{name}">
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></p>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email : </label>
+                <input type="text" class="form-control" id="email" th:field="*{email}">
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></p>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Commentaire : </label>
+                <textarea class="form-control" id="content" th:field="*{content}"></textarea>
+                <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger"></p>
+            </div>
+            <button class="btn btn-outline-success my-2 d-block mx-auto">Valider</button>
+        </form>
+    </th:block>
+</main>
+</body>
+</html>

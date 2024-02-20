@@ -2,8 +2,6 @@ package com.example.tp_blog.controller.web;
 
 import com.example.tp_blog.dto.CommentDTO;
 import com.example.tp_blog.dto.PostDTO;
-import com.example.tp_blog.entity.Comment;
-import com.example.tp_blog.entity.Post;
 import com.example.tp_blog.service.impl.BlogServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
