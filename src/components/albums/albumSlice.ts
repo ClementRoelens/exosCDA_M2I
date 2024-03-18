@@ -140,4 +140,4 @@ const albumSlice = createSlice({
 
 export const { search, resetFilter } = albumSlice.actions;
 export default albumSlice.reducer;
-export const totoSelector = (state: RootState) => state.albums.albums;
+export const albumSelector = (state: RootState) => state.albums.albums;

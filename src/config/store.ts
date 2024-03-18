@@ -3,9 +3,9 @@ import userSlice from "../components/auth/authSlice";
 import albumSlice from "../components/albums/albumSlice";
 
 export const store = configureStore({
-    reducer : {
-        users : userSlice,
-        albums:albumSlice
+    reducer: {
+        users: userSlice,
+        albums: albumSlice
     }
 });
 
