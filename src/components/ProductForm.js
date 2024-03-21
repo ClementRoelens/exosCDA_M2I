@@ -35,7 +35,7 @@ function ProductForm() {
 
   useEffect(() => {
     if (id) {
-      if (isNaN(parseInt(id))){
+      if (isNaN(parseInt(id))) {
         navigate('/products');
       }
       getProduct();
@@ -45,7 +45,7 @@ function ProductForm() {
   return (
     <div className="container">
       <div className="mx-auto w-50 mt-5">
-        <h2 className="text-center my-3">Ajout de produit</h2>
+        <h2 className="text-center my-3">{product ? "Modification de produit" : "Ajout de produit"}</h2>
         <form>
           <div className="my-3">
             <label htmlFor="name" className="form-label mb-2">Nom du produit</label>
