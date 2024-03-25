@@ -30,14 +30,14 @@ export const getStoredUser = createAsyncThunk(
 export const signup = createAsyncThunk(
     "auth/signup",
     async (user: User) => {
-        await axios.post(`${api.baseUrl}/auth/signup`, user);
+        await axios.post(`${api.baseUrl}/user/signup`, user);
     }
 );
 
 export const signin = createAsyncThunk(
     "auth/signin",
     async (credentials: Credentials) => {
-        const response = (await axios.post(`${api.baseUrl}/auth/signin`, credentials)).data;
+        const response = (await axios.post(`${api.baseUrl}/user/signin`, credentials)).data;
         localStorage.setItem("token", JSON.stringify(response.data.token));
         return await getUser(credentials.email);
     }

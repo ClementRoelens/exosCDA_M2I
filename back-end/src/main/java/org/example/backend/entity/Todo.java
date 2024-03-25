@@ -1,6 +1,7 @@
 package org.example.backend.entity;
 
 import jakarta.persistence.*;
+import org.example.backend.dto.TodoDTO;
 
 import java.util.UUID;
 
@@ -31,7 +32,8 @@ public class Todo {
         isCompleted = true;
     }
 
-    public Todo(String title, String description, boolean isCompleted) {
+    public Todo(UUID id, String title, String description, boolean isCompleted) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.isCompleted = isCompleted;
@@ -75,5 +77,10 @@ public class Todo {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+
+    public TodoDTO toDTO(){
+        return new TodoDTO(id,title,description,isCompleted);
     }
 }

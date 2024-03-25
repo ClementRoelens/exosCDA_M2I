@@ -1,6 +1,7 @@
 package org.example.backend.entity;
 
 import jakarta.persistence.*;
+import org.example.backend.dto.UserOutDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,12 +20,16 @@ public class User implements UserDetails {
     private String firstname;
     @Column(name = "user_lastname")
     private String lastname;
-    @Column(name = "user_email")
+    @Column(name = "user_email", unique = true)
     private String email;
     @Column(name = "user_password")
     private String password;
+    @OneToOne
+    @JoinColumn(name = "id_role")
+    private Role role;
     @OneToMany(mappedBy = "user")
     private List<Todo> todos;
+
 
     public User() {
     }
@@ -35,6 +40,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
     }
+
 
     public UUID getId() {
         return id;
@@ -70,6 +76,14 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public List<Todo> getTodos() {
@@ -117,4 +131,7 @@ public class User implements UserDetails {
     }
 
 
+    public UserOutDTO toOutDTO(){
+        return new UserOutDTO(id,firstname,lastname,email,role.getName());
+    }
 }

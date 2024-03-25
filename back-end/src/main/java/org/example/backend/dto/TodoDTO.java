@@ -26,6 +26,6 @@ public class TodoDTO {
     }
     
     public Todo toTodo(){
-        return new Todo(title,description,isCompleted);
+        return new Todo(id,title,description,isCompleted);
     }
 }
