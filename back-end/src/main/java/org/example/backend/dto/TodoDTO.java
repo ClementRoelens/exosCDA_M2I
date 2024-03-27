@@ -6,10 +6,9 @@ import jakarta.persistence.ManyToOne;
 import org.example.backend.entity.Todo;
 import org.example.backend.entity.User;
 
-import java.util.UUID;
 
 public class TodoDTO {
-    private UUID id;
+    private String id;
     private String title;
     private String description;
     private boolean isCompleted;
@@ -20,7 +19,7 @@ public class TodoDTO {
         this.isCompleted = isCompleted;
     }
 
-    public TodoDTO(UUID id, String title, String description, boolean isCompleted) {
+    public TodoDTO(String id, String title, String description, boolean isCompleted) {
         this(title,description,isCompleted);
         this.id = id;
     }

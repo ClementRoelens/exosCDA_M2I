@@ -2,7 +2,9 @@ package org.example.backend.service;
 
 import org.example.backend.config.jwt.JwtProvider;
 import org.example.backend.dto.UserInDTO;
+import org.example.backend.entity.Role;
 import org.example.backend.entity.User;
+import org.example.backend.repository.RoleRepository;
 import org.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -34,14 +36,21 @@ public class UserService implements UserDetailsService {
     @Autowired
     private JwtProvider jwtProvider;
 
+    @Autowired
+    RoleRepository roleRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username);
+        User user = userRepository.findByEmail(username);
+        return user;
     }
 
     public boolean createUser(UserInDTO userInDTO){
         userInDTO.setPassword(passwordEncoder.encode(userInDTO.getPassword()));
-        userRepository.save(userInDTO.toUser());
+        Role role = roleRepository.findByName(userInDTO.getRole());
+        User user = userInDTO.toUser();
+        user.setRole(role);
+        userRepository.save(user);
         return true;
     }
 
@@ -49,6 +58,9 @@ public class UserService implements UserDetailsService {
         return passwordEncoder.matches(passwordToCheck, user.getPassword());
     }
 
+    public boolean compareUserWithToken(User user, String token){
+        return jwtProvider.getUsernameFromToken(token).equals(user.getEmail());
+    }
 
     public String generateToken(String email, String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));

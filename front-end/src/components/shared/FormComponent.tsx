@@ -8,9 +8,9 @@ function FormComponent(props: FormProps) {
     }
 
     return (
-        <form action="#" onSubmit={onSubmit} className="p-3">
+        <form onSubmit={onSubmit} className="w-50 mx-auto">
             {props.children}
-            <button className="btn btn-outline-light mt-3 d-block mx-auto" type="submit">Valider</button>
+            <button className="btn btn-outline-dark mt-4 d-block mx-auto" type="submit">Valider</button>
         </form>
     );
 }

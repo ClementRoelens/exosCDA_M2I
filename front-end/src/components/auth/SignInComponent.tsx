@@ -26,7 +26,7 @@ function SignInComponent() {
 
   return (
     <>
-      <h1>Connexion</h1>
+      <h1 className="text-center">Connexion</h1>
       <FormComponent submitFunction={signinHandler}>
         <div className="my-2">
           <label htmlFor="email" className="form-label"></label>
@@ -37,7 +37,7 @@ function SignInComponent() {
           <input type="password" className="form-control" id="password" required ref={passwordRef} />
         </div>
       </FormComponent>
-      {isRejected && <Alert message="Erreur" description="L'authentification a échoué" type="error"/>}
+      {isRejected && <Alert className="mt-4" message="Erreur" description="L'authentification a échoué" type="error"/>}
     </>
   )
 }

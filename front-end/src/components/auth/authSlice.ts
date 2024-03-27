@@ -1,12 +1,13 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { User } from "../../models/user";
-import { Credentials } from "../../models/credentials";
 import axios from "axios";
 import api from "../../config/api-route.json";
 import { getHeaders } from "../helpers/jwtHeadersProvider";
 import { RootState } from "../../config/store";
+import { User } from "../../models/User";
+import { Credentials } from "../../models/Credentials";
 
 async function getUser(email: string): Promise<User> {
+    console.log(getHeaders());
     return (await axios.get<User>(`${api.baseUrl}/user/getByMail/${email}`, { headers: getHeaders() })).data;
 }
 
@@ -38,7 +39,7 @@ export const signin = createAsyncThunk(
     "auth/signin",
     async (credentials: Credentials) => {
         const response = (await axios.post(`${api.baseUrl}/user/signin`, credentials)).data;
-        localStorage.setItem("token", JSON.stringify(response.data.token));
+        localStorage.setItem("token", response);
         return await getUser(credentials.email);
     }
 );
@@ -53,6 +54,10 @@ const authSlice = createSlice({
     name: "auth",
     initialState: initialState,
     reducers: {
+        signout : (state) => {
+            localStorage.removeItem("user");
+            state.user = null;
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(signin.fulfilled, (state, action: PayloadAction<User>) => {
@@ -76,5 +81,6 @@ const authSlice = createSlice({
     }
 });
 
+export const { signout } = authSlice.actions;
 export default authSlice.reducer;
 export const authSelector = (state:RootState) => state.auth;

@@ -3,15 +3,13 @@ package org.example.backend.entity;
 import jakarta.persistence.*;
 import org.example.backend.dto.TodoDTO;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "todos")
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "todo_id")
-    private UUID id;
+    private String id;
     @Column(name = "todo_title")
     private String title;
     @Column(name = "todo_description")
@@ -32,18 +30,18 @@ public class Todo {
         isCompleted = true;
     }
 
-    public Todo(UUID id, String title, String description, boolean isCompleted) {
+    public Todo(String id, String title, String description, boolean isCompleted) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.isCompleted = isCompleted;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

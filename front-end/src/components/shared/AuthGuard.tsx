@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { useAppSelector } from "../../config/hook";
 import { Navigate } from "react-router-dom";
 
-function Guard(props: GuardProps) {
+function AuthGuard(props: AuthGuardProps) {
   const user = useAppSelector(state => state.auth.user);
 
   if (user) {
@@ -11,8 +11,8 @@ function Guard(props: GuardProps) {
   return <Navigate to={"/"} />
 }
 
-interface GuardProps {
+interface AuthGuardProps {
   children : ReactNode;
 }
 
-export default Guard;
+export default AuthGuard;

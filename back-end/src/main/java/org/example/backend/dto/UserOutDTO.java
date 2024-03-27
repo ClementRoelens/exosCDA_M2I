@@ -1,15 +1,13 @@
 package org.example.backend.dto;
 
-import java.util.UUID;
-
 public class UserOutDTO {
-    private UUID id;
+    private String id;
     private String firstname;
     private String lastname;
     private String email;
     private String role;
 
-    public UserOutDTO(UUID id, String firstname, String lastname, String email, String role) {
+    public UserOutDTO(String id, String firstname, String lastname, String email, String role) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -17,11 +15,11 @@ public class UserOutDTO {
         this.role = role;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

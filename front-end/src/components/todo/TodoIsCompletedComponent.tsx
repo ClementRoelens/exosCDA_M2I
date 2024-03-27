@@ -1,5 +1,5 @@
 import { useAppDispatch } from "../../config/hook";
-import { Todo } from "../../models/todo";
+import { Todo } from "../../models/Todo";
 import { updateTodo } from "./todoSlice";
 
 function TodoIsCompletedComponent(props:IsCompletedProps) {

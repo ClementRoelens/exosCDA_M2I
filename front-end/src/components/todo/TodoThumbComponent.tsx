@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Todo } from "../../models/todo"
+import { Todo } from "../../models/Todo"
 import TodoIsCompletedComponent from "./TodoIsCompletedComponent"
 import { Alert } from "antd";
 

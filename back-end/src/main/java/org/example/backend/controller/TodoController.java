@@ -32,7 +32,7 @@ public class TodoController {
         return todoService.getOneTodo(UUID.fromString(id)).toDTO();
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/getTheirTodos/{userId}")
     public List<TodoDTO> getTheirTodos(@PathVariable String id){
         return todoService.getTheirTodos(UUID.fromString(id)).stream().map(Todo::toDTO).toList();
     }

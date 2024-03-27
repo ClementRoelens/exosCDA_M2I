@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../config/hook"
-import { Todo } from "../../models/todo";
+import { Todo } from "../../models/Todo";
 import TodoThumbComponent from "./TodoThumbComponent";
 
 function TodoListComponent() {

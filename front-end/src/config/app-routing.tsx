@@ -4,8 +4,9 @@ import SignInComponent from "../components/auth/SignInComponent";
 import SignUpComponent from "../components/auth/SignUpComponent";
 import TodoListComponent from "../components/todo/TodoListComponent";
 import TodoDisplayComponent from "../components/todo/TodoDisplayComponent";
-import Guard from "../components/shared/Guard";
+import AuthGuard from "../components/shared/AuthGuard";
 import TodoForm from "../components/todo/TodoForm";
+import AdminGuard from "../components/shared/AdminGuard";
 
 export const router = createBrowserRouter([
     {
@@ -13,10 +14,10 @@ export const router = createBrowserRouter([
             { path: "/", element: <SignInComponent /> },
             { path: "/signup", element: <SignUpComponent /> },
             { path: "/signin", element: <SignInComponent /> },
-            { path: "/todos", element: <Guard><TodoListComponent /></Guard> },
-            { path: "/todos/:id", element: <Guard><TodoListComponent /></Guard> },
-            { path: "/one-todo/:id", element: <Guard><TodoDisplayComponent /></Guard> },
-            { path: "/add-todo", element: <Guard><TodoForm /></Guard> }
+            { path: "/todos", element: <AuthGuard><TodoListComponent /></AuthGuard> },
+            { path: "/todos/:id", element: <AdminGuard><TodoListComponent /></AdminGuard> },
+            { path: "/one-todo/:id", element: <AdminGuard><TodoDisplayComponent /></AdminGuard> },
+            { path: "/add-todo", element: <AdminGuard><TodoForm /></AdminGuard> }
         ]
     }
 ]);

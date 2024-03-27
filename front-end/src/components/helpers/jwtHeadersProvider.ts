@@ -1,3 +1,3 @@
 export const getHeaders = () => {
-    return { "Authorization": localStorage.getItem("token") };
+    return { "Authorization": "Bearer " + localStorage.getItem("token") };
 };

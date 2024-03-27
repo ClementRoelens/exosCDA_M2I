@@ -1,4 +1,4 @@
-import { Todo } from './../../models/todo';
+import { Todo } from '../../models/Todo';
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import api from "../../config/api-route.json";
