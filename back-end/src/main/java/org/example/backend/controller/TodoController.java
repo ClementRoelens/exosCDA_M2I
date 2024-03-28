@@ -29,12 +29,12 @@ public class TodoController {
 
     @GetMapping("/{id}")
     public TodoDTO getOneTodo(@PathVariable String id){
-        return todoService.getOneTodo(UUID.fromString(id)).toDTO();
+        return todoService.getOneTodo(id).toDTO();
     }
 
     @GetMapping("/getTheirTodos/{userId}")
-    public List<TodoDTO> getTheirTodos(@PathVariable String id){
-        return todoService.getTheirTodos(UUID.fromString(id)).stream().map(Todo::toDTO).toList();
+    public List<TodoDTO> getTheirTodos(@PathVariable String userId){
+        return todoService.getTheirTodos(userId).stream().map(Todo::toDTO).toList();
     }
 
     @PutMapping
@@ -44,7 +44,7 @@ public class TodoController {
 
     @DeleteMapping
     public ResponseEntity<String> deleteDTO(String id){
-        Todo todo = todoService.getOneTodo(UUID.fromString(id));
+        Todo todo = todoService.getOneTodo(id);
 
         boolean res = todoService.deleteTodo(todo);
         if (res){

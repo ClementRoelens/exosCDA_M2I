@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 function AdminGuard(props: AdminGuardProps) {
   const user = useAppSelector(state => state.auth.user);
 
-  if (user?.role === "ADMIN") {
+  if (user?.role === "ROLE_ADMIN") {
     return props.children;
   }
   return <Navigate to={"/"} />

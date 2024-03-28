@@ -11,7 +11,7 @@ import AdminGuard from "../components/shared/AdminGuard";
 export const router = createBrowserRouter([
     {
         path: "/", element: <App />, children: [
-            { path: "/", element: <SignInComponent /> },
+            { path: "/", element: <AuthGuard><TodoListComponent /></AuthGuard> },
             { path: "/signup", element: <SignUpComponent /> },
             { path: "/signin", element: <SignInComponent /> },
             { path: "/todos", element: <AuthGuard><TodoListComponent /></AuthGuard> },

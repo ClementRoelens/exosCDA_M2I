@@ -32,7 +32,7 @@ public class UserController {
         User user = (User) userService.loadUserByUsername(credentials.getEmail());
         if (user != null) {
             if (userService.verifyUser(user, credentials.getPassword())) {
-                return new ResponseEntity<>(userService.generateToken(credentials.getEmail(), credentials.getPassword()), HttpStatus.ACCEPTED);
+                return new ResponseEntity<>(userService.generateToken(credentials.getEmail(), credentials.getPassword(), user.getAuthorities()), HttpStatus.ACCEPTED);
             }
             return new ResponseEntity<>("Mauvais mot de passe", HttpStatus.BAD_REQUEST);
         }

@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import org.example.backend.dto.TodoDTO;
 import org.example.backend.entity.Todo;
+import org.example.backend.entity.User;
 import org.example.backend.repository.TodoRepository;
 import org.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,18 @@ public class TodoService {
         return todoRepository.findAll();
     }
 
-    public List<Todo> getTheirTodos(UUID id){
+    public List<Todo> getTheirTodos(String id){
         return todoRepository.findTodosByUser(userRepository.findById(id).orElse(null));
     }
 
-    public Todo getOneTodo(UUID id){
+    public Todo getOneTodo(String id){
         return todoRepository.findById(id).orElse(null);
     }
 
     public Todo createOrUpdateTodo(TodoDTO todoDTO){
+        User user = userRepository.findByEmail(todoDTO.getUserEmail());
         Todo todo = todoDTO.toTodo();
+        todo.setUser(user);
         return todoRepository.save(todo);
     }
 

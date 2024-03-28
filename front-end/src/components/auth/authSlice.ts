@@ -5,9 +5,9 @@ import { getHeaders } from "../helpers/jwtHeadersProvider";
 import { RootState } from "../../config/store";
 import { User } from "../../models/User";
 import { Credentials } from "../../models/Credentials";
+import { decode } from "../helpers/jwtDecoder";
 
 async function getUser(email: string): Promise<User> {
-    console.log(getHeaders());
     return (await axios.get<User>(`${api.baseUrl}/user/getByMail/${email}`, { headers: getHeaders() })).data;
 }
 
@@ -16,13 +16,7 @@ export const getStoredUser = createAsyncThunk(
     async () => {
         const token = localStorage.getItem("token");
         if (token){
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(c => {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            const decoded = JSON.parse(jsonPayload);
-            return await getUser(decoded.sub);
+            return await getUser(decode(token).sub);
         }
         return null;
     }

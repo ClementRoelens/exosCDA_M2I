@@ -29,8 +29,8 @@ export const getTheirTodos = createAsyncThunk(
 
 export const createTodo = createAsyncThunk(
     "todos/create",
-    async (todo: {title:string,description:string}) => {
-        return (await axios.post<Todo>(`${api.baseUrl}/todos`, todo, { headers: getHeaders() })).data;
+    async (payload: {title:string,description:string, userEmail : string}) => {
+        return (await axios.post<Todo>(`${api.baseUrl}/todos`, payload, { headers: getHeaders() })).data;
     }
 );
 

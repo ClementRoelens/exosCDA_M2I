@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../config/hook"
-import { signout } from "../auth/authSlice";
+import { getStoredUser, signout } from "../auth/authSlice";
+import { useEffect } from "react";
 
 function HeaderComponent() {
   const user = useAppSelector(state => state.auth.user);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!user){
+      dispatch(getStoredUser());
+    }
+   },[]);
 
   return (
     <header>
@@ -14,8 +21,8 @@ function HeaderComponent() {
           <ul className="navbar nav">
             {user ?
               <>
-                {user.role === "ADMIN" && <li className="nav-item"><Link className="nav-link text-light" to="/add-todo">Nouvelle tâche</Link></li>}
-                {user.role === "ADMIN" && <li className="nav-item"><Link className="nav-link text-light" to={"/todos/" + user.id}>Mes tâches</Link></li>}
+                {user.role === "ROLE_ADMIN" && <li className="nav-item"><Link className="nav-link text-light" to="/add-todo">Nouvelle tâche</Link></li>}
+                {user.role === "ROLE_ADMIN" && <li className="nav-item"><Link className="nav-link text-light" to={"/todos/" + user.id}>Mes tâches</Link></li>}
                 <li className="nav-item"><button className="nav-link text-light" onClick={() => dispatch(signout())}>Se déconnecter</button></li>
               </>
               :
